@@ -24,20 +24,16 @@ namespace ListPrzewozowy
     public partial class Form1 : Form
     {
         private Column column;
-
         public Form1()
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             Createtable();
             odbiorcy.Visible = false;
-
-            PdfCreator generuj = new PdfCreator();
-           // generuj.Create();
+            string[] kontr;
+            kontr = new string[5];
+            
         }
-
-        public DataSet dataSet { get; private set; }
-        public Bitmap memoryImage { get; private set; }
 
         private void Btn_szukajKTH_Click(object sender, EventArgs e)
         {
@@ -45,14 +41,14 @@ namespace ListPrzewozowy
             string nazwa = Txt_KTH.Text;
             if (NIPValidate(nazwa) != true)
             {
-                 sql = "select k.Nazwa, Ulica, Nrdomu, kod, miasto, Nip, Telefon, " +
+                sql = "select k.Nazwa, Ulica, Nrdomu, kod, miasto, Nip, Telefon, " +
 "(Select top 1  case when tekst like '%pel%' then 'Pełnomocnictwo' else 'Brak' end as Pelnomocnictwo From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Pelnomocnictwo," +
 "(Select top 1  case when tekst like '%osw%' then 'Oswiadczenie' else 'Brak' end as Oswiadczenie From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Oswiadczenie " +
 "from kontrahent k where k.nazwa like '%" + nazwa + "%'";
             }
             else
             {
-                 sql = "select k.Nazwa, Ulica, Nrdomu, kod, miasto, Nip, Telefon, " +
+                sql = "select k.Nazwa, Ulica, Nrdomu, kod, miasto, Nip, Telefon, " +
 "(Select top 1  case when tekst like '%pel%' then 'Pełnomocnictwo' else 'Brak' end as Pelnomocnictwo From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Pelnomocnictwo," +
 "(Select top 1  case when tekst like '%osw%' then 'Oswiadczenie' else 'Brak' end as Oswiadczenie From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Oswiadczenie " +
 "from kontrahent k where k.nip ='" + nazwa + "'";
@@ -108,7 +104,7 @@ namespace ListPrzewozowy
                 string telefon = dataGridView1[6, rownumber].Value.ToString();
                 DodajKontrahenta(nazwa, ulica, nrdomu, kod, miasto, nip, telefon, "", "");
             }
-        } 
+        }
 
         public void Createtable()
         {
@@ -122,7 +118,7 @@ namespace ListPrzewozowy
             odbiorcy.Controls.Add(new Label() { Text = "Telefon" }, 6, 0);
             odbiorcy.Controls.Add(new Label() { Text = "Ilosc (litry)" }, 7, 0);
             odbiorcy.Controls.Add(new Label() { Text = "Adres rozładunku/Uwagi", AutoSize = true }, 8, 0);
-            
+            odbiorcy.Controls.Add(new Label() { Text = "Usun" }, 9, 0);
         }
 
 
@@ -149,10 +145,26 @@ namespace ListPrzewozowy
             odbiorcy.Controls.Add(new Label() { Text = telefon, AutoSize = true }, 6, odbiorcy.RowCount - 1);
             odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 7, odbiorcy.RowCount - 1);
             odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill, AutoSize = true }, 8, odbiorcy.RowCount - 1);
-            // odbiorcy.RowCount++;
+            //odbiorcy.Controls.Add(new CheckBox() { Dock = DockStyle.Fill, AutoSize = true }, 9, odbiorcy.RowCount - 1);
+              odbiorcy.Controls.Add(new Button() { Text = "Usun", Name = "usun_btn",   Dock = DockStyle.Fill, AutoSize = true}, 9, odbiorcy.RowCount - 1 );
+            
+           /*  poniższe dziala na przycisk usun, ale sie pieprzy z indeksem kolumn. Z kolei powyższy button tworzy prawidlowo, ale nie reaguje na button...
+            Button button = new Button();
+            button.Name = (odbiorcy.RowCount).ToString();
+            button.Text = "Usun";
+            button.Click += new System.EventHandler(this.usun_Click);
+            odbiorcy.Controls.Add(button);
+            */
+
+            //  odbiorcy.RowCount++;
+            //   int i = odbiorcy.RowCount - 1;
+            //MessageBox.Show(i.ToString());
+            //  string c = odbiorcy.GetControlFromPosition(0, i).Text.ToString();
+            //MessageBox.Show(c);
+            //odbiorcy.MouseClick += new MouseEventHandler(usun_Click);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e) //button "print"
         {
             // PdfCreator generuj = new PdfCreator();
             // generuj.Create();
@@ -162,9 +174,11 @@ namespace ListPrzewozowy
             print pdf = new print();
             string data = dateTimePicker1.Text;
             pdf.DrawHeader(page, data);
-            pdf.DrawBody(page, "5900");
-            pdf.DrawCustomer(page, 80,"Super Firma sp.z o.o.", "16-542 Cieciówka, Maławieś 14a", "8441234567", "606123789");
+
+            pdf.DrawCustomer(page, 80, "Super Firma sp.z o.o.", "16-542 Cieciówka, Maławieś 14a", "8441234567", "606123789");
             pdf.DrawCustomer(page, 135, "Niezła Firma II sp.z o.o.", "26-442 Miech, Przegonowo 6", "8341234599", "606123780");
+
+            pdf.DrawBody(page, "5900");
             pdf.DrawFooters(page);
             document.Save(filename);
             Process.Start(filename);
@@ -216,37 +230,37 @@ namespace ListPrzewozowy
             // of the page
             Section section = document.AddSection();
             section.PageSetup.PageHeight = height;
-            section.PageSetup.PageWidth = width+30;
+            section.PageSetup.PageWidth = width + 30;
             section.PageSetup.LeftMargin = 20;
             section.PageSetup.RightMargin = 10;
             section.PageSetup.TopMargin = height / 2;
             // Create a table so that we can draw the horizontal lines
             Table table = new Table();
-                   table.Borders.Width = 1; // Default to show borders 1 pixel wide Column
-                   column = table.AddColumn(width);
-                   column.Format.Alignment = ParagraphAlignment.Center;
-                   double fontHeight = 36;
-                   MigraDoc.DocumentObjectModel.Font font = new MigraDoc.DocumentObjectModel.Font("Times New Roman", fontHeight);
-                   // Add a row with a single cell for the first line
-                   Row row = table.AddRow();
-                   Cell cell = row.Cells[0];
-                   cell.Format.Font.Color = Colors.Black;
-                   cell.Format.Font.ApplyFont(font);
-                   cell.Borders.Left.Visible = true;
-                   cell.Borders.Right.Visible = true;
-                   cell.Borders.Bottom.Visible = true;
-                   cell.AddParagraph("Hello, World!");
-                   // Add a row with a single cell for the second line
-                   row = table.AddRow();
-                   cell = row.Cells[0];
-                   cell.Format.Font.Color = Colors.Black;
-                   cell.Format.Alignment = ParagraphAlignment.Left;
-                   cell.Format.Font.ApplyFont(font);
-                   cell.Borders.Left.Visible = false;
-                   cell.Borders.Right.Visible = false;
-                   cell.Borders.Top.Visible = false;
-                   cell.AddParagraph("This is some long text that *will* auto-wrap when the edge of the page is reached"); 
-                   document.LastSection.Add(table); 
+            table.Borders.Width = 1; // Default to show borders 1 pixel wide Column
+            column = table.AddColumn(width);
+            column.Format.Alignment = ParagraphAlignment.Center;
+            double fontHeight = 36;
+            MigraDoc.DocumentObjectModel.Font font = new MigraDoc.DocumentObjectModel.Font("Times New Roman", fontHeight);
+            // Add a row with a single cell for the first line
+            Row row = table.AddRow();
+            Cell cell = row.Cells[0];
+            cell.Format.Font.Color = Colors.Black;
+            cell.Format.Font.ApplyFont(font);
+            cell.Borders.Left.Visible = true;
+            cell.Borders.Right.Visible = true;
+            cell.Borders.Bottom.Visible = true;
+            cell.AddParagraph("Hello, World!");
+            // Add a row with a single cell for the second line
+            row = table.AddRow();
+            cell = row.Cells[0];
+            cell.Format.Font.Color = Colors.Black;
+            cell.Format.Alignment = ParagraphAlignment.Left;
+            cell.Format.Font.ApplyFont(font);
+            cell.Borders.Left.Visible = false;
+            cell.Borders.Right.Visible = false;
+            cell.Borders.Top.Visible = false;
+            cell.AddParagraph("This is some long text that *will* auto-wrap when the edge of the page is reached");
+            document.LastSection.Add(table);
 
             // Create a renderer
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer();
@@ -278,16 +292,57 @@ namespace ListPrzewozowy
             //zapis pliku
             document.Save(filename);
             //----------------------
-            
+
             Process.Start(filename); //podgląd w domyślnym programie
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e) //button "test"
         {
-            string nip = Txt_KTH.Text;
-            if (NIPValidate(nip) == true)
-                MessageBox.Show("prawidłowy NIP");
-            
+            for (int i = 1; i < odbiorcy.RowCount; i++)
+            {
+                //int i = odbiorcy.RowCount - 1;
+                string c = odbiorcy.GetControlFromPosition(0, i).Text.ToString();
+                string d = odbiorcy.GetControlFromPosition(1, i).Text.ToString();
+                MessageBox.Show(c + "xxx:" + d);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e) //button "remove"
+        {
+           // MessageBox.Show(odbiorcy.RowCount.ToString());
+            //odbiorcy.RowStyles.RemoveAt(1);
+            int rem = Convert.ToUInt16(textBox1.Text);
+            RemoveRow(odbiorcy, rem);
+        }
+
+        public void RemoveRow(TableLayoutPanel panel, int rowIndex)
+        {
+            panel.RowStyles.RemoveAt(rowIndex);
+
+            for (int columnIndex = 0; columnIndex < panel.ColumnCount; columnIndex++)
+            {
+                var control = panel.GetControlFromPosition(columnIndex, rowIndex);
+                panel.Controls.Remove(control);
+            }
+            for (int i = rowIndex + 1; i < panel.RowCount; i++)
+            {
+                for (int columnIndex = 0; columnIndex < panel.ColumnCount; columnIndex++)
+                {
+                    var control = panel.GetControlFromPosition(columnIndex, i);
+                 panel.SetRow(control, i - 1);
+                }
+            }
+            panel.RowCount--;
+        }
+        public void usun_Click(object sender, EventArgs e)
+        {
+            //          Point p = this.odbiorcy.PointToClient(Control.MousePosition);//get mouse position
+            //            string a = p.X.ToString() + ":" + p.Y.ToString();//get mouse position
+            //-----------------------------------------------------------------------------
+            var button = sender as Button;
+            int a = Convert.ToUInt16(button.Name)-1;
+             MessageBox.Show("Numer do usuniecia "+a);
+            RemoveRow(odbiorcy, a);
         }
     }
   

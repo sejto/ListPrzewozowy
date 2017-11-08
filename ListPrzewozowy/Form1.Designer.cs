@@ -1,4 +1,6 @@
-﻿namespace ListPrzewozowy
+﻿using System.Windows.Forms;
+
+namespace ListPrzewozowy
 {
     partial class Form1
     {
@@ -40,6 +42,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,7 +89,7 @@
             // 
             this.odbiorcy.AutoSize = true;
             this.odbiorcy.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.odbiorcy.ColumnCount = 9;
+            this.odbiorcy.ColumnCount = 10;
             this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 462F));
             this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 139F));
             this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 84F));
@@ -94,12 +98,13 @@
             this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
             this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 103F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 341F));
-            this.odbiorcy.Location = new System.Drawing.Point(31, 275);
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 306F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 58F));
+            this.odbiorcy.Location = new System.Drawing.Point(31, 278);
             this.odbiorcy.Name = "odbiorcy";
             this.odbiorcy.RowCount = 1;
             this.odbiorcy.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.odbiorcy.Size = new System.Drawing.Size(1692, 41);
+            this.odbiorcy.Size = new System.Drawing.Size(1716, 38);
             this.odbiorcy.TabIndex = 4;
             // 
             // button1
@@ -148,11 +153,30 @@
             this.label2.TabIndex = 9;
             this.label2.Text = "Data:";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(1623, 138);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 10;
+            this.button4.Text = "remove";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(1623, 112);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(41, 20);
+            this.textBox1.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1746, 648);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.button3);
@@ -185,6 +209,8 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button4;
+        private TextBox textBox1;
     }
 }
 
