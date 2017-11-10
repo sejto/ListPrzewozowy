@@ -32,7 +32,7 @@ namespace ListPrzewozowy
             odbiorcy.Visible = false;
             string[] kontr;
             kontr = new string[5];
-            
+
         }
 
         private void Btn_szukajKTH_Click(object sender, EventArgs e)
@@ -118,22 +118,13 @@ namespace ListPrzewozowy
             odbiorcy.Controls.Add(new Label() { Text = "Telefon" }, 6, 0);
             odbiorcy.Controls.Add(new Label() { Text = "Ilosc (litry)" }, 7, 0);
             odbiorcy.Controls.Add(new Label() { Text = "Adres rozładunku/Uwagi", AutoSize = true }, 8, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Usun" }, 9, 0);
-        }
-
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            DodajKontrahenta("Firma pierwsza sp. z o.o.", "Ciekawa", "14b", "00-456", "Ciechanów", "8440001235", "+48695213456", "", "");
+            odbiorcy.Controls.Add(new Label() { Text = "Nasze uwagi" }, 9, 0);
+            odbiorcy.Controls.Add(new Label() { Text = "Usun" }, 10, 0);
         }
         private void DodajKontrahenta(string nazwa, string ulica, string nrdomu, string kod, string miasto, string nip, string telefon, string litry, string uwagi)
         {
-            //get a reference to the previous existent 
             RowStyle temp = odbiorcy.RowStyles[odbiorcy.RowCount - 1];
-            //increase panel rows count by one
             odbiorcy.RowCount++;
-            //add a new RowStyle as a copy of the previous one
-            //odbiorcy.RowStyles.Add(new RowStyle(temp.SizeType, temp.Height));
             odbiorcy.AutoSize = true;
             odbiorcy.RowStyles.Add(new RowStyle(temp.SizeType, temp.Height));
             odbiorcy.Controls.Add(new Label() { Text = nazwa, AutoSize = true }, 0, odbiorcy.RowCount - 1);
@@ -145,46 +136,35 @@ namespace ListPrzewozowy
             odbiorcy.Controls.Add(new Label() { Text = telefon, AutoSize = true }, 6, odbiorcy.RowCount - 1);
             odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 7, odbiorcy.RowCount - 1);
             odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill, AutoSize = true }, 8, odbiorcy.RowCount - 1);
-            //odbiorcy.Controls.Add(new CheckBox() { Dock = DockStyle.Fill, AutoSize = true }, 9, odbiorcy.RowCount - 1);
-              odbiorcy.Controls.Add(new Button() { Text = "Usun", Name = "usun_btn",   Dock = DockStyle.Fill, AutoSize = true}, 9, odbiorcy.RowCount - 1 );
-            
-           /*  poniższe dziala na przycisk usun, ale sie pieprzy z indeksem kolumn. Z kolei powyższy button tworzy prawidlowo, ale nie reaguje na button...
+            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill, AutoSize = true }, 9, odbiorcy.RowCount - 1);
+
             Button button = new Button();
             button.Name = (odbiorcy.RowCount).ToString();
             button.Text = "Usun";
-            button.Click += new System.EventHandler(this.usun_Click);
-            odbiorcy.Controls.Add(button);
-            */
-
-            //  odbiorcy.RowCount++;
-            //   int i = odbiorcy.RowCount - 1;
-            //MessageBox.Show(i.ToString());
-            //  string c = odbiorcy.GetControlFromPosition(0, i).Text.ToString();
-            //MessageBox.Show(c);
-            //odbiorcy.MouseClick += new MouseEventHandler(usun_Click);
+            button.Click += new EventHandler(usun_Click);
+            odbiorcy.Controls.Add(button, 10, odbiorcy.RowCount - 1);
         }
 
-        private void button2_Click(object sender, EventArgs e) //button "print"
+        private void button1_Click(object sender, EventArgs e)// Dodaje kontrahenta z ręki
         {
-            // PdfCreator generuj = new PdfCreator();
-            // generuj.Create();
-            string filename = "print.pdf";
-            PdfDocument document = new PdfDocument(); // stworzenie nowego dokumentu
-            PdfPage page = document.AddPage(); // stworzenie nowej strony dokumentu
-            print pdf = new print();
-            string data = dateTimePicker1.Text;
-            pdf.DrawHeader(page, data);
-
-            pdf.DrawCustomer(page, 80, "Super Firma sp.z o.o.", "16-542 Cieciówka, Maławieś 14a", "8441234567", "606123789");
-            pdf.DrawCustomer(page, 135, "Niezła Firma II sp.z o.o.", "26-442 Miech, Przegonowo 6", "8341234599", "606123780");
-
-            pdf.DrawBody(page, "5900");
-            pdf.DrawFooters(page);
-            document.Save(filename);
-            Process.Start(filename);
-
+            DodajKontrahenta("Firma pierwsza sp. z o.o.", "Ciekawa", "14b", "00-456", "Ciechanów", "8440001235", "+48695213456", "2500", "brak uwag");
         }
-
+        private void Button2_Click(object sender, EventArgs e) //button "print generuje PDF z tablelayout"
+        {
+            printCustomer();
+        }
+        private void button3_Click(object sender, EventArgs e) //button "test"
+        {
+            MessageBox.Show("Nic");
+        }
+        private void button4_Click(object sender, EventArgs e) //button "remove" na podstawie textboxa 
+        {
+            // MessageBox.Show(odbiorcy.RowCount.ToString());
+            //odbiorcy.RowStyles.RemoveAt(1);
+            int rem = Convert.ToUInt16(textBox1.Text);
+            RemoveRow(odbiorcy, rem);
+        }
+        
         static public bool NIPValidate(string NIPValidate)
         {
             const byte lenght = 10;
@@ -218,133 +198,109 @@ namespace ListPrzewozowy
 
         }
 
-        public void printPDF()
-        {
-            Document document = new Document();
-            document.Info.Author = "Rolf Baxter";
-            document.Info.Keywords = "MigraDoc, Examples, C#";
-            // Get the A4 page size
-            Unit width, height;
-            PageSetup.GetPageSize(PageFormat.A4, out width, out height);
-            // Add a section to the document and configure it such that it will be in the centre
-            // of the page
-            Section section = document.AddSection();
-            section.PageSetup.PageHeight = height;
-            section.PageSetup.PageWidth = width + 30;
-            section.PageSetup.LeftMargin = 20;
-            section.PageSetup.RightMargin = 10;
-            section.PageSetup.TopMargin = height / 2;
-            // Create a table so that we can draw the horizontal lines
-            Table table = new Table();
-            table.Borders.Width = 1; // Default to show borders 1 pixel wide Column
-            column = table.AddColumn(width);
-            column.Format.Alignment = ParagraphAlignment.Center;
-            double fontHeight = 36;
-            MigraDoc.DocumentObjectModel.Font font = new MigraDoc.DocumentObjectModel.Font("Times New Roman", fontHeight);
-            // Add a row with a single cell for the first line
-            Row row = table.AddRow();
-            Cell cell = row.Cells[0];
-            cell.Format.Font.Color = Colors.Black;
-            cell.Format.Font.ApplyFont(font);
-            cell.Borders.Left.Visible = true;
-            cell.Borders.Right.Visible = true;
-            cell.Borders.Bottom.Visible = true;
-            cell.AddParagraph("Hello, World!");
-            // Add a row with a single cell for the second line
-            row = table.AddRow();
-            cell = row.Cells[0];
-            cell.Format.Font.Color = Colors.Black;
-            cell.Format.Alignment = ParagraphAlignment.Left;
-            cell.Format.Font.ApplyFont(font);
-            cell.Borders.Left.Visible = false;
-            cell.Borders.Right.Visible = false;
-            cell.Borders.Top.Visible = false;
-            cell.AddParagraph("This is some long text that *will* auto-wrap when the edge of the page is reached");
-            document.LastSection.Add(table);
-
-            // Create a renderer
-            PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer();
-            // Associate the MigraDoc document with a renderer
-            pdfRenderer.Document = document;
-            // Layout and render document to PDF
-            pdfRenderer.RenderDocument();
-            // Save and show the document
-            pdfRenderer.PdfDocument.Save
-            ("TestDocument.pdf");
-            Process.Start("TestDocument.pdf");
-        }
-
-        public void printPDF2()
-        {
-            string filename = "c:\\print.pdf";
-            //nowy dokument
-            PdfDocument document = new PdfDocument(); // stworzenie nowego dokumentu
-            PdfPage page = document.AddPage(); // stworzenie nowej strony dokumentu
-            XGraphics graphics = XGraphics.FromPdfPage(page); // stworzenie obiektu odpowiedzialnego za wygląd strony
-            // prostokat
-            XPen pen = new XPen(XColors.Black, 1); // obramowanie prostokąta
-            XBrush brush = XBrushes.Red; // wypełnienie prostokąta
-            XRect rect = new XRect(0, 0, 60, 20); // położenie i wymiary prostokąta (x, y, szerokość, wysokość)
-            graphics.DrawRectangle(pen, brush, rect); // narysowanie prostokąta
-            //dodanie tekstu
-            XFont font = new XFont("Arial", 10, XFontStyle.Bold); // krój, rozmiar i styl czcionki
-            graphics.DrawString("Poufne", font, XBrushes.Black, rect, XStringFormats.Center); // dodanie czarnego napisu w środku stworzonego wcześniej prostokąta
-            //zapis pliku
-            document.Save(filename);
-            //----------------------
-
-            Process.Start(filename); //podgląd w domyślnym programie
-        }
-
-        private void button3_Click(object sender, EventArgs e) //button "test"
-        {
-            for (int i = 1; i < odbiorcy.RowCount; i++)
-            {
-                //int i = odbiorcy.RowCount - 1;
-                string c = odbiorcy.GetControlFromPosition(0, i).Text.ToString();
-                string d = odbiorcy.GetControlFromPosition(1, i).Text.ToString();
-                MessageBox.Show(c + "xxx:" + d);
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e) //button "remove"
-        {
-           // MessageBox.Show(odbiorcy.RowCount.ToString());
-            //odbiorcy.RowStyles.RemoveAt(1);
-            int rem = Convert.ToUInt16(textBox1.Text);
-            RemoveRow(odbiorcy, rem);
-        }
-
         public void RemoveRow(TableLayoutPanel panel, int rowIndex)
         {
-            panel.RowStyles.RemoveAt(rowIndex);
 
-            for (int columnIndex = 0; columnIndex < panel.ColumnCount; columnIndex++)
+           // MessageBox.Show("RowCount=" +panel.RowCount+" rowIndex= "+rowIndex);
+            if (panel.RowCount >1 && rowIndex <panel.RowCount)
             {
-                var control = panel.GetControlFromPosition(columnIndex, rowIndex);
-                panel.Controls.Remove(control);
-            }
-            for (int i = rowIndex + 1; i < panel.RowCount; i++)
-            {
+                panel.RowStyles.RemoveAt(rowIndex);
                 for (int columnIndex = 0; columnIndex < panel.ColumnCount; columnIndex++)
                 {
-                    var control = panel.GetControlFromPosition(columnIndex, i);
-                 panel.SetRow(control, i - 1);
+                    var control = panel.GetControlFromPosition(columnIndex, rowIndex);
+                    panel.Controls.Remove(control);
                 }
+                for (int i = rowIndex + 1; i < panel.RowCount; i++)
+                {
+                    for (int columnIndex = 0; columnIndex < panel.ColumnCount; columnIndex++)
+                    {
+                        var control = panel.GetControlFromPosition(columnIndex, i);
+                        panel.SetRow(control, i - 1);
+                    }
+                }
+                panel.RowCount--;
             }
-            panel.RowCount--;
+            else
+            {
+                MessageBox.Show("nie bangla");
+            }
         }
+
         public void usun_Click(object sender, EventArgs e)
         {
-            //          Point p = this.odbiorcy.PointToClient(Control.MousePosition);//get mouse position
-            //            string a = p.X.ToString() + ":" + p.Y.ToString();//get mouse position
-            //-----------------------------------------------------------------------------
+            Control ctrlactive = this.ActiveControl;
+            TableLayoutPanelCellPosition celpos = odbiorcy.GetCellPosition(ctrlactive);
+            int rownum = celpos.Row;
+            RemoveRow(odbiorcy, rownum);
+            /*
             var button = sender as Button;
             int a = Convert.ToUInt16(button.Name)-1;
              MessageBox.Show("Numer do usuniecia "+a);
             RemoveRow(odbiorcy, a);
+            */
         }
+        public void printCustomer()
+        {
+            string filename = "print.pdf";
+            PdfDocument document = new PdfDocument(); // stworzenie nowego dokumentu
+            PdfPage page = document.AddPage(); // stworzenie nowej strony dokumentu
+            int heightRowCust = 85;
+            int litry = 0;
+            string[] cust = new string[10];
+            print pdf = new print();
+            string data = dateTimePicker1.Text;
+            pdf.DrawHeader(page, data);
+            for (int i = 1; i < odbiorcy.RowCount; i++)
+            {
+                for (int c = 0; c < 10; c++)
+                {
+                    cust[c] = odbiorcy.GetControlFromPosition(c, i).Text.ToString();
+                    // MessageBox.Show(cust[c]);
+                }
+                pdf.DrawCustomer(page, heightRowCust, cust[0], cust[1] + ", " + cust[2] + ", " + cust[3] + ", " + cust[4], cust[5], cust[6], cust[8], cust[7], cust[9]);
+                heightRowCust = heightRowCust + 70;
+                if (litry != null)
+                { litry = litry + Convert.ToUInt16(cust[7]); }
+                else
+                { litry = 0; };
+            }
+            pdf.DrawBody(page, litry);
+            pdf.DrawFooters(page);
+            document.Save(filename);
+            Process.Start(filename);
+        }
+        public void printSender()
+        {
+            string filename = "print.pdf";
+            PdfDocument document = new PdfDocument(); // stworzenie nowego dokumentu
+            PdfPage page = document.AddPage(); // stworzenie nowej strony dokumentu
+            int heightRowCust = 80;
+            int litry = 0;
+            string[] cust = new string[10];
+            print pdf = new print();
+            string data = dateTimePicker1.Text;
+            pdf.DrawHeader(page, data);
+            for (int i = 1; i < odbiorcy.RowCount; i++)
+            {
+                for (int c = 0; c <10; c++)
+                {
+                    cust[c] = odbiorcy.GetControlFromPosition(c, i).Text.ToString();
+                    // MessageBox.Show(cust[c]);
+                }
+                pdf.DrawCustomer(page, heightRowCust, cust[0], cust[1] + ", " + cust[2] + ", " + cust[3] + ", " + cust[4], cust[5], cust[6], cust[8], cust[7], cust[9]);
+                heightRowCust = heightRowCust + 70;
+                if (litry != null)
+                { litry = litry + Convert.ToUInt16(cust[7]); }
+                else
+                { litry = 0; };
+            }
+            pdf.DrawBody(page, litry);
+            pdf.DrawFooters(page);
+            document.Save(filename);
+            Process.Start(filename);
+        }
+
     }
-  
+
 }
 

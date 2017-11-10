@@ -30,6 +30,7 @@ namespace ListPrzewozowy
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.Txt_KTH = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Btn_szukajKTH = new System.Windows.Forms.Button();
@@ -81,6 +82,7 @@ namespace ListPrzewozowy
             this.dataGridView1.Location = new System.Drawing.Point(31, 85);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.RowHeadersWidth = 60;
             this.dataGridView1.Size = new System.Drawing.Size(1384, 172);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
@@ -89,22 +91,23 @@ namespace ListPrzewozowy
             // 
             this.odbiorcy.AutoSize = true;
             this.odbiorcy.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.odbiorcy.ColumnCount = 10;
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 462F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 139F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 84F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 105F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 198F));
+            this.odbiorcy.ColumnCount = 11;
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 436F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 161F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 71F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 188F));
             this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 103F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 306F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 58F));
-            this.odbiorcy.Location = new System.Drawing.Point(31, 278);
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 107F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 106F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 171F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144F));
+            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 83F));
+            this.odbiorcy.Location = new System.Drawing.Point(31, 263);
             this.odbiorcy.Name = "odbiorcy";
             this.odbiorcy.RowCount = 1;
             this.odbiorcy.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.odbiorcy.Size = new System.Drawing.Size(1716, 38);
+            this.odbiorcy.Size = new System.Drawing.Size(1684, 53);
             this.odbiorcy.TabIndex = 4;
             // 
             // button1
@@ -125,7 +128,7 @@ namespace ListPrzewozowy
             this.button2.TabIndex = 6;
             this.button2.Text = "Print";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // button3
             // 
@@ -187,6 +190,7 @@ namespace ListPrzewozowy
             this.Controls.Add(this.Btn_szukajKTH);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Txt_KTH);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "List przewozowy";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
