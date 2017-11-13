@@ -18,6 +18,7 @@ using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using PdfSharp.Drawing.Layout;
+using System.Xml;
 
 namespace ListPrzewozowy
 {
@@ -53,12 +54,10 @@ namespace ListPrzewozowy
 "(Select top 1  case when tekst like '%osw%' then 'Oswiadczenie' else 'Brak' end as Oswiadczenie From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Oswiadczenie " +
 "from kontrahent k where k.nip ='" + nazwa + "'";
             }
-
-            // "where ko.znaczenie=76 and k.nazwa like '%" + nazwa + "%'";
             string keyname = "HKEY_CURRENT_USER\\MARKET\\serwerLokal";
             rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true);
-            SqlConnection connection = new SqlConnection(klucz);
+            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
+            SqlConnection connection = new SqlConnection(klucz); //skopiować gałąź na pozostałe kompy, ta sama co w ZielonyKoszyk
             SqlDataAdapter dataadapter = new SqlDataAdapter(sql, connection);
             DataSet ds = new DataSet();
             connection.Open();
@@ -102,7 +101,10 @@ namespace ListPrzewozowy
                 string miasto = dataGridView1[4, rownumber].Value.ToString();
                 string nip = dataGridView1[5, rownumber].Value.ToString();
                 string telefon = dataGridView1[6, rownumber].Value.ToString();
-                DodajKontrahenta(nazwa, ulica, nrdomu, kod, miasto, nip, telefon, "", "");
+                string pelnomocnictwo = dataGridView1[7, rownumber].Value.ToString();
+                Boolean sent=false;
+                if (pelnomocnictwo == "Pełnomocnictwo") sent = true;
+                DodajKontrahenta(nazwa, ulica, nrdomu, kod, miasto, nip, telefon, "", "",sent);
             }
         }
 
@@ -116,12 +118,13 @@ namespace ListPrzewozowy
             odbiorcy.Controls.Add(new Label() { Text = "Miasto" }, 4, 0);
             odbiorcy.Controls.Add(new Label() { Text = "Nip" }, 5, 0);
             odbiorcy.Controls.Add(new Label() { Text = "Telefon" }, 6, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Ilosc (litry)" }, 7, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Adres rozładunku/Uwagi", AutoSize = true }, 8, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Nasze uwagi" }, 9, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Usun" }, 10, 0);
+            odbiorcy.Controls.Add(new Label() { Text = "Paliwo" }, 7, 0);
+            odbiorcy.Controls.Add(new Label() { Text = "Ilosc (litry)" }, 8, 0);
+            odbiorcy.Controls.Add(new Label() { Text = "Adres rozładunku/Uwagi", AutoSize = true }, 9, 0);
+            odbiorcy.Controls.Add(new Label() { Text = "Nasze uwagi" }, 10, 0);
+            odbiorcy.Controls.Add(new Label() { Text = "Usun" }, 11, 0);
         }
-        private void DodajKontrahenta(string nazwa, string ulica, string nrdomu, string kod, string miasto, string nip, string telefon, string litry, string uwagi)
+        private void DodajKontrahenta(string nazwa, string ulica, string nrdomu, string kod, string miasto, string nip, string telefon, string litry, string uwagi,Boolean sent)
         {
             RowStyle temp = odbiorcy.RowStyles[odbiorcy.RowCount - 1];
             odbiorcy.RowCount++;
@@ -134,30 +137,67 @@ namespace ListPrzewozowy
             odbiorcy.Controls.Add(new Label() { Text = miasto, AutoSize = true }, 4, odbiorcy.RowCount - 1);
             odbiorcy.Controls.Add(new Label() { Text = nip, AutoSize = true }, 5, odbiorcy.RowCount - 1);
             odbiorcy.Controls.Add(new Label() { Text = telefon, AutoSize = true }, 6, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 7, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill, AutoSize = true }, 8, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill, AutoSize = true }, 9, odbiorcy.RowCount - 1);
+            //odbiorcy.Controls.Add(new ComboBox() {Text="aa",  AutoSize = true }, 7, odbiorcy.RowCount - 1);//rodzaj paliwa
+
+            AddNewComboBox();
+            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 8, odbiorcy.RowCount - 1);//litry
+            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill, AutoSize = true }, 9, odbiorcy.RowCount - 1);//UWAGI
+            if (sent==true) odbiorcy.Controls.Add(new TextBox() { Text = "SENT my zamykamy, ", Dock = DockStyle.Fill, AutoSize = true }, 10, odbiorcy.RowCount - 1);//Uwagi;
+            else
+            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill, AutoSize = true }, 10, odbiorcy.RowCount - 1);//Uwagi
 
             Button button = new Button();
             button.Name = (odbiorcy.RowCount).ToString();
             button.Text = "Usun";
             button.Click += new EventHandler(usun_Click);
-            odbiorcy.Controls.Add(button, 10, odbiorcy.RowCount - 1);
+            odbiorcy.Controls.Add(button, 11, odbiorcy.RowCount - 1);
         }
+
+        void item_SelectedIndexChanged(object sender, EventArgs e)
+        {
+          //  MessageBox.Show(((ComboBox)sender).Text);
+        }
+
+        private void AddNewComboBox()
+        {
+            /*  for (int comboIndex = 1; comboIndex < 2; comboIndex++)
+              {
+                  ComboBox combo = new ComboBox();
+                  combo.Items.Add("Olej napędowy");
+                  combo.Items.Add("Olej opałowy");
+                  combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
+                  odbiorcy.Controls.Add(combo,7,odbiorcy.RowCount-1);
+                  */
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load("parametry.xml");
+            XmlNodeList nodeList = xmlDoc.SelectNodes("/Parametry/Paliwo/Wartosc");
+            for (int comboIndex = 1; comboIndex < 2; comboIndex++)
+            {
+                ComboBox combo = new ComboBox();
+                foreach (XmlNode _node in nodeList)
+                {
+                    String nodeVal = _node.InnerText.ToString();
+                    combo.Items.Add(nodeVal.ToString());
+                }
+                combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
+                odbiorcy.Controls.Add(combo, 7, odbiorcy.RowCount - 1);
+            }
+        } //pobiera towary z xml-a
 
         private void button1_Click(object sender, EventArgs e)// Dodaje kontrahenta z ręki
         {
-            DodajKontrahenta("Firma pierwsza sp. z o.o.", "Ciekawa", "14b", "00-456", "Ciechanów", "8440001235", "+48695213456", "2500", "brak uwag");
+            DodajKontrahenta("Firma pierwsza sp. z o.o.", "Ciekawa", "14b", "00-456", "Ciechanów", "8440001235", "+48695213456", "2500", "brak uwag",true);
         }
         private void Button2_Click(object sender, EventArgs e) //button "print generuje PDF z tablelayout"
         {
             printCustomer();
+         //   printSender();
         }
         private void button3_Click(object sender, EventArgs e) //button "test"
         {
-            MessageBox.Show("Nic");
+            printWZ();
         }
-        private void button4_Click(object sender, EventArgs e) //button "remove" na podstawie textboxa 
+        private void button4_Click(object sender, EventArgs e) //button "remove" na podstawie IDrow textboxa 
         {
             // MessageBox.Show(odbiorcy.RowCount.ToString());
             //odbiorcy.RowStyles.RemoveAt(1);
@@ -241,65 +281,105 @@ namespace ListPrzewozowy
         }
         public void printCustomer()
         {
-            string filename = "print.pdf";
-            PdfDocument document = new PdfDocument(); // stworzenie nowego dokumentu
-            PdfPage page = document.AddPage(); // stworzenie nowej strony dokumentu
+            //MessageBox.Show(odbiorcy.GetControlFromPosition(7, 1).Text.ToString());
+            string data = dateTimePicker1.Text;
+            string filename = "wykaz_kierowca_" + data+".pdf";
+            PdfDocument document = new PdfDocument(); 
+            PdfPage page = document.AddPage(); 
             int heightRowCust = 85;
             int litry = 0;
-            string[] cust = new string[10];
+            int numpage = 1;
+            page = document.Pages[numpage-1]; //numpage-1, ponieważ w document numeracja pages jest od 0.
+            string[] cust = new string[11]; //Dane kontrahenta z tablelayout
             print pdf = new print();
-            string data = dateTimePicker1.Text;
             pdf.DrawHeader(page, data);
-            for (int i = 1; i < odbiorcy.RowCount; i++)
+            pdf.DrawFooters(page, numpage);
+            for (int i = 1; i < odbiorcy.RowCount; i++)  //dla wszystkich odbiorców w TL
             {
-                for (int c = 0; c < 10; c++)
+                if (heightRowCust + 55 > page.Height - 30) //Jeżeli koniec strony
                 {
-                    cust[c] = odbiorcy.GetControlFromPosition(c, i).Text.ToString();
-                    // MessageBox.Show(cust[c]);
+                    page = document.AddPage();
+                    numpage++;
+                    page = document.Pages[numpage-1];
+                    heightRowCust = 55;
+                    pdf.DrawFooters(page, numpage);
                 }
-                pdf.DrawCustomer(page, heightRowCust, cust[0], cust[1] + ", " + cust[2] + ", " + cust[3] + ", " + cust[4], cust[5], cust[6], cust[8], cust[7], cust[9]);
-                heightRowCust = heightRowCust + 70;
-                if (litry != null)
-                { litry = litry + Convert.ToUInt16(cust[7]); }
+                for (int c = 0; c < 11; c++)
+                { cust[c] = odbiorcy.GetControlFromPosition(c, i).Text.ToString(); }
+                if ((String.IsNullOrEmpty(cust[8])))
+                { litry = 0; MessageBox.Show("Nie podano litrów"); return; }
                 else
-                { litry = 0; };
+                { litry = litry + Convert.ToUInt16(cust[8]); };
+                pdf.DrawCustomer(page, heightRowCust, cust[0], cust[1] + ", " + cust[2] + ", " + cust[3] + ", " + cust[4], cust[5], cust[6], cust[9], cust[8], "");
+                heightRowCust = heightRowCust + 70; 
             }
+            page = document.Pages[0];
             pdf.DrawBody(page, litry);
-            pdf.DrawFooters(page);
             document.Save(filename);
             Process.Start(filename);
         }
         public void printSender()
         {
-            string filename = "print.pdf";
-            PdfDocument document = new PdfDocument(); // stworzenie nowego dokumentu
-            PdfPage page = document.AddPage(); // stworzenie nowej strony dokumentu
-            int heightRowCust = 80;
+            string data = dateTimePicker1.Text;
+            string filename = "wykaz_wewnetrzny_" + data+".pdf";
+            PdfDocument document = new PdfDocument(); 
+            PdfPage page = document.AddPage(); 
+            int heightRowCust = 85;
             int litry = 0;
+            int numpage = 1;
+            page = document.Pages[numpage-1];
             string[] cust = new string[10];
             print pdf = new print();
-            string data = dateTimePicker1.Text;
             pdf.DrawHeader(page, data);
+            pdf.DrawFooters(page, numpage);
             for (int i = 1; i < odbiorcy.RowCount; i++)
             {
-                for (int c = 0; c <10; c++)
+                if (heightRowCust + 55 > page.Height - 30)
                 {
-                    cust[c] = odbiorcy.GetControlFromPosition(c, i).Text.ToString();
-                    // MessageBox.Show(cust[c]);
+                    page = document.AddPage();
+                    numpage++;
+                    page = document.Pages[numpage-1];
+                    heightRowCust = 55;
+                    pdf.DrawFooters(page, numpage);
                 }
+                for (int c = 0; c < 10; c++)
+                { cust[c] = odbiorcy.GetControlFromPosition(c, i).Text.ToString(); }
+                if ((String.IsNullOrEmpty(cust[7])))
+                { litry = 0; MessageBox.Show("Nie podano litrów"); return; }
+                else
+                { litry = litry + Convert.ToUInt16(cust[7]); };
                 pdf.DrawCustomer(page, heightRowCust, cust[0], cust[1] + ", " + cust[2] + ", " + cust[3] + ", " + cust[4], cust[5], cust[6], cust[8], cust[7], cust[9]);
                 heightRowCust = heightRowCust + 70;
-                if (litry != null)
-                { litry = litry + Convert.ToUInt16(cust[7]); }
-                else
-                { litry = 0; };
             }
+            page = document.Pages[0];
             pdf.DrawBody(page, litry);
-            pdf.DrawFooters(page);
+            document.Save(filename);
+            Process.Start(filename);
+        }
+        public void printWZ()
+        {
+            string filename = "WZ.pdf";
+            //MessageBox.Show(odbiorcy.GetControlFromPosition(7, 1).Text.ToString());
+            //MessageBox.Show(parametry("/Parametry/Uzytkownik/Wartosc"));
+            //select parwartosc from konfig where parnazwa='nazwa1' select parwartosc from konfig where parnazwa='ulica'
+
+            PdfDocument document = new PdfDocument();
+            PdfPage page = document.AddPage();
+            print pdf = new print();
+            pdf.DrawWZName(page, "659/2017");
+            pdf.DrawWZBody(page,"asda","adad","adasd");
+
             document.Save(filename);
             Process.Start(filename);
         }
 
+        public string parametry(string param)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load("parametry.xml");
+            XmlNode dane = xmlDoc.DocumentElement.SelectSingleNode(param);
+            return dane.InnerText;
+        }  //odczytuje gałąź konfiguracji z xml
     }
 
 }
