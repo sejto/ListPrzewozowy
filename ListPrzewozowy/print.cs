@@ -40,6 +40,7 @@ namespace ListPrzewozowy
         public string[] lineour = new string[6];
         public string paliwo="";
         public string ilosc="";
+        public string cenapaliwa = "";
         public string uwagi="";
         public string uwagiN = "";
         public string line1;
@@ -104,7 +105,7 @@ namespace ListPrzewozowy
                 XRect listCust4 = new XRect(posX+10, posYCustomer+35, lenListName, 5);
                 XRect listCust5 = new XRect(posX+10, posYCustomer+45, lenListName, 5);
                 XRect listCust6 = new XRect(posX+10, posYCustomer + 55, lenListName, 5);
-                XRect linesent = new XRect(posX + 10, posYCustomer + 55, lenListName, 5); //ustawić współrzedne
+                XRect linesent = new XRect(posX+10, posYCustomer + 55, lenListName, 5); //ustawić współrzedne
 
                 XRect listCustomerAmount = new XRect(posX+ lenListName, posYCustomer, lenListDischarge, 70);
                 XRect listCustomerRest = new XRect(posX + lenListName + lenListDischarge, posYCustomer, 95, 70);
@@ -217,6 +218,7 @@ namespace ListPrzewozowy
                 XRect JmVal = new XRect(posXWZ1 + 260, BodyPosY1 + newline, 45, 30);
                 XRect WydanaVal = new XRect(posXWZ1 + 305, BodyPosY1 + newline, 75, 30);
                 XRect CenaVal = new XRect(posXWZ1 + 380, BodyPosY1 + newline, 70, 30);
+                XRect TerminVal = new XRect(posXWZ1 + 380, BodyPosY1 + newline, 70, 30);
                 XRect WartoscVal = new XRect(posXWZ1 + 450, BodyPosY1 + newline, 80, 30);
                 newline = newline + newline;
                 for (int t=0; t<2;t++)
@@ -252,17 +254,19 @@ namespace ListPrzewozowy
                 graphics.DrawRectangle(_pen, ZadyspVal);
                 graphics.DrawRectangle(_pen, JmVal);
                 graphics.DrawRectangle(_pen, WydanaVal);
-                graphics.DrawRectangle(_pen, CenaVal);
+                graphics.DrawRectangle(_pen, TerminVal);
                 graphics.DrawRectangle(_pen, WartoscVal);
 
 
                 graphics.DrawString("Lp", _fontProductsHeader, _brush, Lp, XStringFormats.Center);
                 graphics.DrawString("Nazwa towaru", _fontProductsHeader, _brush, NazwaTow, XStringFormats.Center);
-                graphics.DrawString("Ilosc", _fontProductsHeader, _brush, Ilosc, XStringFormats.Center);
+                graphics.DrawString("Ilość", _fontProductsHeader, _brush, Ilosc, XStringFormats.Center);
                 graphics.DrawString("Zadysponowana", _fontProductsHeader, _brush, Zadysp, XStringFormats.Center);
                 graphics.DrawString("j.m.", _fontProductsHeader, _brush, Jm, XStringFormats.Center);
                 graphics.DrawString("Wydana", _fontProductsHeader, _brush, Wydana, XStringFormats.Center);
                 graphics.DrawString("Cena", _fontProductsHeader, _brush, Cena, XStringFormats.Center);
+                graphics.DrawString("Wartość", _fontProductsHeader, _brush, Wartosc, XStringFormats.Center);
+                graphics.DrawString(cenapaliwa, _fontProductsHeader, _brush, CenaVal, XStringFormats.Center);
                 graphics.DrawString(paliwo, _fontWZproduct, _brush, NazwaTowVal, XStringFormats.Center);
                 graphics.DrawString("1", _fontWZproduct, _brush, LpVal, XStringFormats.Center);
                 graphics.DrawString(ilosc, _fontWZproduct, _brush, ZadyspVal, XStringFormats.Center);
@@ -287,8 +291,10 @@ namespace ListPrzewozowy
                 XRect WydalVal = new XRect(230, FooterPosY1 + 30, 80, 30);
                 XRect DataVal = new XRect(310, FooterPosY1 + 30, 80, 30);
                 XRect OdebralVal = new XRect(390, FooterPosY1 + 15, 170, 45);
+                XRect DaneDoPrzelewu1 = new XRect(posXWZ1, FooterPosY1+85, 530, 45);
+                XRect DaneDoPrzelewu2 = new XRect(posXWZ1, FooterPosY1 + 100, 530, 45);
 
-               graphics.DrawRectangle(_pen, XBrushes.LightGray, Wystawil);
+                graphics.DrawRectangle(_pen, XBrushes.LightGray, Wystawil);
                 graphics.DrawRectangle(_pen, XBrushes.LightGray, Zatwierdzil);
                 graphics.DrawRectangle(_pen, XBrushes.LightGray, Ilosci);
                 graphics.DrawRectangle(_pen, XBrushes.LightGray, Wydal);
@@ -299,14 +305,17 @@ namespace ListPrzewozowy
                 graphics.DrawRectangle(_pen, WydalVal);
                 graphics.DrawRectangle(_pen, DataVal);
                 graphics.DrawRectangle(_pen, OdebralVal);
+             //   graphics.DrawRectangle(_pen, DaneDoPrzelewu1);
 
                 graphics.DrawString("Wystawił", _fontProductsHeader, _brush, Wystawil, XStringFormats.Center);
                 graphics.DrawString("Zatwierdził", _fontProductsHeader, _brush, Zatwierdzil, XStringFormats.Center);
                 graphics.DrawString("Wymienione ilości", _fontProductsHeader, _brush, Ilosci, XStringFormats.Center);
-                graphics.DrawString("Wydal", _fontProductsHeader, _brush, Wydal, XStringFormats.Center);
+                graphics.DrawString("Wydał", _fontProductsHeader, _brush, Wydal, XStringFormats.Center);
                 graphics.DrawString("Data", _fontProductsHeader, _brush, Data, XStringFormats.Center);
                 graphics.DrawString("Odebrał", _fontProductsHeader, _brush, Odebral, XStringFormats.Center);
                 graphics.DrawString(wystawil, _fontProductsHeader, _brush, WystawilVal, XStringFormats.Center);
+                graphics.DrawString("Dane do przelewu: "+ lineour[0]+" "+lineour[1]+", "+lineour[2], _fontBold, _brush, DaneDoPrzelewu1, XStringFormats.TopLeft);
+                graphics.DrawString(lineour[5] , _fontBold, _brush, DaneDoPrzelewu2, XStringFormats.TopLeft);
 
                 XPen pen = XPens.LightGray.Clone();
                 pen.DashStyle = XDashStyle.DashDot;
