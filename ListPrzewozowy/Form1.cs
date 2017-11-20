@@ -19,6 +19,7 @@ using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using PdfSharp.Drawing.Layout;
 using System.Xml;
+using System.IO;
 
 namespace ListPrzewozowy
 {
@@ -130,6 +131,7 @@ namespace ListPrzewozowy
             odbiorcy.Controls.Add(new Label() { Text = "Adres dostawy", AutoSize = true }, 11, 0);
             odbiorcy.Controls.Add(new Label() { Text = "Termin" }, 12, 0);
             odbiorcy.Controls.Add(new Label() { Text = "Usun" }, 13, 0);
+            odbiorcy.Controls.Add(new Label() { Text = "SENT" }, 14, 0);
         }
         private void DodajKontrahenta(string nazwa, string ulica, string nrdomu, string kod, string miasto, string nip, string telefon, string litry, string uwagi,Boolean sent)
         {
@@ -147,7 +149,7 @@ namespace ListPrzewozowy
             odbiorcy.Controls.Add(new Label() { Text = telefon }, 6, odbiorcy.RowCount - 1);
             AddComboPaliwo(); //7
             odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 8, odbiorcy.RowCount - 1);//litry
-            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 9, odbiorcy.RowCount - 1);//cena !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 9, odbiorcy.RowCount - 1);//cena
             AddComboPlatnosc(); //10
             odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 11, odbiorcy.RowCount - 1);//UWAGI
             odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill}, 12, odbiorcy.RowCount - 1);//Uwagi
@@ -155,15 +157,7 @@ namespace ListPrzewozowy
             Button button = new Button{Name = (odbiorcy.RowCount).ToString(),Text = "Usun"};
             button.Click += new EventHandler(usun_Click);
             odbiorcy.Controls.Add(button, 13, odbiorcy.RowCount - 1);
-            if (sent == true)
-            {
-                odbiorcy.Controls.Add(new Label() { Text = "SENT my zamykamy"}, 14, odbiorcy.RowCount - 1);
-            }
-            else
-            {
-                odbiorcy.Controls.Add(new Label() { Text = "." }, 14, odbiorcy.RowCount - 1);
-            }
-            Cursor.Current = Cursors.Default;
+            AddComboSENT(); //14
         }
 
         void item_SelectedIndexChanged(object sender, EventArgs e)
@@ -184,7 +178,8 @@ namespace ListPrzewozowy
                     String nodeVal = _node.InnerText.ToString();
                     combo.Items.Add(nodeVal.ToString());
                 }
-              //  combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
+                //  combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
+                combo.SelectedIndex = 0;
                 odbiorcy.Controls.Add(combo, 7, odbiorcy.RowCount - 1);
             }
         } //pobiera towary z xml-a
@@ -196,8 +191,23 @@ namespace ListPrzewozowy
                 combo.Items.Add("Gotówka");
                 combo.Items.Add("Przelew");
                 combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
+                combo.SelectedIndex = 0;
                 odbiorcy.Controls.Add(combo, 10, odbiorcy.RowCount - 1);
             } //Dodaje combo z wyborem płatności
+
+        }
+        private void AddComboSENT()
+        {
+            for (int comboIndex = 1; comboIndex < 2; comboIndex++)
+            {
+                ComboBox combo = new ComboBox();
+                combo.Items.Add("");
+                combo.Items.Add("SENT my zamykamy");
+                combo.Items.Add("SENT oni zamykają");
+                combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
+                combo.SelectedIndex = 0;
+                odbiorcy.Controls.Add(combo, 14, odbiorcy.RowCount - 1);
+            } //Dodaje combo z wyborem SENT
 
         }
         private void Button2_Click(object sender, EventArgs e) //button "print generuje PDF z tablelayout"
@@ -209,6 +219,7 @@ namespace ListPrzewozowy
         {
             //parametryZapisz("/Parametry/NrWZ/Wartosc","30");
             printWZ("3000","olej napedowy","4,35","przelew","3 dni","dostawa:w polu","line1","line2","line3","line4","line5");
+           // printCustomer();
         }
         
         static public bool NIPValidate(string NIPValidate)
@@ -281,11 +292,12 @@ namespace ListPrzewozowy
         {
             //MessageBox.Show(odbiorcy.GetControlFromPosition(7, 1).Text.ToString());
             string data = dateTimePicker1.Text;
-            string filename = "wykaz_kierowca_" + data+".pdf";
+            string filename = "wykaz_" + data+".pdf";
             PdfDocument document = new PdfDocument(); 
             PdfPage page = document.AddPage(); 
             int heightRowCust = 85;
-            int litry = 0;
+            int litryON = 0;
+            int litryOP = 0;
             int numpage = 1;
             page = document.Pages[numpage-1]; //numpage-1, ponieważ w document numeracja pages jest od 0.
             string[] cust = new string[15]; //Dane kontrahenta z tablelayout
@@ -314,15 +326,19 @@ namespace ListPrzewozowy
                 string trzecialinia = cust[1] + ", " + cust[2] + ", " + cust[3] + " " + cust[4];
                 string NIPlinia = cust[5];
                 string tellinia = cust[6];
-                string sentlinia = cust[14];
+                string sentlinia = "";
                 string formaplat = cust[10];
                 string cena = cust[9];
 
-
                 if (String.IsNullOrEmpty(ilosc))
-                { litry = 0; MessageBox.Show("Nie podano litrów"); return; }
+                { litryON = 0; MessageBox.Show("Nie podano litrów"); return; }
                 else
-                { litry = litry + Convert.ToUInt16(ilosc); };
+                {
+                    if (paliwo == "Olej napędowy")
+                    { litryON = litryON + Convert.ToUInt16(ilosc); }
+                    else
+                    { litryOP = litryOP + Convert.ToUInt16(ilosc); }
+                };
                 pdf.DrawCustomer(page, heightRowCust, nazwakontrahenta, trzecialinia, NIPlinia, tellinia, uwagiN, ilosc, sentlinia+", "+cena+"-"+formaplat+","+termin);
                 heightRowCust = heightRowCust + 70;
                 //----------------drukowanie WZ dla każdego kontrahenta---------------
@@ -340,12 +356,15 @@ namespace ListPrzewozowy
                 }
                 else
                     pierwszalinia = nazwakontrahenta;
+                
+                int f = 1;
+                while (File.Exists(filename)) { filename = "wykaz_kierowca_" + data + "_"+f+".pdf";f++; }
                 printWZ(ilosc, paliwo,cena, formaplat,  termin, uwagiN , pierwszalinia, drugalinia,trzecialinia,"Nip:"+NIPlinia,"tel:"+tellinia);
                 //--------------------------------------------------------------------
                 //MessageBox.Show(formaplat + cena);
             }
             page = document.Pages[0];
-            pdf.DrawBody(page, litry);
+            pdf.DrawBody(page, litryON, litryOP);
             document.Save(filename);
             Process.Start(filename);
         }
@@ -376,10 +395,16 @@ namespace ListPrzewozowy
             pdf.line3 = line3;
             pdf.line4 = line4;
             pdf.line5 = line5;
+            if (formaplat == "Przelew") { cena = ""; }
             pdf.cenapaliwa = cena;
-            pdf.DrawWZName(page, num+"/2017", dataWZ);
-            pdf.DrawWZBody(page);
-            pdf.DrawWZFooter(page, parametry("/Parametry/Uzytkownik/Wartosc")); //Nazwisko wystawiającego w polu wystawil
+            pdf.DrawWZName(page, num+"/2017", dataWZ,30);
+            pdf.DrawWZBody(page,106);
+            pdf.DrawWZFooter(page, parametry("/Parametry/Uzytkownik/Wartosc"),226); //Nazwisko wystawiającego w polu wystawil
+            //-------część dolna WZ------------------
+            pdf.DrawWZName(page, num + "/2017", dataWZ, 450);
+            pdf.DrawWZBody(page, 526);
+            pdf.DrawWZFooter(page, parametry("/Parametry/Uzytkownik/Wartosc"), 646); //Nazwisko wystawiającego w polu wystawil
+            //---------------------------------------
             document.Save(filename);
             Process.Start(filename);
             num = ++num ; //następny numer WZ
@@ -401,7 +426,7 @@ namespace ListPrzewozowy
             xmlDoc.Load(file);
             xmlDoc.SelectSingleNode(param).InnerText = val;
             xmlDoc.Save(file);
-        }
+        }  //zapisuje konfigurację do xml
     }
 
 }
