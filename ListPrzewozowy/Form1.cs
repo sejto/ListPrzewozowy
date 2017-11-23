@@ -42,7 +42,7 @@ namespace ListPrzewozowy
         }
         void OnProcessExit(object sender, EventArgs e)
         {
-          //  parametryZapisz("/Parametry/NrWZ/Wartosc", num.ToString());
+            parametry("/Parametry/NrWZ/Wartosc", num.ToString()); //zapamiętanie numeru ostatniej WZ-tki
         }
 
         private void Btn_szukajKTH_Click(object sender, EventArgs e)
@@ -81,6 +81,7 @@ namespace ListPrzewozowy
                 Text = "Wybierz",
                 Name = "Wybor"
             };
+            dataGridView1.RowTemplate.Height = 30; //---tutaj skonczylem-------------------------------------!!!!!!!!!!!!!!!!!
             dataGridView1.Columns.Add(col);
             odbiorcy.Visible = true;
             DataGridViewColumn column = dataGridView1.Columns[0];
@@ -218,8 +219,10 @@ namespace ListPrzewozowy
         private void button3_Click(object sender, EventArgs e) //button "test"
         {
             //parametryZapisz("/Parametry/NrWZ/Wartosc","30");
-            printWZ("3000","olej napedowy","4,35","przelew","3 dni","dostawa:w polu","line1","line2","line3","line4","line5");
-           // printCustomer();
+            // printWZ("3000","olej napedowy","4,35","przelew","3 dni","dostawa:w polu","line1","line2","line3","line4","line5");
+            // printCustomer();
+            //SENT100();
+            drawSENTawaria();
         }
         
         static public bool NIPValidate(string NIPValidate)
@@ -290,6 +293,7 @@ namespace ListPrzewozowy
         }
         public void printCustomer()
         {
+            num = Convert.ToInt32(WZtxt.Text);
             //MessageBox.Show(odbiorcy.GetControlFromPosition(7, 1).Text.ToString());
             string data = dateTimePicker1.Text;
             string filename = "wykaz_" + data+".pdf";
@@ -327,6 +331,7 @@ namespace ListPrzewozowy
                 string NIPlinia = cust[5];
                 string tellinia = cust[6];
                 string sentlinia = "";
+                if (cust[14].Length > 1) { sentlinia = cust[14]; }
                 string formaplat = cust[10];
                 string cena = cust[9];
 
@@ -359,7 +364,7 @@ namespace ListPrzewozowy
                 
                 int f = 1;
                 while (File.Exists(filename)) { filename = "wykaz_kierowca_" + data + "_"+f+".pdf";f++; }
-                printWZ(ilosc, paliwo,cena, formaplat,  termin, uwagiN , pierwszalinia, drugalinia,trzecialinia,"Nip:"+NIPlinia,"tel:"+tellinia);
+                printWZ(ilosc, paliwo,cena, formaplat,  termin, uwagiN , pierwszalinia, drugalinia,trzecialinia,"NIP:"+NIPlinia,"tel:"+tellinia);
                 //--------------------------------------------------------------------
                 //MessageBox.Show(formaplat + cena);
             }
@@ -370,7 +375,7 @@ namespace ListPrzewozowy
         }
         public void printWZ(string ilosc, string paliwo,string cena,string formaplat, string termin, string uwagiN, string line1, string line2, string line3, string line4, string line5)
         {
-            num = Convert.ToInt32(WZtxt.Text);
+           
             string filename = "WZ_"+num+".pdf";
             //MessageBox.Show(odbiorcy.GetControlFromPosition(7, 1).Text.ToString());
             PdfDocument document = new PdfDocument();
@@ -408,8 +413,8 @@ namespace ListPrzewozowy
             document.Save(filename);
             Process.Start(filename);
             num = ++num ; //następny numer WZ
-            WZtxt.Text = num.ToString(); //aktualizacja textboxa
-            parametry("/Parametry/NrWZ/Wartosc", num.ToString()); //zapamiętanie numeru ostatniej WZ-tki
+//            WZtxt.Text = num.ToString(); //aktualizacja textboxa
+            //parametry("/Parametry/NrWZ/Wartosc", num.ToString()); //zapamiętanie numeru ostatniej WZ-tki
         }
 
         public string parametry(string param)
@@ -427,6 +432,47 @@ namespace ListPrzewozowy
             xmlDoc.SelectSingleNode(param).InnerText = val;
             xmlDoc.Save(file);
         }  //zapisuje konfigurację do xml
+
+        public void SENT100()
+        {
+            TraderAddress Sender = new TraderAddress();
+            Sender.City = "Wypierdek Mamuci";
+            TraderInfo Trader = new TraderInfo();
+            Trader.TraderIdentityNumber = "84422233388";
+
+            ZapiszSENT("/ns2:SENT_100/ns2:GoodsSender/TraderInfo/TraderIdentityNumber", "345353535");
+        }
+        public void ZapiszSENT(string param, string val)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(file);
+            xmlDoc.SelectSingleNode(param).InnerText = val;
+            xmlDoc.Save(file);
+        }  //zapisuje SENT
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string appPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+            Process.Start("explorer.exe", appPath);
+        }  //pokaż folder z dokumentami pdf
+
+        private void drawSENTawaria()
+        {
+            
+            string filename = "SENT_awaria_WZ_" + num + ".pdf";
+            PdfDocument document = new PdfDocument();
+            PdfPage page = document.AddPage();
+            SentAwaria awaria = new SentAwaria();
+            awaria.OwnNumber = "12312313/2017";
+
+            awaria.DrawPage1(page);
+            page = document.AddPage();
+            awaria.DrawPage2(page);
+            //MessageBox.Show("Height: "+page.Height+", Width: "+page.Width);
+
+            document.Save(filename);
+            Process.Start(filename);
+        }
     }
 
 }

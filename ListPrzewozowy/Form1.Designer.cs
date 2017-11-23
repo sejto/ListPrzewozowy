@@ -44,6 +44,7 @@ namespace ListPrzewozowy
             this.label3 = new System.Windows.Forms.Label();
             this.WZtxt = new System.Windows.Forms.TextBox();
             this.odbiorcy = new System.Windows.Forms.TableLayoutPanel();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,7 +91,7 @@ namespace ListPrzewozowy
             // 
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(1086, 38);
+            this.button2.Location = new System.Drawing.Point(986, 33);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(92, 35);
             this.button2.TabIndex = 6;
@@ -113,7 +114,7 @@ namespace ListPrzewozowy
             // 
             this.dateTimePicker1.Location = new System.Drawing.Point(584, 48);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.Size = new System.Drawing.Size(145, 20);
             this.dateTimePicker1.TabIndex = 8;
             // 
             // label2
@@ -128,7 +129,7 @@ namespace ListPrzewozowy
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(848, 52);
+            this.label3.Location = new System.Drawing.Point(772, 51);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(102, 13);
             this.label3.TabIndex = 12;
@@ -136,7 +137,7 @@ namespace ListPrzewozowy
             // 
             // WZtxt
             // 
-            this.WZtxt.Location = new System.Drawing.Point(956, 49);
+            this.WZtxt.Location = new System.Drawing.Point(880, 48);
             this.WZtxt.Name = "WZtxt";
             this.WZtxt.Size = new System.Drawing.Size(58, 20);
             this.WZtxt.TabIndex = 13;
@@ -165,15 +166,29 @@ namespace ListPrzewozowy
             this.odbiorcy.MaximumSize = new System.Drawing.Size(1384, 0);
             this.odbiorcy.Name = "odbiorcy";
             this.odbiorcy.RowCount = 1;
-            this.odbiorcy.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
-            this.odbiorcy.Size = new System.Drawing.Size(1384, 33);
+            this.odbiorcy.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.odbiorcy.Size = new System.Drawing.Size(1384, 34);
             this.odbiorcy.TabIndex = 4;
+            // 
+            // button1
+            // 
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(1123, 34);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(94, 34);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "Otwórz";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1434, 648);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.WZtxt);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -209,6 +224,7 @@ namespace ListPrzewozowy
         private Label label3;
         private TextBox WZtxt;
         private TableLayoutPanel odbiorcy;
+        private Button button1;
     }
 }
 

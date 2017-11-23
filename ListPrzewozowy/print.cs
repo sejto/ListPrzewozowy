@@ -20,7 +20,7 @@ namespace ListPrzewozowy
         private static readonly XFont _fontInvoiceType = new XFont("Arial", 12, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static readonly XFont _fontDates = new XFont("Arial", 10, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static readonly XFont _fontProductsHeader = new XFont("Arial", 8, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontWZproduct = new XFont("Arial", 11, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont _fontWZproduct = new XFont("Arial", 8, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static readonly XFont _fontSubtitle = new XFont("Arial", 6, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static double posX = 30;
         private static double lenListName = 360;
@@ -126,7 +126,7 @@ namespace ListPrzewozowy
 
                 graphics.DrawString(line1, _fontProductsHeader, _brush, listCust1, XStringFormats.TopLeft  );
                 graphics.DrawString(line2, _fontNormal, _brush, listCust2, XStringFormats.TopLeft);
-                graphics.DrawString("Nip: "+line3, _fontNormal, _brush, listCust3, XStringFormats.TopLeft);
+                graphics.DrawString("NIP: "+line3, _fontNormal, _brush, listCust3, XStringFormats.TopLeft);
                 graphics.DrawString("Tel: "+line4, _fontNormal, _brush, listCust4, XStringFormats.TopLeft);
                 graphics.DrawString("UWAGI: "+line5, _fontBold, _brush, listCust5, XStringFormats.TopLeft);
                 graphics.DrawString("Uwagi: " + line6, _fontNormal, _brush, listCust6, XStringFormats.TopLeft);
@@ -281,7 +281,7 @@ namespace ListPrzewozowy
                 graphics.DrawString("1", _fontWZproduct, _brush, LpVal, XStringFormats.Center);
                 graphics.DrawString(ilosc, _fontWZproduct, _brush, ZadyspVal, XStringFormats.Center);
                 graphics.DrawString("l", _fontWZproduct, _brush, JmVal, XStringFormats.Center);
-                graphics.DrawString("Sent", _fontWZproduct, _brush, Sent, XStringFormats.Center);
+                graphics.DrawString("SENT", _fontWZproduct, _brush, Sent, XStringFormats.Center);
                 graphics.DrawString(uwagi, _fontProductsHeader, _brush, Uwagi, XStringFormats.Center);
             }
         } //Drukuje zawartość WZ
