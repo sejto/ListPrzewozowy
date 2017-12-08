@@ -126,7 +126,7 @@ namespace ListPrzewozowy
 
                 graphics.DrawString(line1, _fontProductsHeader, _brush, listCust1, XStringFormats.TopLeft  );
                 graphics.DrawString(line2, _fontNormal, _brush, listCust2, XStringFormats.TopLeft);
-                graphics.DrawString("NIP: "+line3, _fontNormal, _brush, listCust3, XStringFormats.TopLeft);
+                graphics.DrawString("NIP/PESEL: "+line3, _fontNormal, _brush, listCust3, XStringFormats.TopLeft);
                 graphics.DrawString("Tel: "+line4, _fontNormal, _brush, listCust4, XStringFormats.TopLeft);
                 graphics.DrawString("UWAGI: "+line5, _fontBold, _brush, listCust5, XStringFormats.TopLeft);
                 graphics.DrawString("Uwagi: " + line6, _fontNormal, _brush, listCust6, XStringFormats.TopLeft);
@@ -148,7 +148,7 @@ namespace ListPrzewozowy
                     formatFar.Alignment = XStringAlignment.Far;
 
                     graphics.DrawString("Strona "+ numpage, _fontSubtitle, _brush, rectFooter, formatFar);
-                    graphics.DrawString("List przewozowy v1.0 @sejto.pl", _fontSubtitle, _brush, rectFooter, formatNear);
+                    graphics.DrawString("List przewozowy v1.1 @sejto.pl", _fontSubtitle, _brush, rectFooter, formatNear);
                 }
         }
 
@@ -332,7 +332,7 @@ namespace ListPrzewozowy
                 graphics.DrawLine(pen, new XPoint(30, page.Height / 2), new XPoint(page.Width - 30.75, page.Height / 2));
             }
             
-        } //Dokończyć rysowanie stopki WZ
+        } 
     }
 
 }
