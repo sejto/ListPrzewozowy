@@ -16,6 +16,7 @@ namespace ListPrzewozowy
         private static readonly XFont _fontNormal = new XFont("Arial", 9, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static readonly XFont _fontWZ = new XFont("Arial", 11, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static readonly XFont _fontBold = new XFont("Arial", 10, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont _fontAmount = new XFont("Arial", 9, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static readonly XFont _fontHeader = new XFont("Arial", 14, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static readonly XFont _fontInvoiceType = new XFont("Arial", 12, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static readonly XFont _fontDates = new XFont("Arial", 10, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
@@ -68,7 +69,7 @@ namespace ListPrzewozowy
                 graphics.DrawString(SaleDate, _fontHeader, _brush, listDate, XStringFormats.Center);
             }
         }
-        public void DrawBody(PdfPage page, int litryON, int litryOP)
+        public void DrawBody(PdfPage page, int litryON, int litryONA, int litryOP)
         {
             using (XGraphics graphics = XGraphics.FromPdfPage(page))
             {
@@ -76,9 +77,10 @@ namespace ListPrzewozowy
                 XRect listName1 = new XRect(posX, posYBody+5, lenListName, 10);
                 XRect listName2 = new XRect(posX, posYBody+15, lenListName, 10); 
                 XRect listAmountH = new XRect(posX+ lenListName, posYBody, 170, 15);
-                XRect listAmountHON = new XRect(posX + lenListName, posYBody, 35, 15);
-                XRect listAmountON = new XRect(posX + lenListName+20, posYBody, 85, 15);
-                XRect listAmountOP = new XRect(posX + lenListName + 85, posYBody, 85, 15);
+                XRect listAmountHON = new XRect(posX + lenListName-5, posYBody, 35, 15);
+                XRect listAmountON = new XRect(posX + lenListName+5, posYBody, 85, 15);
+                XRect listAmountONA = new XRect(posX + lenListName + 55, posYBody, 85, 15);
+                XRect listAmountOP = new XRect(posX + lenListName + 105, posYBody, 85, 15);
 
                 XRect listOrdered = new XRect(posX + lenListName, posYBody + 15, 55, 15);
                 XRect listDischarge = new XRect(posX + lenListName+55, posYBody+15, 58, 15);
@@ -93,8 +95,9 @@ namespace ListPrzewozowy
                 graphics.DrawString("Nazwa i adres odbiorcy", _fontNormal, _brush, listName1, XStringFormats.Center);
                 graphics.DrawString("(miejsce rozładunku)", _fontNormal, _brush, listName2, XStringFormats.Center);
                 graphics.DrawString("Ilość", _fontBold, _brush, listAmountHON, XStringFormats.Center);
-                graphics.DrawString("ON: "+litryON, _fontInvoiceType, _brush, listAmountON, XStringFormats.Center);
-                graphics.DrawString("OP: " + litryOP, _fontInvoiceType, _brush, listAmountOP, XStringFormats.Center);
+                graphics.DrawString("ON: "+litryON, _fontAmount, _brush, listAmountON, XStringFormats.Center);
+                graphics.DrawString("ONA: " + litryONA, _fontAmount, _brush, listAmountONA, XStringFormats.Center);
+                graphics.DrawString("OP: " + litryOP, _fontAmount, _brush, listAmountOP, XStringFormats.Center);
                 graphics.DrawString("Zamówione", _fontNormal, _brush, listOrdered, XStringFormats.Center);
                 graphics.DrawString("Rozładowane", _fontNormal, _brush, listDischarge, XStringFormats.Center);
                 graphics.DrawString("Pozostało", _fontNormal, _brush, listRest, XStringFormats.Center);
@@ -202,7 +205,7 @@ namespace ListPrzewozowy
             }
         }
 
-        public void DrawWZBody(PdfPage page, double BodyPosY1)
+        public void DrawWZBody(PdfPage page, double BodyPosY1, Boolean sentval)
         {
             using (XGraphics graphics = XGraphics.FromPdfPage(page))
             {
@@ -281,7 +284,10 @@ namespace ListPrzewozowy
                 graphics.DrawString("1", _fontWZproduct, _brush, LpVal, XStringFormats.Center);
                 graphics.DrawString(ilosc, _fontWZproduct, _brush, ZadyspVal, XStringFormats.Center);
                 graphics.DrawString("l", _fontWZproduct, _brush, JmVal, XStringFormats.Center);
-                graphics.DrawString("SENT", _fontWZproduct, _brush, Sent, XStringFormats.Center);
+                if (sentval)
+                    graphics.DrawString("SENT", _fontWZproduct, _brush, Sent, XStringFormats.Center);
+                else
+                    graphics.DrawString("", _fontWZproduct, _brush, Sent, XStringFormats.Center);
                 graphics.DrawString(uwagi, _fontProductsHeader, _brush, Uwagi, XStringFormats.Center);
             }
         } //Drukuje zawartość WZ

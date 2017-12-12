@@ -2,12 +2,20 @@ create database ListPrzewozowy
 go
 
 
+CREATE TABLE [dbo].[Dok](
+	[ID] int IDENTITY(1,1) primary key,
+	[Data] [varchar](10) NOT NULL)
+
+------------------
+CREATE TABLE [dbo].[Paliwo](
+	[PaliwoID] [int] NOT NULL,
+	[PaliwoNazwa][varchar](30))
+-----------
+
 CREATE TABLE [dbo].[List](
 	[ID] int IDENTITY(1,1) primary key,
-	[Data] [varchar](10) NOT NULL,
 	[KontrId] [numeric](9,0) NOT NULL,
-	[KontrNazwa] [varchar](120) NULL,
-	[Paliwo] [varchar](45) NOT NULL,
+	[PaliwoID] [int] NOT NULL,
 	[Ilosc] [int] NOT NULL,
 	[Cena][varchar](6) NULL,
 	[FormaPlat][varchar](8) NULL,
@@ -28,6 +36,8 @@ CREATE TABLE [dbo].[List](
 
 
 --drop table [List]
+--drop table [Dok]
+--drop table [Paliwo]
 ---------------------------------------------------------
 
 --Temp Table: 

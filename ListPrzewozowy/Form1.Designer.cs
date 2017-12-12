@@ -43,29 +43,15 @@ namespace ListPrzewozowy
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.WZtxt = new System.Windows.Forms.TextBox();
-            this.odbiorcy = new System.Windows.Forms.TableLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
-            this.test_btn = new System.Windows.Forms.Button();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column15 = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.button5 = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.New_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // Txt_KTH
@@ -87,16 +73,21 @@ namespace ListPrzewozowy
             // 
             // Btn_szukajKTH
             // 
-            this.Btn_szukajKTH.Location = new System.Drawing.Point(368, 45);
+            this.Btn_szukajKTH.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Btn_szukajKTH.Image = ((System.Drawing.Image)(resources.GetObject("Btn_szukajKTH.Image")));
+            this.Btn_szukajKTH.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_szukajKTH.Location = new System.Drawing.Point(368, 30);
             this.Btn_szukajKTH.Name = "Btn_szukajKTH";
-            this.Btn_szukajKTH.Size = new System.Drawing.Size(75, 23);
+            this.Btn_szukajKTH.Size = new System.Drawing.Size(96, 38);
             this.Btn_szukajKTH.TabIndex = 2;
             this.Btn_szukajKTH.Text = "Szukaj";
+            this.Btn_szukajKTH.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Btn_szukajKTH.UseVisualStyleBackColor = true;
             this.Btn_szukajKTH.Click += new System.EventHandler(this.Btn_szukajKTH_Click);
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(31, 85);
@@ -111,7 +102,7 @@ namespace ListPrzewozowy
             // 
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(805, 32);
+            this.button2.Location = new System.Drawing.Point(664, 37);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(93, 39);
             this.button2.TabIndex = 6;
@@ -124,7 +115,7 @@ namespace ListPrzewozowy
             // 
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(920, 34);
+            this.button3.Location = new System.Drawing.Point(1150, 7);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(93, 37);
             this.button3.TabIndex = 7;
@@ -135,7 +126,7 @@ namespace ListPrzewozowy
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(523, 12);
+            this.dateTimePicker1.Location = new System.Drawing.Point(57, 44);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(145, 20);
             this.dateTimePicker1.TabIndex = 8;
@@ -143,7 +134,7 @@ namespace ListPrzewozowy
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(484, 19);
+            this.label2.Location = new System.Drawing.Point(18, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 9;
@@ -152,7 +143,7 @@ namespace ListPrzewozowy
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(503, 54);
+            this.label3.Location = new System.Drawing.Point(241, 50);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(102, 13);
             this.label3.TabIndex = 12;
@@ -160,36 +151,10 @@ namespace ListPrzewozowy
             // 
             // WZtxt
             // 
-            this.WZtxt.Location = new System.Drawing.Point(611, 51);
+            this.WZtxt.Location = new System.Drawing.Point(349, 47);
             this.WZtxt.Name = "WZtxt";
             this.WZtxt.Size = new System.Drawing.Size(58, 20);
             this.WZtxt.TabIndex = 13;
-            // 
-            // odbiorcy
-            // 
-            this.odbiorcy.AutoSize = true;
-            this.odbiorcy.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.odbiorcy.ColumnCount = 13;
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.91232F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.990494F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.737826F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.732554F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.714716F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 9.510814F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.228819F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.143187F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.816647F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.841674F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.010008F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.99845F));
-            this.odbiorcy.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.362485F));
-            this.odbiorcy.Location = new System.Drawing.Point(31, 296);
-            this.odbiorcy.MaximumSize = new System.Drawing.Size(1384, 0);
-            this.odbiorcy.Name = "odbiorcy";
-            this.odbiorcy.RowCount = 1;
-            this.odbiorcy.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-            this.odbiorcy.Size = new System.Drawing.Size(1384, 54);
-            this.odbiorcy.TabIndex = 4;
             // 
             // button1
             // 
@@ -204,21 +169,11 @@ namespace ListPrzewozowy
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label4.Location = new System.Drawing.Point(113, 270);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(118, 16);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "Wykaz odbiorców:";
-            // 
             // button4
             // 
             this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
             this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.Location = new System.Drawing.Point(690, 32);
+            this.button4.Location = new System.Drawing.Point(549, 37);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(93, 39);
             this.button4.TabIndex = 17;
@@ -226,139 +181,65 @@ namespace ListPrzewozowy
             this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button4.UseVisualStyleBackColor = true;
             // 
-            // test_btn
+            // dataGridView3
             // 
-            this.test_btn.Location = new System.Drawing.Point(1148, 48);
-            this.test_btn.Name = "test_btn";
-            this.test_btn.Size = new System.Drawing.Size(75, 23);
-            this.test_btn.TabIndex = 18;
-            this.test_btn.Text = "test";
-            this.test_btn.UseVisualStyleBackColor = true;
-            this.test_btn.Click += new System.EventHandler(this.test_btn_Click);
+            this.dataGridView3.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
+            this.dataGridView3.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView3.GridColor = System.Drawing.SystemColors.AppWorkspace;
+            this.dataGridView3.Location = new System.Drawing.Point(0, 88);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.Size = new System.Drawing.Size(1392, 258);
+            this.dataGridView3.TabIndex = 20;
             // 
-            // dataGridView2
+            // button5
             // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3,
-            this.Column8,
-            this.Column9,
-            this.Column6,
-            this.Column10,
-            this.Column7,
-            this.Column11,
-            this.Column12,
-            this.Column13,
-            this.Column14,
-            this.Column4,
-            this.Column5,
-            this.Column15});
-            this.dataGridView2.Location = new System.Drawing.Point(31, 409);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.RowHeadersVisible = false;
-            this.dataGridView2.Size = new System.Drawing.Size(1384, 131);
-            this.dataGridView2.TabIndex = 19;
+            this.button5.Location = new System.Drawing.Point(998, 44);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 21;
+            this.button5.Text = "test_2";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // Column1
+            // groupBox1
             // 
-            this.Column1.HeaderText = "Nazwa";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 180;
+            this.groupBox1.Controls.Add(this.New_btn);
+            this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.dataGridView3);
+            this.groupBox1.Controls.Add(this.dateTimePicker1);
+            this.groupBox1.Controls.Add(this.button4);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.WZtxt);
+            this.groupBox1.Location = new System.Drawing.Point(31, 296);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(1392, 352);
+            this.groupBox1.TabIndex = 22;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Wykaz odbiorców:";
             // 
-            // Column2
+            // New_btn
             // 
-            this.Column2.HeaderText = "Ulica";
-            this.Column2.Name = "Column2";
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Miasto";
-            this.Column3.Name = "Column3";
-            // 
-            // Column8
-            // 
-            this.Column8.HeaderText = "NIP";
-            this.Column8.Name = "Column8";
-            this.Column8.Width = 50;
-            // 
-            // Column9
-            // 
-            this.Column9.HeaderText = "Telefon";
-            this.Column9.Name = "Column9";
-            this.Column9.Width = 60;
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "Paliwo";
-            this.Column6.Name = "Column6";
-            // 
-            // Column10
-            // 
-            this.Column10.HeaderText = "Ilość";
-            this.Column10.Name = "Column10";
-            this.Column10.Width = 70;
-            // 
-            // Column7
-            // 
-            this.Column7.HeaderText = "Cena";
-            this.Column7.Name = "Column7";
-            this.Column7.Width = 70;
-            // 
-            // Column11
-            // 
-            this.Column11.HeaderText = "forma_płatn";
-            this.Column11.Name = "Column11";
-            // 
-            // Column12
-            // 
-            this.Column12.HeaderText = "Termin";
-            this.Column12.Name = "Column12";
-            this.Column12.Width = 60;
-            // 
-            // Column13
-            // 
-            this.Column13.HeaderText = "Sent";
-            this.Column13.Name = "Column13";
-            // 
-            // Column14
-            // 
-            this.Column14.HeaderText = "Dost_ulica";
-            this.Column14.Name = "Column14";
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Ulica";
-            this.Column4.Name = "Column4";
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "Miasto";
-            this.Column5.Name = "Column5";
-            // 
-            // Column15
-            // 
-            this.Column15.HeaderText = "Usuń";
-            this.Column15.Name = "Column15";
+            this.New_btn.Image = ((System.Drawing.Image)(resources.GetObject("New_btn.Image")));
+            this.New_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.New_btn.Location = new System.Drawing.Point(787, 37);
+            this.New_btn.Name = "New_btn";
+            this.New_btn.Size = new System.Drawing.Size(92, 39);
+            this.New_btn.TabIndex = 0;
+            this.New_btn.Text = "Nowa lista";
+            this.New_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.New_btn.Click += new System.EventHandler(this.New_btn_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1434, 648);
-            this.Controls.Add(this.dataGridView2);
-            this.Controls.Add(this.test_btn);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.label4);
+            this.ClientSize = new System.Drawing.Size(1435, 671);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.WZtxt);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.odbiorcy);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.Btn_szukajKTH);
             this.Controls.Add(this.label1);
@@ -366,8 +247,11 @@ namespace ListPrzewozowy
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "List przewozowy";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,27 +271,12 @@ namespace ListPrzewozowy
         private System.Windows.Forms.Label label2;
         private Label label3;
         private TextBox WZtxt;
-        private TableLayoutPanel odbiorcy;
         private Button button1;
-        private Label label4;
         private Button button4;
-        private Button test_btn;
-        private DataGridView dataGridView2;
-        private DataGridViewTextBoxColumn Column1;
-        private DataGridViewTextBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column3;
-        private DataGridViewTextBoxColumn Column8;
-        private DataGridViewTextBoxColumn Column9;
-        private DataGridViewTextBoxColumn Column6;
-        private DataGridViewTextBoxColumn Column10;
-        private DataGridViewTextBoxColumn Column7;
-        private DataGridViewTextBoxColumn Column11;
-        private DataGridViewTextBoxColumn Column12;
-        private DataGridViewTextBoxColumn Column13;
-        private DataGridViewTextBoxColumn Column14;
-        private DataGridViewTextBoxColumn Column4;
-        private DataGridViewTextBoxColumn Column5;
-        private DataGridViewButtonColumn Column15;
+        private DataGridView dataGridView3;
+        private Button button5;
+        private GroupBox groupBox1;
+        private Button New_btn;
     }
 }
 

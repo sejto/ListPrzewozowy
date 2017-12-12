@@ -115,7 +115,7 @@ namespace ListPrzewozowy
             Form1.KontrahentDane[7] = Form1.telefon;
             */
 
-            if (string.IsNullOrWhiteSpace(TowarBox.Text)) { Form1.KontrahentDane[8] = " "; } else
+      /*      if (string.IsNullOrWhiteSpace(TowarBox.Text)) { Form1.KontrahentDane[8] = " "; } else
             { Form1.KontrahentDane[8] = TowarBox.Text; }
             if (string.IsNullOrWhiteSpace(IloscBox.Text)) { Form1.KontrahentDane[9] = " "; } else
             { Form1.KontrahentDane[9] = IloscBox.Text; }
@@ -136,23 +136,33 @@ namespace ListPrzewozowy
             { Form1.KontrahentDane[16] = MiejscowoscBox.Text; }
             if (string.IsNullOrWhiteSpace(KodBox.Text)) { Form1.KontrahentDane[17] = " "; } else
             { Form1.KontrahentDane[17] = KodBox.Text; }
+            
 
           //  string dataWZ = dateTimePicker1.Value.Date.ToString("dd.MM.yyyy");
             Form1.KontrahentDane[18] = dateTimePicker1.Value.Date.ToString("dd.MM.yyyy");
             Form1.KontrahentDane[19] = dateTimePicker2.Value.Date.ToString("dd.MM.yyyy");
             Form1.KontrahentDane[20] = dateTimePicker3.Value.Date.ToString("dd.MM.yyyy");
-
+            */
 
             string DataPlanRozp = dateTimePicker1.Value.Date.ToString("dd.MM.yyyy");
             string DataRozp= dateTimePicker2.Value.Date.ToString("dd.MM.yyyy");
             string DataPlanZak= dateTimePicker3.Value.Date.ToString("dd.MM.yyyy");
+            int ilosc=0;
+            if (String.IsNullOrEmpty(IloscBox.Text))
+            { ilosc = 0; MessageBox.Show("Nie podano litrów"); return; }
+            else
+            { if (!Int32.TryParse(IloscBox.Text, out ilosc)) 
+                { MessageBox.Show("Błędna ilość"); return; }
+            else
+           { ilosc = Convert.ToInt32(IloscBox.Text); }
+            }
             Form1.FirmLista.Add(new DaneFirmy
-                (Form1.data, Convert.ToInt32(Form1.KontrID),KontrNazwa,KontrUlica, KontrNrDomu, KontrKod, KontrMiasto,KontrTelefon,KontrNip, TowarBox.Text, Convert.ToInt32(IloscBox.Text),
+                (Form1.data, Convert.ToInt32(Form1.KontrID),KontrNazwa,KontrUlica, KontrNrDomu, KontrKod, KontrMiasto,KontrTelefon,KontrNip, TowarBox.Text, ilosc,
                 CenaBox.Text,FormaPlatBox.Text,TerminBox.Text,SentBox.Text,UlicaBox.Text,NrDomuBox.Text,MiejscowoscBox.Text,KodBox.Text,MiejscowoscBox.Text,
                 "PL",DataPlanRozp,DataRozp,DataPlanZak,"", nrWZ));
 
             Close();
-        //    OnRunMethod();//wywołuje funkcję WczytajDane z form1 za pomocą delegata
+            OnRunMethod();//wywołuje funkcję WczytajDane z form1 za pomocą delegata
         }  //przycisk Zapisz
 
         private void SentBox_SelectedIndexChanged(object sender, EventArgs e)

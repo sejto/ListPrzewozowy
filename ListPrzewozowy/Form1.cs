@@ -36,10 +36,6 @@ namespace ListPrzewozowy
         public static string nrdomu;
         public static string kod;
         public static string miasto;
-     /*   public static string DostarczUlica;
-        public static string DostarczNrdomu;
-        public static string DostarczMiasto;
-        public static string DostarczKod; */
         public static string nip;
         public static string telefon;
         public static string[] KontrahentDane = new string[21];
@@ -50,22 +46,18 @@ namespace ListPrzewozowy
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
-            Createtable();
-            odbiorcy.Visible = false;
+            CreateDGV();
             string[] kontr;
             kontr = new string[5];
             print pdf = new print();
             WZtxt.Text=parametry("/Parametry/NrWZ/Wartosc");
             nrwz = Convert.ToInt32(WZtxt.Text);
-
-            //----testy array-----------------------
         }
 
         void OnProcessExit(object sender, EventArgs e)
         {
             parametry("/Parametry/NrWZ/Wartosc", nrwz.ToString()); //zapamiętanie numeru ostatniej WZ-tki
         }
-
 
         private void Btn_szukajKTH_Click(object sender, EventArgs e)
         {
@@ -104,7 +96,7 @@ namespace ListPrzewozowy
                 Name = "Wybor"
             };
             dataGridView1.Columns.Add(col);
-            odbiorcy.Visible = true;
+            //odbiorcy.Visible = true;
             DataGridViewColumn columnNazwa = dataGridView1.Columns[1];
             DataGridViewColumn columnID = dataGridView1.Columns[0];
             columnNazwa.Width = 350;
@@ -149,8 +141,8 @@ namespace ListPrzewozowy
                     MessageBox.Show("Tu będzie wczytywanie listu z bazy SQL.");
                 }
             }
-            
-        } //Wyswietl Form_Kontrahent a następnie dodaj kontrahenta do listy i wyświetl TLP
+
+        } //Wyswietl Form_Kontrahent a następnie dodaj kontrahenta do zmiennej FirmLista oraz wyświetl ją w DGV
         private void ZapiszDoBazy()
         {
             data = dateTimePicker1.Value.Date.ToString("dd.MM.yyyy");
@@ -171,108 +163,55 @@ namespace ListPrzewozowy
                 conn.Close();
             }
         }
+        public void CreateDGV()
+                {
+                    dataGridView3.CellClick += dataGridView3_CellClick;
+                    dataGridView3.RowHeadersVisible = false;
+                    dataGridView3.Columns.Add("Column", "Nazwa");
+                    dataGridView3.Columns[0].Width = 180;
+                    dataGridView3.Columns.Add("Column", "Ulica");
+                    dataGridView3.Columns[1].Width = 120;
+                    dataGridView3.Columns.Add("Column", "Miasto");
+                    dataGridView3.Columns[2].Width = 100;
+                    dataGridView3.Columns.Add("Column", "Nip");
+                    dataGridView3.Columns[3].Width = 80;
+                    dataGridView3.Columns.Add("Column", "Telefon");
+                    dataGridView3.Columns[4].Width = 80;
+                    dataGridView3.Columns.Add("Column", "Paliwo");
+                    dataGridView3.Columns.Add("Column", "Ilość");
+                    dataGridView3.Columns[6].Width = 60;
+                    dataGridView3.Columns.Add("Column", "Cena");
+                    dataGridView3.Columns[7].Width = 60;
+                    dataGridView3.Columns.Add("Column", "Forma płat");
+                    dataGridView3.Columns.Add("Column", "Termin");
+                    dataGridView3.Columns.Add("Column", "Sent");
+                    dataGridView3.Columns.Add("Column", "Miejsce dostarcz");
+                    dataGridView3.Columns[11].Width = 200;
 
-   /*     private void DodajKontrahentList(int rownumber,string nazwa, string ulica, string nrdomu, string kod, string miasto, string nip, string telefon)
-        {
-            FirmLista.Add(new DaneFirmy(rownumber, nazwa, ulica, nrdomu));
-        }
-        */
-
-        public void Createtable()
-        {
-              // TableLayoutPanel odbiorcy = new TableLayoutPanel();
-            odbiorcy.Controls.Add(new Label() { Text = "Nazwa" }, 0, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Adres" }, 1, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Miasto" }, 2, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Nip" }, 3, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Telefon" }, 4, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Paliwo" }, 5, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Ilość(litry)" }, 6, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Cena" }, 7, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Forma płat." }, 8, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Termin" }, 9, 0); 
-            odbiorcy.Controls.Add(new Label() { Text = "SENT" }, 10, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Adres dostawy" }, 11, 0);
-            odbiorcy.Controls.Add(new Label() { Text = "Usuń" }, 12, 0);
-
-        }
-        private void DodajKontrahenta(string nazwa, string ulica, string nrdomu, string kod, string miasto, string nip, string telefon)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            RowStyle temp = odbiorcy.RowStyles[odbiorcy.RowCount - 1];
-            odbiorcy.RowCount++;
-            odbiorcy.AutoSize = true;
-            odbiorcy.RowStyles.Add(new RowStyle(temp.SizeType, temp.Height));
-            odbiorcy.Controls.Add(new Label() { Text = nazwa, AutoSize = true }, 0, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new Label() { Text = ulica, AutoSize = true }, 1, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new Label() { Text = nrdomu}, 2, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new Label() { Text = kod}, 3, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new Label() { Text = miasto, AutoSize = true }, 4, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new Label() { Text = nip }, 5, odbiorcy.RowCount - 1);
-            odbiorcy.Controls.Add(new Label() { Text = telefon }, 6, odbiorcy.RowCount - 1);
-            AddComboPaliwo(); //7
-            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 8, odbiorcy.RowCount - 1);//litry
-            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 9, odbiorcy.RowCount - 1);//cena
-            AddComboPlatnosc(); //10
-            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill }, 11, odbiorcy.RowCount - 1);//UWAGI
-            odbiorcy.Controls.Add(new TextBox() { Dock = DockStyle.Fill}, 12, odbiorcy.RowCount - 1);//Uwagi
-
-            Button button = new Button{Name = (odbiorcy.RowCount).ToString(),Text = "Usun"};
-            button.Click += new EventHandler(usun_Click);
-            odbiorcy.Controls.Add(button, 13, odbiorcy.RowCount - 1);
-            AddComboSENT(); //14
-        }
-
+                    var buttonCol = new DataGridViewButtonColumn();
+                    buttonCol.HeaderText = "Usun";
+                    buttonCol.Name = "Usun";
+                    buttonCol.Text = "Usun";
+                    buttonCol.UseColumnTextForButtonValue = true;
+                    dataGridView3.Columns.Add(buttonCol);
+                    dataGridView3.AllowUserToAddRows = false;
+                }  //Utwórz nagłówki dgv listy z kontrahentami
         void item_SelectedIndexChanged(object sender, EventArgs e)
         {
           //  MessageBox.Show(((ComboBox)sender).Text);
         }
-
-        private void AddComboPaliwo()
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(file);
-            XmlNodeList nodeList = xmlDoc.SelectNodes("/Parametry/Paliwo/Wartosc");
-            for (int comboIndex = 1; comboIndex < 2; comboIndex++)
-            {
-                ComboBox combo = new ComboBox();
-                foreach (XmlNode _node in nodeList)
+        public void WczytajDane()
                 {
-                    String nodeVal = _node.InnerText.ToString();
-                    combo.Items.Add(nodeVal.ToString());
-                }
-                //  combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
-                combo.SelectedIndex = 0;
-                odbiorcy.Controls.Add(combo, 7, odbiorcy.RowCount - 1);
-            }
-        } //pobiera towary z xml-a
-        private void AddComboPlatnosc()
-        {
-            for (int comboIndex = 1; comboIndex < 2; comboIndex++)
-            {
-                ComboBox combo = new ComboBox();
-                combo.Items.Add("Gotówka");
-                combo.Items.Add("Przelew");
-                combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
-                combo.SelectedIndex = 0;
-                odbiorcy.Controls.Add(combo, 10, odbiorcy.RowCount - 1);
-            } //Dodaje combo z wyborem płatności
-
-        }
-        private void AddComboSENT()
-        {
-            for (int comboIndex = 1; comboIndex < 2; comboIndex++)
-            {
-                ComboBox combo = new ComboBox();
-                combo.Items.Add("");
-                combo.Items.Add("SENT my zamykamy");
-                combo.Items.Add("SENT oni zamykają");
-                combo.SelectedIndexChanged += new EventHandler(item_SelectedIndexChanged);
-                combo.SelectedIndex = 0;
-                odbiorcy.Controls.Add(combo, 14, odbiorcy.RowCount - 1);
-            } //Dodaje combo z wyborem SENT
-
-        }
+                    dataGridView3.Rows.Clear();
+                    dataGridView3.Refresh();
+                    int firmCount = FirmLista.Count;
+                    for (int count = 0; count < firmCount; ++count)
+                    {
+                        DaneFirmy oFirma = FirmLista[count];
+                        dataGridView3.Rows.Add(new object[] { oFirma.KontrNazwa, oFirma.KontrUlica + " " + oFirma.KontrNrDomu, oFirma.KontrMiasto + " " + oFirma.KontrKod,
+                        oFirma.KontrNIP,oFirma.KontrTel,oFirma.Paliwo,oFirma.Ilosc.ToString(),oFirma.Cena,oFirma.FormPlat,oFirma.Termin,oFirma.Sent,oFirma.DostUlica + " " + oFirma.DostNr,"Usuń" });
+                    }
+                }//Wyswietla dane z listy w DGV3
         private void Button2_Click(object sender, EventArgs e) //button "print generuje PDF z tablelayout"
         {
             printCustomer();
@@ -281,7 +220,16 @@ namespace ListPrzewozowy
         private void button3_Click(object sender, EventArgs e) //button "Wczytaj" - pokaz zapisane w bazie
         {
             string sql;
-            sql = "select data,nazwa, paliwo, ilosc, cena, termin, sent from OTD.dbo.kontrahent join list on list.kontrid = OTD.dbo.kontrahent.kontrid";
+            /* sql = "select d.ID as Nr_listu,d.Data, count(K.Nazwa)as Kontrahentów,p.nazwa as Paliwo, sum(l.Ilosc) as Litrów from dok D "+
+                 "inner join List L on L.dokID = D.ID inner join OTD.dbo.kontrahent K on k.kontrid = L.kontrID inner join paliwo P on p.paliwoID = L.paliwoID "+
+                 "group by d.ID, d.Data,p.nazwa"; */
+            sql = "select * from (select d.ID as Nr_listu,d.Data, count(K.Nazwa) as Kontrahentów," +
+                "(select sum(ilosc) from list where paliwoid = 1) as Olej_napedowy," +
+                "(select sum(ilosc) from list where paliwoid = 2) as Olej_arktyczny," +
+                "(select sum(ilosc) from list where paliwoid = 3) as Olej_opałowy," +
+                "U.Nazwa as Wystawił from dok D inner join List L on L.dokID = D.ID " +
+                "inner join OTD.dbo.kontrahent K on k.kontrid = L.kontrID inner join paliwo P on p.paliwoID = L.paliwoID " +
+                "inner join Uzytkownik U on D.userId = U.id group by d.ID, d.Data,u.nazwa)k";
             
             string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
             rejestrIO rejestr = new rejestrIO();
@@ -303,7 +251,7 @@ namespace ListPrzewozowy
             };
             dataGridView1.Columns.Add(col);
 
-            odbiorcy.Visible = true;
+            //odbiorcy.Visible = true;
 
         }
 
@@ -339,124 +287,90 @@ namespace ListPrzewozowy
             }
 
         }
-
-        public void RemoveRow(TableLayoutPanel panel, int rowIndex)
-        {
-            if (panel.RowCount >1 && rowIndex <panel.RowCount)
-            {
-                panel.RowStyles.RemoveAt(rowIndex);
-                for (int columnIndex = 0; columnIndex < panel.ColumnCount; columnIndex++)
-                {
-                    var control = panel.GetControlFromPosition(columnIndex, rowIndex);
-                    panel.Controls.Remove(control);
-                }
-                for (int i = rowIndex + 1; i < panel.RowCount; i++)
-                {
-                    for (int columnIndex = 0; columnIndex < panel.ColumnCount; columnIndex++)
+        private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
                     {
-                        var control = panel.GetControlFromPosition(columnIndex, i);
-                        panel.SetRow(control, i - 1);
-                    }
-                }
-                panel.RowCount--;
-            }
-            else
-            {
-                MessageBox.Show("nie bangla");
-            }
-        }
-
-        public void usun_Click(object sender, EventArgs e)
-        {
-            Control ctrlactive = this.ActiveControl;
-            TableLayoutPanelCellPosition celpos = odbiorcy.GetCellPosition(ctrlactive);
-            int rownum = celpos.Row;
-            RemoveRow(odbiorcy, rownum);
-        }
+                    int firmCount;
+                    if (e.ColumnIndex == dataGridView3.Columns["Usun"].Index && e.RowIndex >= 0)
+                        firmCount = FirmLista.Count;
+                        FirmLista.RemoveAt(e.RowIndex);
+                    WczytajDane();
+                } //Usuń wybranego kontrahenta z listy
         public void printCustomer()
-        {
-            nrwz = Convert.ToInt32(WZtxt.Text);
-            //MessageBox.Show(odbiorcy.GetControlFromPosition(7, 1).Text.ToString());
-            data = dateTimePicker1.Text;
-            string filename = "wykaz_" + data+".pdf";
-            PdfDocument document = new PdfDocument(); 
-            PdfPage page = document.AddPage(); 
-            int heightRowCust = 85;
-            int litryON = 0;
-            int litryOP = 0;
-            int numpage = 1;
-            page = document.Pages[numpage-1]; //numpage-1, ponieważ w document numeracja pages jest od 0.
-            string[] cust = new string[11]; //Dane kontrahenta z tablelayout
-            print pdf = new print();
-            pdf.DrawHeader(page, data);
-            pdf.DrawFooters(page, numpage);
-            for (int i = 1; i < odbiorcy.RowCount; i++)  //dla wszystkich odbiorców w TL
-            {
-                if (heightRowCust + 55 > page.Height - 30) //Jeżeli koniec strony
                 {
-                    page = document.AddPage();
-                    numpage++;
-                    page = document.Pages[numpage-1];
-                    heightRowCust = 55;
+                    nrwz = Convert.ToInt32(WZtxt.Text);
+                    data = dateTimePicker1.Text;
+                    string filename = "wykaz_" + data + ".pdf";
+                    string pierwszalinia="";
+                    string drugalinia="";
+                    string termin;
+                    Boolean sentval;
+                    PdfDocument document = new PdfDocument();
+                    PdfPage page = document.AddPage();
+                    int heightRowCust = 85;
+                    int litryON = 0;
+                    int litryONA = 0;
+                    int litryOP = 0;
+                    int numpage = 1;
+                    page = document.Pages[numpage - 1];
+                    print pdf = new print();
+                    pdf.DrawHeader(page, data);
                     pdf.DrawFooters(page, numpage);
-                }
-                for (int c = 0; c < cust.Length; c++)
-                    { cust[c] = odbiorcy.GetControlFromPosition(c, i).Text.ToString(); };
-                string nazwakontrahenta = cust[0];
-                string ilosc = cust[6];
-                string paliwo = odbiorcy.GetControlFromPosition(5, i).Text.ToString();
-                string termin = cust[9];
-              //  string uwagiN = cust[11];
-                string pierwszalinia = "";
-                string drugalinia = "";
-                string trzecialinia = cust[1] + ", " + cust[2] ;
-                string NIPlinia = cust[3];
-                string tellinia = cust[4];
-                string sentlinia = "";
-                if (cust[10].Length > 1) { sentlinia = cust[10]; }
-                string formaplat = cust[8];
-                string cena = cust[7];
-
-                if (String.IsNullOrEmpty(ilosc))
-                { litryON = 0; MessageBox.Show("Nie podano litrów"); return; }
-                else
-                {
-                    if (paliwo == "Olej napędowy")
-                    { litryON = litryON + Convert.ToUInt16(ilosc); }
-                    else
-                    { litryOP = litryOP + Convert.ToUInt16(ilosc); }
-                };
-                pdf.DrawCustomer(page, heightRowCust, nazwakontrahenta, trzecialinia, NIPlinia, tellinia, "", ilosc, sentlinia+", "+cena+"-"+formaplat+","+termin);
-                heightRowCust = heightRowCust + 70;
-                //----------------drukowanie WZ dla każdego kontrahenta---------------
-
-                StringBuilder completedWord = new StringBuilder();
-                int znaki = nazwakontrahenta.Count();
-                if (znaki > 35)
-                {
-                    completedWord.Append(nazwakontrahenta.Substring(0, 35));//Jeżeli za długa nazwa kontrahenta, to po 35 znaku podzielic na 2 linie
-                    completedWord.AppendLine();
-                    pierwszalinia = completedWord.ToString();
-                    completedWord.Clear();
-                    completedWord.Append(nazwakontrahenta.Substring(35, znaki - 35));
-                    drugalinia = completedWord.ToString();
-                }
-                else
-                    pierwszalinia = nazwakontrahenta;
+                    int firmCount = FirmLista.Count;
+                    for (int count = 0; count < firmCount; ++count)  //dla wszystkich odbiorców w zmiennej
+                    {
+                        DaneFirmy oFirma = FirmLista[count];
+                        if (heightRowCust + 55 > page.Height - 30) //Jeżeli koniec strony
+                        {
+                            page = document.AddPage();
+                            numpage++;
+                            page = document.Pages[numpage - 1];
+                            heightRowCust = 55;
+                            pdf.DrawFooters(page, numpage);
+                        }
                 
-                int f = 1;
-                while (File.Exists(filename)) { filename = "wykaz_kierowca_" + data + "_"+f+".pdf";f++; }
-                ZapiszDoBazy();
-                printWZ(ilosc, paliwo,cena, formaplat,  termin, "" , pierwszalinia, drugalinia,trzecialinia,"NIP/PESEL:"+NIPlinia,"tel:"+tellinia);
-                //--------------------------------------------------------------------
-                //MessageBox.Show(formaplat + cena);
-            }
-            page = document.Pages[0];
-            pdf.DrawBody(page, litryON, litryOP);
-            document.Save(filename);
-            Process.Start(filename);
-        }
-        public void printWZ(string ilosc, string paliwo,string cena,string formaplat, string termin, string uwagiN, string line1, string line2, string line3, string line4, string line5)
+                        if (oFirma.Paliwo == "Olej napędowy")
+                            { litryON = litryON + oFirma.Ilosc; }
+                        else if(oFirma.Paliwo == "Olej napędowy arktyczny")
+                            { litryONA = litryONA + oFirma.Ilosc; }
+                        else
+                            { litryOP = litryOP + oFirma.Ilosc; }
+                        if (oFirma.FormPlat == "Gotówka")
+                            termin = oFirma.Termin;
+                        else
+                            termin = oFirma.Termin + " dni";
+
+                        pdf.DrawCustomer(page, heightRowCust, oFirma.KontrNazwa, oFirma.KontrUlica+" "+oFirma.KontrNrDomu, oFirma.KontrNIP, oFirma.KontrTel, "", 
+                            oFirma.Ilosc.ToString(), oFirma.Sent+ ", " + oFirma.Cena + " " + oFirma.FormPlat + "," + termin );
+                        heightRowCust = heightRowCust + 70;
+                        StringBuilder completedWord = new StringBuilder();
+                        int znaki = oFirma.KontrNazwa.Count();
+                        if (znaki > 35)
+                        {
+                            completedWord.Append(oFirma.KontrNazwa.Substring(0, 35));//Jeżeli za długa nazwa kontrahenta, to po 35 znaku podzielic na 2 linie
+                            completedWord.AppendLine();
+                           pierwszalinia = completedWord.ToString();
+                            completedWord.Clear();
+                            completedWord.Append(oFirma.KontrNazwa.Substring(35, znaki - 35));
+                           drugalinia = completedWord.ToString();
+                        }
+                        else
+                            pierwszalinia = oFirma.KontrNazwa;
+
+                        int f = 1;
+                        while (File.Exists(filename)) { filename = "wykaz_kierowca_" + data + "_" + f + ".pdf"; f++; }
+                        if (oFirma.Sent.Length != 0)
+                            sentval = true; else sentval = false;
+
+
+                        printWZ(oFirma.Ilosc.ToString(), oFirma.Paliwo, oFirma.Cena, oFirma.FormPlat, termin, "", pierwszalinia, drugalinia, oFirma.KontrUlica
+                            +" "+oFirma.KontrNrDomu+", "+oFirma.KontrMiasto, "NIP/PESEL:" + oFirma.KontrNIP, "tel:" + oFirma.KontrTel,sentval);
+                    }
+                    page = document.Pages[0];
+                    pdf.DrawBody(page, litryON, litryONA, litryOP);
+                    document.Save(filename);
+                    Process.Start(filename);
+                } //drukuj list przewozowy
+        public void printWZ(string ilosc, string paliwo,string cena,string formaplatWZ, string termin, string uwagiN, string line1, string line2, string line3, string line4, string line5, Boolean sentval)
         {
            
             string filename = "WZ_"+nrwz+".pdf";
@@ -466,7 +380,7 @@ namespace ListPrzewozowy
             print pdf = new print();
             pdf.ilosc = ilosc;
             pdf.paliwo = paliwo;
-            pdf.uwagi = formaplat + "," + termin;
+            pdf.uwagi = formaplatWZ + " " + termin;
             pdf.uwagiN = uwagiN;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(file);
@@ -483,14 +397,14 @@ namespace ListPrzewozowy
             pdf.line3 = line3;
             pdf.line4 = line4;
             pdf.line5 = line5;
-            if (formaplat == "Przelew") { cena = ""; }
-            pdf.cenapaliwa = cena;
+         //   if (formaplatWZ == "Przelew") { cena = ""; }
+            pdf.cenapaliwa = cena+" zł";
             pdf.DrawWZName(page, nrwz+"/2017", dataWZ,30);
-            pdf.DrawWZBody(page,106);
+            pdf.DrawWZBody(page,106, sentval);
             pdf.DrawWZFooter(page, parametry("/Parametry/Uzytkownik/Wartosc"),226); //Nazwisko wystawiającego w polu wystawil
             //-------część dolna WZ------------------
             pdf.DrawWZName(page, nrwz + "/2017", dataWZ, 450);
-            pdf.DrawWZBody(page, 526);
+            pdf.DrawWZBody(page, 526,sentval);
             pdf.DrawWZFooter(page, parametry("/Parametry/Uzytkownik/Wartosc"), 646); //Nazwisko wystawiającego w polu wystawil
             //---------------------------------------
             document.Save(filename);
@@ -507,7 +421,6 @@ namespace ListPrzewozowy
             XmlNode dane = xmlDoc.DocumentElement.SelectSingleNode(param);
             return dane.InnerText;
         }  //odczytuje gałąź konfiguracji z xml
-
         public void parametry(string param, string val)
         {
             XmlDocument xmlDoc = new XmlDocument();
@@ -566,88 +479,22 @@ namespace ListPrzewozowy
             //odbiorcy.Visible = true;
             //MessageBox.Show(nazwa);
            // WczytajDane();
-        } 
+        }  //test
 
-        public void WczytajDane()
+        private void button5_Click(object sender, EventArgs e)
         {
-            //-----tutaj będzie dopisywanie danych z form2 do tablicy list z kontrahentami widocznymi w TLP, a nastepnie zapis tej tablicy do sql---------------
-         //   FirmLista.Add(new DaneFirmy(odbiorcy.RowCount, KontrahentDane[1], KontrahentDane[2] + " " + KontrahentDane[3], KontrahentDane[6]));
+           // WczytajDane();
+        }
 
-            RowStyle temp = odbiorcy.RowStyles[odbiorcy.RowCount - 1];
-            odbiorcy.RowCount++;
-            odbiorcy.AutoSize = true;
-            odbiorcy.RowStyles.Add(new RowStyle(temp.SizeType, temp.Height));
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[1], AutoSize = true }, 0, odbiorcy.RowCount - 1);// Nazwa
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[2]+" "+ KontrahentDane[3], AutoSize = true }, 1, odbiorcy.RowCount - 1); //adres - ulica+nrdomu
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[4]+" "+ KontrahentDane[5], AutoSize = true }, 2, odbiorcy.RowCount - 1); //miasto - miasto+kod
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[6] }, 3, odbiorcy.RowCount - 1); // NIP
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[7]}, 4, odbiorcy.RowCount - 1); //telefon
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[8], AutoSize = true }, 5, odbiorcy.RowCount - 1); //paliwo
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[9] }, 6, odbiorcy.RowCount - 1); //ilosc
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[10] }, 7, odbiorcy.RowCount - 1); //cena
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[11] }, 8, odbiorcy.RowCount - 1); //forma płatności
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[12] }, 9, odbiorcy.RowCount - 1); //termin
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[13] }, 10, odbiorcy.RowCount - 1); //Sent info
-            odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[14]+" "+KontrahentDane[14], AutoSize = true }, 11, odbiorcy.RowCount - 1);//miejsce dostarczenia - ulica+nr domu
-
-            Button button = new Button { Name = (odbiorcy.RowCount).ToString(), Text = "Usun" }; //button usuń
-            button.Click += new EventHandler(usun_Click);
-            odbiorcy.Controls.Add(button, 12, odbiorcy.RowCount - 1);
-
-
-      /*      for (int i = 0; i < KontrahentDane.Length; i++)
-            {
-                //odbiorcy.Controls.Add(new Label() { Text = KontrahentDane[i], AutoSize = true }, i, odbiorcy.RowCount - 1);
-
-            }
-            */
-
-            odbiorcy.Visible = true;
-        }//Czyta dane z form2-Kontrahent
-
-        private void test_btn_Click(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            //-----testy do DGV zamiast TLP--------------
-            //dataGridView2.Rows.Add(new object[] { oFirma.KontrNazwa, oFirma.KontrUlica + " " + oFirma.KontrNrDomu, oFirma.KontrMiasto + " " + oFirma.KontrKod });
-            //--------------------------------------------
 
-            // odbiorcy.Controls.Clear();
-            //odbiorcy.RowStyles.Clear();
-            //  Createtable();
-            // odbiorcy.RowCount = 1;
+        }
 
-            dataGridView2.Rows.Clear();
-            dataGridView2.Refresh();
-            int firmCount = FirmLista.Count;
-            for (int count = 0; count < firmCount; ++count)
-            {
-                DaneFirmy oFirma = FirmLista[count];
-
-                dataGridView2.Rows.Add(new object[] { oFirma.KontrNazwa, oFirma.KontrUlica + " " + oFirma.KontrNrDomu, oFirma.KontrMiasto + " " + oFirma.KontrKod,
-                oFirma.KontrNIP,oFirma.KontrTel,oFirma.Paliwo,oFirma.Ilosc.ToString(),oFirma.Cena,oFirma.FormPlat,oFirma.Termin,oFirma.Sent,oFirma.DostUlica + " " + oFirma.DostNr,"Usuń" });
-
-/*
-                RowStyle temp = odbiorcy.RowStyles[odbiorcy.RowCount - 1];
-                odbiorcy.RowCount++;
-                odbiorcy.AutoSize = true;
-                odbiorcy.RowStyles.Add(new RowStyle(temp.SizeType, temp.Height));
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.KontrNazwa, AutoSize = true }, 0, odbiorcy.RowCount - 1);// Nazwa
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.KontrUlica + " " + oFirma.KontrNrDomu, AutoSize = true }, 1, odbiorcy.RowCount - 1); //adres - ulica+nrdomu
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.KontrMiasto + " " + oFirma.KontrKod, AutoSize = true }, 2, odbiorcy.RowCount - 1); //miasto - miasto+kod
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.KontrNIP }, 3, odbiorcy.RowCount - 1); // NIP
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.KontrTel }, 4, odbiorcy.RowCount - 1); //telefon
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.Paliwo, AutoSize = true }, 5, odbiorcy.RowCount - 1); //paliwo
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.Ilosc.ToString() }, 6, odbiorcy.RowCount - 1); //ilosc
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.Cena }, 7, odbiorcy.RowCount - 1); //cena
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.FormPlat }, 8, odbiorcy.RowCount - 1); //forma płatności
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.Termin }, 9, odbiorcy.RowCount - 1); //termin
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.Sent }, 10, odbiorcy.RowCount - 1); //Sent info
-                odbiorcy.Controls.Add(new Label() { Text = oFirma.DostUlica + " " + oFirma.DostNr, AutoSize = true }, 11, odbiorcy.RowCount - 1);//miejsce dostarczenia - ulica+nr domu
-                Button button = new Button { Name = (odbiorcy.RowCount).ToString(), Text = "Usun" }; //button usuń
-                button.Click += new EventHandler(usun_Click);
-                odbiorcy.Controls.Add(button, 12, odbiorcy.RowCount - 1);
-                */
-            }
+        private void New_btn_Click(object sender, EventArgs e)
+        {
+            FirmLista.Clear();
+            WczytajDane();
         }
     }
     public class DaneFirmy
@@ -691,6 +538,7 @@ namespace ListPrzewozowy
             KontrNrDomu = nKontrNrDomu;
             KontrKod = nKontrKod;
             KontrMiasto = nKontrMiasto;
+            KontrTel = nKontrTel;
             KontrNIP = nKontrNIP;
             Paliwo = nPaliwo;
             Ilosc = nIlosc;
