@@ -73,6 +73,7 @@ namespace ListPrzewozowy
 
         private void Kontrahent_Load(object sender, EventArgs e)
         {
+            /*
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(file);
             XmlNodeList nodeList = xmlDoc.SelectNodes("/Parametry/Paliwo/Wartosc");
@@ -80,8 +81,22 @@ namespace ListPrzewozowy
                 {
                     TowarBox.Items.Add(new Towar { Name = _node.InnerText.ToString() });
                 }
+                */
+            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
+            rejestrIO rejestr = new rejestrIO();
+            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
+            var conn = new SqlConnection(klucz);
+            conn.Open();
+            using (SqlCommand command = new SqlCommand("select nazwa from paliwo", conn))
+            {
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    TowarBox.Items.Add(new Towar {Name = reader.GetValue(0).ToString()});
+                }
+            }
+            conn.Close();
             TowarBox.SelectedIndex = 0;
-
 
             FormaPlatBox.Items.Add(new Platnosc { Name = "Gotówka", Value = "G" }); //Combobox z formami płatności
             FormaPlatBox.Items.Add(new Platnosc { Name = "Przelew", Value = "P" });
@@ -96,54 +111,6 @@ namespace ListPrzewozowy
 
         private void DodajKthBtn_Click(object sender, EventArgs e)
         {
-            /*
-            SentKontrahent.Dane.Add(0, UlicaBox.Text);
-            SentKontrahent.Dane.Add(1, NrDomuBox.Text);
-            SentKontrahent.Dane.Add(2, MiejscowoscBox.Text);
-            SentKontrahent.Dane.Add(3, KodBox.Text);
-            Form1.DostarczUlica = UlicaBox.Text;
-            */
-
-            //----public static string[] KontrahentDane - w Form1---------------------------------
-       /*     Form1.KontrahentDane[0] = Form1.KontrID;
-            Form1.KontrahentDane[1] = Form1.nazwa;
-            Form1.KontrahentDane[2] = Form1.ulica;
-            Form1.KontrahentDane[3] = Form1.nrdomu;
-            Form1.KontrahentDane[4] = Form1.kod;
-            Form1.KontrahentDane[5] = Form1.miasto;
-            Form1.KontrahentDane[6] = Form1.nip;
-            Form1.KontrahentDane[7] = Form1.telefon;
-            */
-
-      /*      if (string.IsNullOrWhiteSpace(TowarBox.Text)) { Form1.KontrahentDane[8] = " "; } else
-            { Form1.KontrahentDane[8] = TowarBox.Text; }
-            if (string.IsNullOrWhiteSpace(IloscBox.Text)) { Form1.KontrahentDane[9] = " "; } else
-            { Form1.KontrahentDane[9] = IloscBox.Text; }
-            if (string.IsNullOrWhiteSpace(CenaBox.Text)) { Form1.KontrahentDane[10] = " "; } else
-            { Form1.KontrahentDane[10] = CenaBox.Text; }
-            if (string.IsNullOrWhiteSpace(FormaPlatBox.Text)) { Form1.KontrahentDane[11] = " "; } else
-            { Form1.KontrahentDane[11] = FormaPlatBox.Text; }
-            if (string.IsNullOrWhiteSpace(TerminBox.Text)) { Form1.KontrahentDane[12] = "0"; } else
-            { Form1.KontrahentDane[12] = TerminBox.Text; }
-            if (string.IsNullOrWhiteSpace(SentBox.Text)) { Form1.KontrahentDane[13] = " "; } else
-            { Form1.KontrahentDane[13] = SentBox.Text; }
-
-            if (string.IsNullOrWhiteSpace(UlicaBox.Text)) { Form1.KontrahentDane[14] = " "; } else
-            { Form1.KontrahentDane[14] = UlicaBox.Text; }
-            if (string.IsNullOrWhiteSpace(NrDomuBox.Text)) { Form1.KontrahentDane[15] = " "; } else
-            { Form1.KontrahentDane[15] = NrDomuBox.Text; }
-            if (string.IsNullOrWhiteSpace(MiejscowoscBox.Text)) { Form1.KontrahentDane[16] = " "; } else
-            { Form1.KontrahentDane[16] = MiejscowoscBox.Text; }
-            if (string.IsNullOrWhiteSpace(KodBox.Text)) { Form1.KontrahentDane[17] = " "; } else
-            { Form1.KontrahentDane[17] = KodBox.Text; }
-            
-
-          //  string dataWZ = dateTimePicker1.Value.Date.ToString("dd.MM.yyyy");
-            Form1.KontrahentDane[18] = dateTimePicker1.Value.Date.ToString("dd.MM.yyyy");
-            Form1.KontrahentDane[19] = dateTimePicker2.Value.Date.ToString("dd.MM.yyyy");
-            Form1.KontrahentDane[20] = dateTimePicker3.Value.Date.ToString("dd.MM.yyyy");
-            */
-
             string DataPlanRozp = dateTimePicker1.Value.Date.ToString("dd.MM.yyyy");
             string DataRozp= dateTimePicker2.Value.Date.ToString("dd.MM.yyyy");
             string DataPlanZak= dateTimePicker3.Value.Date.ToString("dd.MM.yyyy");
@@ -157,11 +124,12 @@ namespace ListPrzewozowy
            { ilosc = Convert.ToInt32(IloscBox.Text); }
             }
             Form1.FirmLista.Add(new DaneFirmy
-                (Form1.data, Convert.ToInt32(Form1.KontrID),KontrNazwa,KontrUlica, KontrNrDomu, KontrKod, KontrMiasto,KontrTelefon,KontrNip, TowarBox.Text, ilosc,
+                (Form1.data, Convert.ToInt32(Form1.KontrID),KontrNazwa,KontrUlica, KontrNrDomu, KontrKod, KontrMiasto,KontrTelefon,KontrNip, TowarBox.SelectedIndex+1, ilosc,
                 CenaBox.Text,FormaPlatBox.Text,TerminBox.Text,SentBox.Text,UlicaBox.Text,NrDomuBox.Text,MiejscowoscBox.Text,KodBox.Text,MiejscowoscBox.Text,
                 "PL",DataPlanRozp,DataRozp,DataPlanZak,"", nrWZ));
-
+            //MessageBox.Show(TowarBox.SelectedIndex.ToString());
             Close();
+           
             OnRunMethod();//wywołuje funkcję WczytajDane z form1 za pomocą delegata
         }  //przycisk Zapisz
 

@@ -18,45 +18,79 @@ inner join paliwo P
 on p.paliwoID=L.paliwoID
 group by d.ID, d.Data,p.nazwa
 
-------------test-------------
-select * from (
-select d.ID as Nr_listu,d.Data, count(K.Nazwa)as Kontrahentów,
-(select sum(ilosc) from list where paliwoid=1) as Olej_napedowy,
-(select sum(ilosc) from list where paliwoid=2) as Olej_arktyczny,
-(select sum(ilosc) from list where paliwoid=3) as Olej_opałowy
-from dok D
+
+-------------test3-------------------
+select * from 
+(select dokid, sum(ilosc) as Ilosc, paliwoid from list where paliwoid=1 group by dokid, paliwoid) as  _ON,
+(select dokid, sum(ilosc) as Ilosc, paliwoid from list where paliwoid=2 group by id,dokid, paliwoid) as _ONA
+----
+select * from (select dokid, sum(_ON.ilosc),
+(select dokid, sum(ilosc) as Ilosc, paliwoid from list where paliwoid=1 group by id,dokid, paliwoid) as  _ON,
+(select dokid, sum(ilosc) as Ilosc, paliwoid from list where paliwoid=2 group by id,dokid, paliwoid) as _ONA,
+(select dokid, sum(ilosc) as Ilosc, paliwoid from list where paliwoid=3 group by id,dokid, paliwoid) as _OP
+from k
 inner join List L
 on L.dokID=D.ID
+)k
+
+---
+select * from 
+(select dokid, sum(ilosc) as Ilosc, paliwoid from list where paliwoid=1 group by id,dokid, paliwoid) as  _ON
+inner join
+(select dokid, sum(ilosc) as Ilosc, paliwoid from list where paliwoid=2 group by id,dokid, paliwoid) as _ONA
+on id._ON=id._ONA
+------------*********-----------------
+select _ON.id, IloscON, IloscONA from
+(select id,sum(ilosc) as IloscON from list where paliwoid=1 group by id) as _ON
+full outer join
+(select id,sum(ilosc) as IloscONA from list where paliwoid=2 group by id) as _ONA
+on _ON.id=_ONA.id
+-----------------------------------------
+select _ON.dokid, IloscON, IloscONA, IloscOP from
+(select id,dokid,sum(ilosc) as IloscON from list where paliwoid=1 group by id,dokid) as _ON
+full outer join
+(select id,dokid,sum(ilosc) as IloscONA from list where paliwoid=2 group by id,dokid) as _ONA
+on _ON.id=_ONA.id
+full outer join
+(select id,dokid,sum(ilosc) as IloscOP from list where paliwoid=3 group by id,dokid) as _OP
+on _ON.id=_OP.id
+------------------------------------------------------
+select e1.dokid, e1.paliwoid, e1.ilosc as IloscON,e2.ilosc as IloscONA
+from list e1 left outer join list e2 on e1.id=e2.id
+------------------------------------------------------
+select * from(
+select e1.dokid, e1.paliwoid, e1.ilosc as IloscON,e2.ilosc as IloscONA
+from list e1 left outer join list e2 on e1.id=e2.id)k
+where paliwoid=1
+***********************************************
+SELECT  Dokid as nrWZ,
+        SUM(CASE WHEN paliwoid = 1 THEN ilosc END) iloscON,
+        SUM(CASE WHEN paliwoid = 2 THEN ilosc END) iloscONA,
+        SUM(CASE WHEN paliwoid = 3 THEN ilosc END) iloscOP
+FROM list
+GROUP BY Dokid;
+***********************************************
+SELECT L.Dokid,D.Data,
+        SUM(CASE WHEN paliwoid = 1 THEN ilosc END) iloscON,
+        SUM(CASE WHEN paliwoid = 2 THEN ilosc END) iloscONA,
+        SUM(CASE WHEN paliwoid = 3 THEN ilosc END) iloscOP,
+Nazwa as Wystawiajacy
+FROM list L
+inner join dok D
+on D.id=L.dokid
+inner join Uzytkownik U
+on U.id=D.Userid
+GROUP BY L.Dokid, D.data, U.nazwa;
+---------------wczytywanie do zmiennej----------------------
+select K.Nazwa,K.Ulica, K.Miasto, K.Nip, K.telefon,P.nazwa,L.Ilosc,L.Cena, L.FormaPlat, L.Termin, L.Sent, L.DostUlica from List L
+inner join Dok D
+on D.id=L.dokid
+inner join Uzytkownik U
+on U.id=D.userID
+inner join Paliwo P
+on P.paliwoID=L.paliwoid
 inner join OTD.dbo.kontrahent K
 on k.kontrid=L.kontrID
-inner join paliwo P
-on p.paliwoID=L.paliwoID
-group by d.ID, d.Data)k
----
-
-
-select NrListu, K.nazwa, paliwo, ilosc, cena from list L 
-
-
-select * from
-(
-select kontrid from List	
-union all
-select kontrid,nazwa from OTD.dbo.kontrahent )
-as aa
-where kontrid=35
-
-select  nazwa, paliwo, ilosc, cena, termin, sent
-from OTD.dbo.kontrahent 
-join list
-on list.kontrid=OTD.dbo.kontrahent.kontrid
-
-where nazwa like '%trans%'
-
-
-select  top 1 isnull (nrlistu,1) from list order by ID desc
-
-SELECT CASE WHEN COUNT(1) =0  THEN 1 else ((select top 1 nrlistu from list order by ID desc)+1 )END AS nrlistu FROM List
 
 ------------###############----------------
 insert into dok (Data,userID)values('2017-12-10',1)
@@ -124,3 +158,16 @@ select * from Paliwo
 select * from List
 
 select * from Uzytkownik
+
+select nazwa from paliwo
+
+delete from list where paliwoid=0
+
+select * from paliwo where paliwoid=1
+
+select cast(ROUND(Cenadet*(1+(CAST(Stawka AS DECIMAL))/10000),2 )AS DECIMAL(5,2)) as cena from towar where towid=1
+select * from Regula
+
+
+select * from List
+
