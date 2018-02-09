@@ -33,6 +33,7 @@
             this.MiastoLabel = new System.Windows.Forms.Label();
             this.NipLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.KontrIDlabel = new System.Windows.Forms.Label();
             this.DodajKthBtn = new System.Windows.Forms.Button();
             this.MiejsceGroup = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -67,7 +68,8 @@
             this.CenaBox = new System.Windows.Forms.TextBox();
             this.TowarBox = new System.Windows.Forms.ComboBox();
             this.IloscBox = new System.Windows.Forms.TextBox();
-            this.KontrIDlabel = new System.Windows.Forms.Label();
+            this.UwagiBox = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.MiejsceGroup.SuspendLayout();
             this.DataBox.SuspendLayout();
@@ -125,6 +127,15 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Dane kontrahenta:";
+            // 
+            // KontrIDlabel
+            // 
+            this.KontrIDlabel.AutoSize = true;
+            this.KontrIDlabel.Location = new System.Drawing.Point(151, 65);
+            this.KontrIDlabel.Name = "KontrIDlabel";
+            this.KontrIDlabel.Size = new System.Drawing.Size(20, 16);
+            this.KontrIDlabel.TabIndex = 5;
+            this.KontrIDlabel.Text = "...";
             // 
             // DodajKthBtn
             // 
@@ -320,6 +331,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label16);
+            this.groupBox4.Controls.Add(this.UwagiBox);
             this.groupBox4.Controls.Add(this.label15);
             this.groupBox4.Controls.Add(this.label14);
             this.groupBox4.Controls.Add(this.label13);
@@ -440,14 +453,21 @@
             this.IloscBox.Size = new System.Drawing.Size(62, 23);
             this.IloscBox.TabIndex = 1;
             // 
-            // KontrIDlabel
+            // UwagiBox
             // 
-            this.KontrIDlabel.AutoSize = true;
-            this.KontrIDlabel.Location = new System.Drawing.Point(151, 65);
-            this.KontrIDlabel.Name = "KontrIDlabel";
-            this.KontrIDlabel.Size = new System.Drawing.Size(20, 16);
-            this.KontrIDlabel.TabIndex = 5;
-            this.KontrIDlabel.Text = "...";
+            this.UwagiBox.Location = new System.Drawing.Point(535, 101);
+            this.UwagiBox.Name = "UwagiBox";
+            this.UwagiBox.Size = new System.Drawing.Size(366, 23);
+            this.UwagiBox.TabIndex = 12;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(533, 81);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(48, 16);
+            this.label16.TabIndex = 13;
+            this.label16.Text = "Uwagi:";
             // 
             // Kontrahent
             // 
@@ -516,5 +536,7 @@
         private System.Windows.Forms.ComboBox TowarBox;
         private System.Windows.Forms.TextBox IloscBox;
         private System.Windows.Forms.Label KontrIDlabel;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox UwagiBox;
     }
 }

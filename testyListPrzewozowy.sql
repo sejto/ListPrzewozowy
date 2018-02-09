@@ -1,3 +1,30 @@
+create view KontrahentNIPView as
+select k.kontrid as ID,k.Nazwa, Ulica, Nrdomu, kod, miasto, Nip, Telefon, 
+(Select top 1  case when tekst like '%pel%' then 'Pełnomocnictwo' else 'Brak' end as Pelnomocnictwo From OTD.dbo.KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Pelnomocnictwo,
+(Select top 1  case when tekst like '%osw%' then 'Oswiadczenie' else 'Brak' end as Oswiadczenie From OTD.dbo.KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Oswiadczenie 
+from OTD.dbo.kontrahent k 
+----------------------------------------------
+Create view KontrahentNazwaView as
+select k.kontrid as ID, k.Nazwa, Ulica, Nrdomu, kod, miasto, Nip, Telefon, 
+(Select top 1  case when tekst like '%pel%' then 'Pełnomocnictwo' else 'Brak' end as Pelnomocnictwo From OTD.dbo.KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Pelnomocnictwo,
+(Select top 1  case when tekst like '%osw%' then 'Oswiadczenie' else 'Brak' end as Oswiadczenie From OTD.dbo.KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Oswiadczenie 
+from OTD.dbo.kontrahent k
+-----------------------------------------------
+create view ListyView as
+SELECT L.Dokid,D.Data,SUM(CASE WHEN paliwoid = 1 THEN ilosc END) IloscON,SUM(CASE WHEN paliwoid = 2 THEN ilosc END) IloscONA,
+SUM(CASE WHEN paliwoid = 3 THEN ilosc END) IloscOP,count(nrwz) as Klienci,Nazwa as Wystawiajacy FROM list L inner join dok D on D.id=L.dokid 
+inner join Uzytkownik U on U.id=D.Userid where L.aktywny=1 GROUP BY L.Dokid, D.data, U.nazwa 
+--------------------------------------------------------
+create view WZView as
+select l.ID,L.dokid,d.data,K.Kontrid,K.Nazwa,K.Ulica,K.nrdomu,K.Kod, K.Miasto,K.Nip, K.telefon,P.PaliwoID,P.nazwa as Paliwo,L.Ilosc,L.Cena, L.FormaPlat, L.Termin, L.Sent, L.DostUlica,L.DostNr,L.DostMiasto,
+L.DostKod,L.DostPoczta,L.DostKraj,L.DostPlanRozp,L.DostRozp,L.DostPlanZak,L.Uwagi,L.nrWZ from List L 
+inner join Dok D on D.id = L.dokid inner join Uzytkownik U on U.id = D.userID inner join Paliwo P on P.paliwoID = L.paliwoid inner join OTD.dbo.kontrahent K
+on k.kontrid = L.kontrID  where L.aktywny=1
+----------------------------
+select * from WZView where dokid=55
+
+select * from ListyView where dokid>55
+-----------------------------------------------------
 --- Wyświetlenie wszystkich kontrahentów z listu przewozowego
 select d.ID as Nr_listu, K.Nazwa, k.Ulica, k.Nrdomu, k.Nrlokalu,k.Kod,k.Miasto,p.nazwa as Paliwo, l.Ilosc, l.Cena, l.Formaplat,l.Termin, l.Sent,U.Nazwa as Wystawił from dok D
 inner join List L
@@ -82,7 +109,7 @@ inner join Uzytkownik U
 on U.id=D.Userid
 GROUP BY L.Dokid, D.data, U.nazwa;
 ---------------wczytywanie do zmiennej----------------------
-select K.Nazwa,K.Ulica, K.Miasto, K.Nip, K.telefon,P.nazwa,L.Ilosc,L.Cena, L.FormaPlat, L.Termin, L.Sent, L.DostUlica from List L
+select d.data,K.Nazwa,K.Ulica,K.nrdomu, K.Miasto, K.Nip, K.telefon,P.nazwa,L.Ilosc,L.Cena, L.FormaPlat, L.Termin, L.Sent, L.DostUlica,L.DostNr from List L
 inner join Dok D
 on D.id=L.dokid
 inner join Uzytkownik U
@@ -91,7 +118,7 @@ inner join Paliwo P
 on P.paliwoID=L.paliwoid
 inner join OTD.dbo.kontrahent K
 on k.kontrid=L.kontrID
-
+ where dokid=1
 ------------###############----------------
 insert into dok (Data,userID)values('2017-12-10',1)
 insert into Uzytkownik (nazwa) values ('Alina Spura')
@@ -129,7 +156,7 @@ CREATE TABLE [dbo].[List](
 	[Ilosc] [int] NOT NULL,
 	[Cena][varchar](6) NULL,
 	[FormaPlat][varchar](8) NULL,
-	[Termin][varchar](6) NULL,
+	[Termin][int] NULL,
 	[Sent][varchar](20) NULL,
 	[DostUlica][varchar](40) NULL,
 	[DostNr][varchar](8) NULL,
@@ -141,7 +168,8 @@ CREATE TABLE [dbo].[List](
 	[DostRozp][varchar](10) NULL,
 	[DostPlanZak][varchar](10) NULL,
 	[Uwagi][varchar](250) NULL,
-	[NrWZ][varchar](10) NOT NULL)
+	[NrWZ][int] NOT NULL,
+	[Aktywny][bit]NOT NULL)
 
 
 --drop table [List]
@@ -149,25 +177,21 @@ CREATE TABLE [dbo].[List](
 --drop table [Paliwo]
 --drop table [Uzytkownik]
 
+select * from KontrahentNazwaView where nazwa like '%sej%'
+select * from ListyView
+select * from List where aktywny = 1
+update list set aktywny=1 where dokid=59
+ALTER TABLE List ADD aktywny BIT
 
+update list set aktywny=1 where id=4
 
 select * from Dok
-
-select * from Paliwo
-
 select * from List
+select * from WZView where dokid =2
+select top 1 isnull(nrwz,1) from list order by nrwz desc
 
-select * from Uzytkownik
-
-select nazwa from paliwo
-
-delete from list where paliwoid=0
-
-select * from paliwo where paliwoid=1
-
-select cast(ROUND(Cenadet*(1+(CAST(Stawka AS DECIMAL))/10000),2 )AS DECIMAL(5,2)) as cena from towar where towid=1
-select * from Regula
-
-
-select * from List
-
+delete from dok where id=1
+delete from list where dokid=64
+select top 1 isnull(nrwz,1) from List L inner join dok D on D.id = L.dokid order by L.id desc
+SELECT COALESCE(MAX(nrwz), '0') FROM List
+select COALESCE(MAX(id), '0') from dok 

@@ -49,6 +49,9 @@ namespace ListPrzewozowy
             this.button5 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.New_btn = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.ListNr_lbl = new System.Windows.Forms.Label();
+            this.RebuildSQL_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -113,13 +116,14 @@ namespace ListPrzewozowy
             // 
             // button3
             // 
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(1150, 7);
+            this.button3.Location = new System.Drawing.Point(594, 30);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(93, 37);
+            this.button3.Size = new System.Drawing.Size(117, 38);
             this.button3.TabIndex = 7;
-            this.button3.Text = "Wczytaj";
+            this.button3.Text = "Wczytaj listy";
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -160,11 +164,11 @@ namespace ListPrzewozowy
             // 
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(1287, 7);
+            this.button1.Location = new System.Drawing.Point(755, 30);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(109, 34);
+            this.button1.Size = new System.Drawing.Size(138, 37);
             this.button1.TabIndex = 14;
-            this.button1.Text = "Otwórz PDF";
+            this.button1.Text = "Otwórz folder PDF";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -195,16 +199,18 @@ namespace ListPrzewozowy
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(998, 44);
+            this.button5.Location = new System.Drawing.Point(1171, 30);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 21;
-            this.button5.Text = "test_2";
+            this.button5.Text = "but5_test_2";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.ListNr_lbl);
+            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.New_btn);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.dataGridView3);
@@ -225,19 +231,48 @@ namespace ListPrzewozowy
             // 
             this.New_btn.Image = ((System.Drawing.Image)(resources.GetObject("New_btn.Image")));
             this.New_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.New_btn.Location = new System.Drawing.Point(787, 37);
+            this.New_btn.Location = new System.Drawing.Point(783, 38);
             this.New_btn.Name = "New_btn";
-            this.New_btn.Size = new System.Drawing.Size(92, 39);
+            this.New_btn.Size = new System.Drawing.Size(96, 38);
             this.New_btn.TabIndex = 0;
             this.New_btn.Text = "Nowa lista";
             this.New_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.New_btn.Click += new System.EventHandler(this.New_btn_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1118, 63);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(122, 13);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "List przewozowy numer: ";
+            // 
+            // ListNr_lbl
+            // 
+            this.ListNr_lbl.AutoSize = true;
+            this.ListNr_lbl.Location = new System.Drawing.Point(1240, 63);
+            this.ListNr_lbl.Name = "ListNr_lbl";
+            this.ListNr_lbl.Size = new System.Drawing.Size(10, 13);
+            this.ListNr_lbl.TabIndex = 22;
+            this.ListNr_lbl.Text = ".";
+            // 
+            // RebuildSQL_btn
+            // 
+            this.RebuildSQL_btn.Location = new System.Drawing.Point(1325, 47);
+            this.RebuildSQL_btn.Name = "RebuildSQL_btn";
+            this.RebuildSQL_btn.Size = new System.Drawing.Size(87, 21);
+            this.RebuildSQL_btn.TabIndex = 23;
+            this.RebuildSQL_btn.Text = "Reinicjalizacja";
+            this.RebuildSQL_btn.UseVisualStyleBackColor = true;
+            this.RebuildSQL_btn.Click += new System.EventHandler(this.RebuildSQL_btn_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1435, 671);
+            this.Controls.Add(this.RebuildSQL_btn);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button1);
@@ -279,6 +314,9 @@ namespace ListPrzewozowy
         private Button button5;
         private GroupBox groupBox1;
         private Button New_btn;
+        private Label ListNr_lbl;
+        private Label label4;
+        private Button RebuildSQL_btn;
     }
 }
 

@@ -38,11 +38,9 @@ namespace ListPrzewozowy
         public static string miasto;
         public static string nip;
         public static string telefon;
-        public static string[] KontrahentDane = new string[21];
-        public string sqlval = "";
-
+        public static string FirstnrWZ;
+        public static string FirstdataWZ;
         public static List<DaneFirmy> FirmLista = new List<DaneFirmy>();
-//        public List<string> zawartosc = new List<string>();
 
         public Form1()
         {
@@ -50,56 +48,95 @@ namespace ListPrzewozowy
             this.WindowState = FormWindowState.Maximized;
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
             CreateDGV();
-            string[] kontr;
-            kontr = new string[5];
             print pdf = new print();
-            WZtxt.Text=parametry("/Parametry/NrWZ/Wartosc");
-            nrwz = Convert.ToInt32(WZtxt.Text);
+            NewList();
+            //TODO - dodać sprawdzanie czy baza istnieje i jest we właściwej wersji !=> inicjalizacja bazy
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-
-        }
+            ToolTip ToolTip1 = new ToolTip();
+            ToolTip1.SetToolTip(button2, "Zapisz dokument przed wydrukowaniem.");
+    }
 
         void OnProcessExit(object sender, EventArgs e)
         {
             parametry("/Parametry/NrWZ/Wartosc", nrwz.ToString()); //zapamiętanie numeru ostatniej WZ-tki
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string appPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+            Process.Start("explorer.exe", appPath);
+        }  //pokaż folder z dokumentami pdf
+        private void Button2_Click(object sender, EventArgs e) //button "print generuje PDF z tablelayout"
+        {
+            printCustomer();
+            //   printSender();
+        }
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            if (button4.Text.Contains("poprawione"))
+                UaktualnijList();
+            else
+                ZapiszList();
+        } //Button Zapisz do bazy
+        private void button3_Click(object sender, EventArgs e) //button "Wczytaj" - pokaz zapisane w bazie
+        {
+            PokazListy();
+        }
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Zapisz.DoLogu("asdasd");
+        } //button5 test2
+        private void RebuildSQL_btn_Click(object sender, EventArgs e)
+        {
+            Baza bazasql = new Baza();
+            bazasql.ReinicjalizacjaBazy();
+            NewList();
+            MessageBox.Show("Baza została odbudowana.");
+        } //Button reinicjujący baze
         private void New_btn_Click(object sender, EventArgs e)
         {
-            FirmLista.Clear();
-            WczytajDane();
+            NewList();
+        } // Nowa lista
+        private void Btn_szukajKTH_Click(object sender, EventArgs e)
+        {
+            SzukajKTH();
+        }
+        void CheckKeys(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                Btn_szukajKTH_Click(sender, (EventArgs)e);
+            }
         }
 
-        private void Btn_szukajKTH_Click(object sender, EventArgs e)
+        void NewList()
+        {
+            FirmLista.Clear();
+            WczytajDaneDoDGV3();
+            dateTimePicker1.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            Baza baza = new Baza();
+            int a = Convert.ToInt32(baza.CzytajZBazy("SELECT COALESCE(MAX(nrwz), '0') FROM List"));
+            WZtxt.Text = (a + 1).ToString();
+            button4.Text = "Zapisz";
+            ListNr_lbl.Text = "";
+        }
+        void SzukajKTH()
         {
             string sql;
             string nazwa = Txt_KTH.Text;
             if (NIPValidate(nazwa) != true)
             {
-                sql = "select k.kontrid as ID, k.Nazwa, Ulica, Nrdomu, kod, miasto, Nip, Telefon, " +
-"(Select top 1  case when tekst like '%pel%' then 'Pełnomocnictwo' else 'Brak' end as Pelnomocnictwo From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Pelnomocnictwo," +
-"(Select top 1  case when tekst like '%osw%' then 'Oswiadczenie' else 'Brak' end as Oswiadczenie From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Oswiadczenie " +
-"from kontrahent k where k.nazwa like '%" + nazwa + "%'";
+                sql = "select * from KontrahentNazwaView where nazwa like '%" + nazwa + "%'";
             }
             else
             {
-                sql = "select k.kontrid as ID,k.Nazwa, Ulica, Nrdomu, kod, miasto, Nip, Telefon, " +
-"(Select top 1  case when tekst like '%pel%' then 'Pełnomocnictwo' else 'Brak' end as Pelnomocnictwo From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Pelnomocnictwo," +
-"(Select top 1  case when tekst like '%osw%' then 'Oswiadczenie' else 'Brak' end as Oswiadczenie From KontrOpis ko where KO.KontrId = K.KontrId and Znaczenie = 76) as Oswiadczenie " +
-"from kontrahent k where k.nip ='" + nazwa + "'";
+                sql = "select * from KontrahentNIPView where nip ='" + nazwa + "'";
             }
-            string keyname = "HKEY_CURRENT_USER\\MARKET\\serwerLokal";
-            rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
-            SqlConnection connection = new SqlConnection(klucz); //skopiować gałąź na pozostałe kompy, ta sama co w ZielonyKoszyk
-            SqlDataAdapter dataadapter = new SqlDataAdapter(sql, connection);
-            DataSet ds = new DataSet();
-            connection.Open();
-            dataadapter.Fill(ds, "Kontrahenci");
-            connection.Close();
+            Baza BazaSQL = new Baza();
             dataGridView1.Columns.Clear();
-            dataGridView1.DataSource = ds;
+            dataGridView1.DataSource = BazaSQL.Polacz(sql); ;
             dataGridView1.DataMember = "Kontrahenci";
             DataGridViewButtonColumn col = new DataGridViewButtonColumn
             {
@@ -108,22 +145,48 @@ namespace ListPrzewozowy
                 Name = "Wybor"
             };
             dataGridView1.Columns.Add(col);
-            //odbiorcy.Visible = true;
             DataGridViewColumn columnNazwa = dataGridView1.Columns[1];
             DataGridViewColumn columnID = dataGridView1.Columns[0];
             columnNazwa.Width = 350;
             columnID.Width = 50;
         }
-
-        private void CheckKeys(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        void CreateDGV()
         {
-            if (e.KeyChar == (char)13)
-            {
-                Btn_szukajKTH_Click(sender, (EventArgs)e);
-            }
-        }
+            dataGridView3.CellClick += dataGridView3_CellClick;
+            dataGridView3.RowHeadersVisible = false;
+            dataGridView3.Columns.Add("Column", "Nazwa");
+            dataGridView3.Columns[0].Width = 180;
+            dataGridView3.Columns.Add("Column", "Ulica");
+            dataGridView3.Columns[1].Width = 120;
+            dataGridView3.Columns.Add("Column", "Miasto");
+            dataGridView3.Columns[2].Width = 100;
+            dataGridView3.Columns.Add("Column", "Nip");
+            dataGridView3.Columns[3].Width = 80;
+            dataGridView3.Columns.Add("Column", "Telefon");
+            dataGridView3.Columns[4].Width = 80;
+            dataGridView3.Columns.Add("Column", "Paliwo");
+            dataGridView3.Columns.Add("Column", "Ilość");
+            dataGridView3.Columns[6].Width = 60;
+            dataGridView3.Columns.Add("Column", "Cena");
+            dataGridView3.Columns[7].Width = 60;
+            dataGridView3.Columns.Add("Column", "Forma płat");
+            dataGridView3.Columns.Add("Column", "Termin");
+            dataGridView3.Columns.Add("Column", "Sent");
+            dataGridView3.Columns.Add("Column", "Miejsce dostarcz");
+            dataGridView3.Columns[11].Width = 160;
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+            dataGridView3.Columns.Add("Column", "NrWZ");
+            dataGridView3.Columns[12].Width = 45;
+
+            var buttonCol = new DataGridViewButtonColumn();
+            buttonCol.HeaderText = "Usun";
+            buttonCol.Name = "Usun";
+            buttonCol.Text = "Usun";
+            buttonCol.UseColumnTextForButtonValue = true;
+            dataGridView3.Columns.Add(buttonCol);
+            dataGridView3.AllowUserToAddRows = false;
+        }  //Utwórz nagłówki dgv listy z kontrahentami
+        void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == dataGridView1.Columns["Wybor"].Index && e.RowIndex >= 0)
             {
@@ -131,148 +194,107 @@ namespace ListPrzewozowy
                 {
                     int rownumber = Convert.ToInt16(((DataGridView)sender).SelectedCells[0].RowIndex);
                     KontrID = dataGridView1[0, rownumber].Value.ToString();
-                 /*   nazwa = dataGridView1[1, rownumber].Value.ToString();
-                    ulica = dataGridView1[2, rownumber].Value.ToString();
-                    nrdomu = dataGridView1[3, rownumber].Value.ToString();
-                    kod = dataGridView1[4, rownumber].Value.ToString();
-                    miasto = dataGridView1[5, rownumber].Value.ToString();
-                    nip = dataGridView1[6, rownumber].Value.ToString();
-                    telefon = dataGridView1[7, rownumber].Value.ToString();
-                    string pelnomocnictwo = dataGridView1[8, rownumber].Value.ToString();
-                    */
                     data = dateTimePicker1.Text;
-
+                    //nrwz =  zwiekszac w zaleznosci od firmlista
                     Kontrahent KontrahentForm = new Kontrahent();
-                    KontrahentForm.OnRunMethod += new Kontrahent.methodHandler(WczytajDane);
+                    KontrahentForm.OnRunMethod += new Kontrahent.methodHandler(WczytajDaneDoDGV3);
                     KontrahentForm.Show();
-                    //  DodajKontrahenta(nazwa, ulica, nrdomu, kod, miasto, nip, telefon);
-                    //  DodajKontrahentList(rownumber,nazwa, ulica, nrdomu, kod, miasto, nip, telefon);
                 }
                 else if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString() == "Edytuj")
                 {
                     string d = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
-                    MessageBox.Show("Tu będzie wczytywanie listu z bazy SQL. DokId: " +d);
+                    FirmLista.Clear();
                     PokazDok(d);
                 }
             }
 
         } //Wyswietl Form_Kontrahent a następnie dodaj kontrahenta do zmiennej FirmLista oraz wyświetl ją w DGV
-
-        private void ZapiszDoBazy(string sqlval)
+        void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-           // MessageBox.Show(sqlval);
-            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
-            using (var conn = new SqlConnection(klucz))
-            using (var cmd = conn.CreateCommand())
-            {
-                conn.Open();
-                cmd.CommandText = sqlval;
-                var result = cmd.ExecuteNonQuery();
-                conn.Close();
-            }
-        }
-
-       /* public string CzytajZBazy(string sql)
-        {
-            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            rejestrIO rejestr = new rejestrIO();
-             List<string> zawartosc = new List<string>();
-           // zawartosc.Clear();            
-            int i = 0;
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
-            var conn = new SqlConnection(klucz);
-            conn.Open();
-            using (SqlCommand command = new SqlCommand(sql, conn))
-            {
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+            int firmCount;
+                if (e.ColumnIndex == dataGridView3.Columns["Usun"].Index && e.RowIndex >= 0)
                 {
-                    zawartosc.Add(reader.GetValue(0).ToString());
+                    firmCount = FirmLista.Count;
+                    FirmLista.RemoveAt(e.RowIndex);
+               // MessageBox.Show(dataGridView3.Rows[e.RowIndex].Cells["nrwz"].Value.ToString());
+                    WczytajDaneDoDGV3();
                 }
-            }
-            for (i = 0; i <= zawartosc.Count; i++)
-            {
-                return zawartosc[i];
-            }
-            return zawartosc[0];
-            conn.Close();
-        }  //zwraca STRING
-        */
+            //---------------
+            //string nrdok = 
+            //string sql = "update list set aktywny=0 where id="+nrdok;  //usun dok=dokid
+            //Baza BazaSQL = new Baza();
+            //BazaSQL.ZapiszDoBazy(sql);
+            //PokazDok(nrdok);
+            //---------------
 
-        public void CreateDGV()
-                {
-                    dataGridView3.CellClick += dataGridView3_CellClick;
-                    dataGridView3.RowHeadersVisible = false;
-                    dataGridView3.Columns.Add("Column", "Nazwa");
-                    dataGridView3.Columns[0].Width = 180;
-                    dataGridView3.Columns.Add("Column", "Ulica");
-                    dataGridView3.Columns[1].Width = 120;
-                    dataGridView3.Columns.Add("Column", "Miasto");
-                    dataGridView3.Columns[2].Width = 100;
-                    dataGridView3.Columns.Add("Column", "Nip");
-                    dataGridView3.Columns[3].Width = 80;
-                    dataGridView3.Columns.Add("Column", "Telefon");
-                    dataGridView3.Columns[4].Width = 80;
-                    dataGridView3.Columns.Add("Column", "Paliwo");
-                    dataGridView3.Columns.Add("Column", "Ilość");
-                    dataGridView3.Columns[6].Width = 60;
-                    dataGridView3.Columns.Add("Column", "Cena");
-                    dataGridView3.Columns[7].Width = 60;
-                    dataGridView3.Columns.Add("Column", "Forma płat");
-                    dataGridView3.Columns.Add("Column", "Termin");
-                    dataGridView3.Columns.Add("Column", "Sent");
-                    dataGridView3.Columns.Add("Column", "Miejsce dostarcz");
-                    dataGridView3.Columns[11].Width = 200;
-
-                    var buttonCol = new DataGridViewButtonColumn();
-                    buttonCol.HeaderText = "Usun";
-                    buttonCol.Name = "Usun";
-                    buttonCol.Text = "Usun";
-                    buttonCol.UseColumnTextForButtonValue = true;
-                    dataGridView3.Columns.Add(buttonCol);
-                    dataGridView3.AllowUserToAddRows = false;
-                }  //Utwórz nagłówki dgv listy z kontrahentami
-        void item_SelectedIndexChanged(object sender, EventArgs e)
+        } //Usuń wybranego kontrahenta z listy
+        void WczytajDaneDoDGV3()
         {
-          //  MessageBox.Show(((ComboBox)sender).Text);
-        }
-        public void WczytajDane()
-                {
-                    dataGridView3.Rows.Clear();
-                    dataGridView3.Refresh();
-                    int firmCount = FirmLista.Count;
+           dataGridView3.Rows.Clear();
+           dataGridView3.Refresh();
+           int firmCount = FirmLista.Count;
                     for (int count = 0; count < firmCount; ++count)
                     {
                         DaneFirmy oFirma = FirmLista[count];
                         int Fuel = Convert.ToInt32(oFirma.Paliwo);
-                        dataGridView3.Rows.Add(new object[] { oFirma.KontrNazwa, oFirma.KontrUlica + " " + oFirma.KontrNrDomu, oFirma.KontrMiasto + " " + oFirma.KontrKod,
-                        oFirma.KontrNIP,oFirma.KontrTel,Fuel,oFirma.Ilosc.ToString(),oFirma.Cena,oFirma.FormPlat,oFirma.Termin,oFirma.Sent,oFirma.DostUlica + " " + oFirma.DostNr,"Usuń" });
+                        dataGridView3.Rows.Add(new object[] {oFirma.KontrNazwa, oFirma.KontrUlica + " " + oFirma.KontrNrDomu, oFirma.KontrMiasto + " " + oFirma.KontrKod,
+                        oFirma.KontrNIP,oFirma.KontrTel,Fuel,oFirma.Ilosc.ToString(),oFirma.Cena,oFirma.FormPlat,oFirma.Termin,oFirma.Sent,oFirma.DostUlica + " " + oFirma.DostNr,oFirma.NrWZ,"Usuń" });
                     }
                 }//Wyswietla dane z listy w DGV3
-        private void Button2_Click(object sender, EventArgs e) //button "print generuje PDF z tablelayout"
+        void PokazDok(string nrdok)
         {
-            printCustomer();
-         //   printSender();
-        }
-        private void button3_Click(object sender, EventArgs e) //button "Wczytaj" - pokaz zapisane w bazie
-        {
-            string sql = "SELECT L.Dokid,D.Data,SUM(CASE WHEN paliwoid = 1 THEN ilosc END) iloscON,SUM(CASE WHEN paliwoid = 2 THEN ilosc END) iloscONA,"+
-                  "SUM(CASE WHEN paliwoid = 3 THEN ilosc END) iloscOP,Nazwa as Wystawiajacy FROM list L inner join dok D on D.id=L.dokid "+
-                  "inner join Uzytkownik U on U.id=D.Userid GROUP BY L.Dokid, D.data, U.nazwa";
-            
+            FirmLista.Clear();
+            button2.Enabled = false;
+            button4.Text = "Zapisz poprawione";
+            ListNr_lbl.Text = nrdok;
+            string sql = "select * from WZView where dokid =" + nrdok;
             string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
             rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
-            SqlConnection connection = new SqlConnection(klucz); //skopiować gałąź na pozostałe kompy, ta sama co w ZielonyKoszyk
-            SqlDataAdapter dataadapter = new SqlDataAdapter(sql, connection);
-            DataSet ds = new DataSet();
-            connection.Open();
-            dataadapter.Fill(ds, "Kontrahenci");
-            connection.Close();
+            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true);
+            using (SqlConnection connection = new SqlConnection(klucz))
+            {
+                SqlCommand command = new SqlCommand(sql, connection);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                { FirmLista.Add(new DaneFirmy
+                (reader["Data"].ToString(),
+                Convert.ToInt32(reader["KontrID"]),
+                reader["Nazwa"].ToString(),
+                reader["Ulica"].ToString(),
+                reader["NrDomu"].ToString(),
+                reader["Kod"].ToString(),
+                reader["Miasto"].ToString(),
+                reader["Telefon"].ToString(),
+                reader["NIP"].ToString(),
+                Convert.ToInt32(reader["PaliwoID"]),
+                Convert.ToInt32(reader["Ilosc"]),
+                reader["Cena"].ToString(),
+                reader["FormaPlat"].ToString(),
+                reader["Termin"].ToString(),
+                reader["Sent"].ToString(),
+                reader["DostUlica"].ToString(),
+                reader["DostNr"].ToString(),
+                reader["DostMiasto"].ToString(),
+                reader["DostKod"].ToString(),
+                reader["DostPoczta"].ToString(),
+                reader["DostKraj"].ToString(),
+                reader["DostPlanRozp"].ToString(),
+                reader["DostRozp"].ToString(),
+                reader["DostPlanZak"].ToString(),
+                reader["Uwagi"].ToString(),
+                reader["nrwz"].ToString())); }
+                connection.Close();
+                AktualizujWczytanie(nrdok);
+                WczytajDaneDoDGV3();
+            }
+        }
+        void PokazListy()
+        {
+            string sql = "select * from ListyView";
+            Baza bazaSQL = new Baza();
             dataGridView1.Columns.Clear();
-            dataGridView1.DataSource = ds;
+            dataGridView1.DataSource = bazaSQL.Polacz(sql);
             dataGridView1.DataMember = "Kontrahenci";
             DataGridViewButtonColumn col = new DataGridViewButtonColumn
             {
@@ -281,10 +303,95 @@ namespace ListPrzewozowy
                 Name = "Wybor"
             };
             dataGridView1.Columns.Add(col);
-
-            //odbiorcy.Visible = true;
-
         }
+        void ClearDGV3()
+        {
+            while (dataGridView3.Rows.Count > 1)
+            {
+                dataGridView3.Rows.Clear();
+            }
+
+            while (dataGridView3.Columns.Count > 0)
+            {
+                dataGridView3.Columns.Clear();
+            }
+        }
+        void AktualizujWczytanie(string nrdok)
+        {
+            PierwszaWZ(nrdok, out string FirstNRWZNew, out string FirstdataWZNewk);
+            WZtxt.Text = FirstNRWZNew;
+            dateTimePicker1.Text = FirstdataWZNewk;
+        } //aktualizuje pole nrwz oraz date
+        static void PierwszaWZ(string nrdok, out string FirstNRWZ, out string FirstdataWZ)
+        {
+            Baza baza = new Baza();
+            FirstNRWZ = baza.CzytajZBazy("select top 1 nrwz from List where dokid=" + nrdok+ " and aktywny=1");
+            FirstdataWZ = baza.CzytajZBazy("select top 1 data from List L inner join dok D on D.id = L.dokid where dokid=" + nrdok+ " and aktywny=1");
+        }
+        static string OstatniaWZ()
+        {
+            Baza baza = new Baza();
+            string LastnrWZ = baza.CzytajZBazy("select top 1 nrwz from List L inner join dok D on D.id = L.dokid order by L.id desc");
+            return LastnrWZ;
+        }
+        void ZapiszList()
+            {
+            int UserID = 1;
+            int aktywnyDok = 1;
+            data = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd");
+            string sql = "insert into dok (Data,userID)values('" + data + "'," + UserID + ")";  //uzytkownik id=
+            Baza dok = new Baza();
+            dok.ZapiszDoBazy(sql); //zapis do tabeli dok
+            sql = "select COALESCE(MAX(id), '0') from dok";
+            int nrdok = Convert.ToInt32(dok.CzytajZBazy(sql)); //ostatni numer dok
+            sql = "SELECT COALESCE(MAX(nrwz), '0') FROM List";
+            int WZnr = Convert.ToInt32(dok.CzytajZBazy(sql));
+            WZnr = ++WZnr;
+            int firmCount = FirmLista.Count;
+            for (int count = 0; count < firmCount; ++count)
+                {
+                DaneFirmy oFirma = FirmLista[count];
+                int Fuel = Convert.ToInt32(oFirma.Paliwo);
+                MessageBox.Show(WZnr + "");
+                sql = "insert into list (Dokid, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, NrWZ, Aktywny) " +
+                       "values(" + nrdok + "," + oFirma.KontrahentID + "," + oFirma.Paliwo +"," + oFirma.Ilosc + ",'" + oFirma.Cena + "','" + oFirma.FormPlat + "','" + oFirma.Termin + "','" + oFirma.Sent + "','" + 
+                        oFirma.DostUlica + "','" + oFirma.DostNr + "','" + oFirma.DostMiasto + "','" + oFirma.DostKod + "','" + oFirma.DostPoczta + "','" + oFirma.DostKraj +
+                        "','" + oFirma.DostPlanRozp + "','" + oFirma.DostRozp + "','" + oFirma.DostPlanZak + "'," + WZnr + "," + aktywnyDok + ")";
+                dok.ZapiszDoBazy(sql);
+                WZnr = ++WZnr;
+                }
+            NewList();
+            button2.Enabled = true;  //zezwolenie na drukowanie
+            
+        } 
+        //TODO***************zapiszlist oraz UaktualnijList przerobić na wywoływanie procedur na serwerze SQL i jeżeli się da wykorzystać zatwierdzanie transakcji!!******************************
+        void UaktualnijList()
+        {
+            int aktywnyDok = 1;
+            int WZnr = Convert.ToInt32(WZtxt.Text);
+            int Doknr = Convert.ToInt32(ListNr_lbl.Text);
+            Baza dok = new Baza();
+            string sql = "update list set aktywny=0,nrwz=0 where dokid=" + Doknr+" and Aktywny=1";
+            dok.ZapiszDoBazy(sql);//wszystkie WZ z tego Listu jako nieaktywne
+            int firmCount = FirmLista.Count;
+            for (int count = 0; count < firmCount; ++count)
+            {
+                DaneFirmy oFirma = FirmLista[count];
+                int Fuel = Convert.ToInt32(oFirma.Paliwo);
+                MessageBox.Show(WZnr + "");
+                sql = "insert into list (Dokid, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, NrWZ, Aktywny) " +
+                   "values(" + Doknr + "," + oFirma.KontrahentID + "," + oFirma.Paliwo + "," + oFirma.Ilosc + ",'" + oFirma.Cena + "','" + oFirma.FormPlat + "','" + oFirma.Termin + "','" + oFirma.Sent + "','" +
+                    oFirma.DostUlica + "','" + oFirma.DostNr + "','" + oFirma.DostMiasto + "','" + oFirma.DostKod + "','" + oFirma.DostPoczta + "','" + oFirma.DostKraj +
+                    "','" + oFirma.DostPlanRozp + "','" + oFirma.DostRozp + "','" + oFirma.DostPlanZak + "'," + WZnr + "," + aktywnyDok + ")";
+                dok.ZapiszDoBazy(sql); //dodaj na nowo wszystkie wz na nowo z FirmLista
+                WZnr = ++WZnr;
+            }
+            NewList();
+            button2.Enabled = true;
+            PokazListy();
+        }
+        //TODO - przy zapisie zaktualizowanego Listu dopisac warunek sprawdzający, aby edycja wczesniejszych listów nie przekracza liczby wz w oryginalnym LisciePrzewozowym
+        //bo się zdublują nr WZ. W teorii nie powinno się tego robić... Nie dotyczy ostatniego ListuPrzewozowego
 
         static public bool NIPValidate(string NIPValidate)
         {
@@ -318,19 +425,14 @@ namespace ListPrzewozowy
             }
 
         }
-        private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
-                    {
-                    int firmCount;
-                    if (e.ColumnIndex == dataGridView3.Columns["Usun"].Index && e.RowIndex >= 0)
-                        firmCount = FirmLista.Count;
-                        FirmLista.RemoveAt(e.RowIndex);
-                    WczytajDane();
-                } //Usuń wybranego kontrahenta z listy
+        
         public void printCustomer()
                 {
                     nrwz = Convert.ToInt32(WZtxt.Text);
                     data = dateTimePicker1.Text;
-                    int UserId = 1; //************************************  Pobranie Id użytkownika z DropListy - do stworzenia na później ***************************************
+                    int UserId = 1; 
+            
+            //TODO ************************************  Pobranie Id użytkownika z DropListy - do stworzenia na później ***************************************
                     string filename = "wykaz_" + data + ".pdf";
                     string pierwszalinia="";
                     string drugalinia="";
@@ -348,7 +450,7 @@ namespace ListPrzewozowy
                     pdf.DrawHeader(page, data);
                     pdf.DrawFooters(page, numpage);
                         string DataDok = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd");
-                        ZapiszDok(DataDok, UserId); //Nowy dokument w bazie
+            //            ZapiszDok(DataDok, UserId); //Nowy dokument w bazie
                     int firmCount = FirmLista.Count;
                     for (int count = 0; count < firmCount; ++count)  //dla wszystkich odbiorców w zmiennej
                     {
@@ -395,8 +497,8 @@ namespace ListPrzewozowy
                         if (oFirma.Sent.Length != 0)
                             sentval = true; else sentval = false;
 
-                     ZapiszList(oFirma.KontrahentID, oFirma.Paliwo, oFirma.Ilosc, oFirma.Cena, oFirma.FormPlat, oFirma.Termin, oFirma.Sent, oFirma.DostUlica, oFirma.DostNr, oFirma.DostMiasto, oFirma.DostKod,
-                                oFirma.DostPoczta, oFirma.DostKraj, oFirma.DostPlanRozp, oFirma.DostRozp, oFirma.DostPlanZak, nrwz);
+          //           ZapiszList(oFirma.KontrahentID, oFirma.Paliwo, oFirma.Ilosc, oFirma.Cena, oFirma.FormPlat, oFirma.Termin, oFirma.Sent, oFirma.DostUlica, oFirma.DostNr, oFirma.DostMiasto, oFirma.DostKod,
+           //                     oFirma.DostPoczta, oFirma.DostKraj, oFirma.DostPlanRozp, oFirma.DostRozp, oFirma.DostPlanZak, nrwz);
                      Baza CzytajSQL = new Baza();
                      var fuel = CzytajSQL.CzytajZBazy("select nazwa from paliwo where paliwoid=" + oFirma.Paliwo);
                      printWZ(oFirma.Ilosc.ToString(), fuel, oFirma.Cena, oFirma.FormPlat, termin, "", pierwszalinia, drugalinia, oFirma.KontrUlica
@@ -483,13 +585,6 @@ namespace ListPrzewozowy
             xmlDoc.SelectSingleNode(param).InnerText = val;
             xmlDoc.Save(file);
         }  //zapisuje SENT
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string appPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
-            Process.Start("explorer.exe", appPath);
-        }  //pokaż folder z dokumentami pdf
-
         private void drawSENTawaria()
         {
             
@@ -507,162 +602,16 @@ namespace ListPrzewozowy
             document.Save(filename);
             Process.Start(filename);
         }
-
-        private void button5_Click(object sender, EventArgs e)
+    /*    static void ZapiszDoLogu(string error)
         {
-            PokazDokTest("1");
-
-        } //button test2
-
-        public void PokazDok(string nrdok)
-        {
-            string sql = "select * from list where dokid="+nrdok;
-            #region
-            //przeniesc do klasy--------------------
-            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); 
-            SqlConnection connection = new SqlConnection(klucz); 
-            SqlDataAdapter dataadapter = new SqlDataAdapter(sql, connection);
-            DataSet ds = new DataSet();
-            connection.Open();
-            dataadapter.Fill(ds, "Kontrahenci");
-            connection.Close();
-            //przeniesc do klasy--------------------
-            #endregion
-            //dataadapter do tablicy firm
-
-            dataGridView3.Columns.Clear();
-            dataGridView3.DataSource = ds;
-            dataGridView3.DataMember = "Kontrahenci";
-            DataGridViewButtonColumn col = new DataGridViewButtonColumn
-            {
-                UseColumnTextForButtonValue = true,
-                Text = "Usun",
-                Name = "Usun"
-            };
-            dataGridView3.Columns.Add(col);
+            string data = DateTime.Now.ToString();
+            StackTrace stackTrace = new StackTrace();
+            var nazwa=(stackTrace.GetFrame(1).GetMethod().Name);
+            //File.WriteAllText(@"Logi.txt", data+": "+ error);
+            File.AppendAllText(@"Logi.txt", data + ": " +nazwa+" "+ error + Environment.NewLine);
         }
+        */
 
-        public void AktualizujWczytanie()
-        {
-            // pobrac z bazy sql nr ostatniej Wz-tki 
-            //moze przygotowac prosta funkcje czytaj z bazy (1 parametr)
-            dateTimePicker1.Text = "2018-06-06";
-            WZtxt.Text = "666";
-        }
-
-        public string PokazDokTest(string nrdok)
-        {
-            string sql = "select d.data,k.KontrID,K.Nazwa,K.Ulica,K.nrdomu, K.Miasto, K.Nip, K.telefon,p.paliwoid,P.nazwa as Paliwo,L.Ilosc,L.Cena, L.FormaPlat, L.Termin, L.Sent, L.DostUlica,L.DostNr,L.nrWZ from List L " +
-                        "inner join Dok D on D.id = L.dokid inner join Uzytkownik U on U.id = D.userID inner join Paliwo P on P.paliwoID = L.paliwoid inner join OTD.dbo.kontrahent K "+
-                        "on k.kontrid = L.kontrID  where dokid =" + nrdok;
-            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true);
-
-           // List<CityInfo> cities = new List<CityInfo>();
-            using (SqlConnection connection = new SqlConnection(klucz))
-            {
-                SqlCommand command = new SqlCommand(sql, connection);
-                connection.Open();
-
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    // cities.Add(new CityInfo((int)reader["id"], reader["city"].ToString()));
-                  /*  MessageBox.Show(
-                        reader["Data"].ToString() + ", " +
-                        reader["Nazwa"].ToString()+", "+
-                        reader["Ulica"].ToString() + ", " +
-                        reader["NrDomu"].ToString() + ", "+
-                        reader["Miasto"].ToString() + ", "+
-                        reader["NIP"].ToString() + ", "+
-                        reader["Telefon"].ToString() + ", "+
-                        reader["Paliwo"].ToString() + ", "+
-                        reader["Ilosc"].ToString() + ", "+
-                        reader["Cena"].ToString() + ", "+
-                        reader["FormaPlat"].ToString() + ", "+
-                        reader["Termin"].ToString() + ", "+
-                        reader["Sent"].ToString() + ", "+
-                        reader["DostUlica"].ToString() + ", "+
-                        reader["DostNr"].ToString() + ", "
-                                    );
-                                    */
-                    //-----------
-                    FirmLista.Add(new DaneFirmy 
-                (reader["Data"].ToString(),
-                Convert.ToInt32(reader["KontrID"]),
-                reader["Nazwa"].ToString(),
-                reader["Ulica"].ToString(),
-                reader["NrDomu"].ToString(),
-                "",
-                reader["Miasto"].ToString(),
-                reader["Telefon"].ToString(),
-                reader["NIP"].ToString(),
-                Convert.ToInt32(reader["PaliwoID"]),
-                Convert.ToInt32(reader["Ilosc"]),
-                reader["Cena"].ToString(),
-                reader["FormaPlat"].ToString(),
-                reader["Termin"].ToString(),
-                reader["Sent"].ToString(),
-                reader["DostUlica"].ToString(),
-                reader["DostNr"].ToString(),
-                "","","","",
-                "","","",
-                "",
-                reader["nrwz"].ToString()));
-                   
-                }
-                connection.Close();
-                AktualizujWczytanie();
-                WczytajDane();
-            }
-            return nrdok;
-            
-            /*
-              FirmLista.Add(new DaneFirmy
-                (Form1.data, Convert.ToInt32(Form1.KontrID), KontrNazwa, KontrUlica, KontrNrDomu, KontrKod, KontrMiasto, KontrTelefon, KontrNip, TowarBox.SelectedIndex + 1, ilosc,
-                CenaBox.Text, FormaPlatBox.Text, TerminBox.Text, SentBox.Text, UlicaBox.Text, NrDomuBox.Text, MiejscowoscBox.Text, KodBox.Text, MiejscowoscBox.Text,
-                "PL", DataPlanRozp, DataRozp, DataPlanZak, "", nrWZ));
-                */
-            
-                }
-
-        private void button4_Click_1(object sender, EventArgs e)
-        {
-   /*         data = dateTimePicker1.Value.Date.ToString("yyyy--MM--dd");
-
-            //insert into list (DokID, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent, NrWZ) values (1,83,1, 1000,'3,99','przelew',3,'My zamykamy','148')
-            sqlval = "insert into list (Dokid, KontrId, Paliwo, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, NrWZ) " +
-               "values(" + dokid + ",";
-                
-           /*     "values(" + dokid + "," + KontrID + ", '" + KontrahentDane[8] + "'," + KontrahentDane[9] + ",'" + KontrahentDane[10] + "','" + KontrahentDane[11] + "'," + KontrahentDane[12] +
-                ",'" + KontrahentDane[13] + "','" + KontrahentDane[14] + "','" + KontrahentDane[15] + "','" + KontrahentDane[16] + "','" + KontrahentDane[17] + "','" + KontrahentDane[16] + "','PL', " +
-                "'" + KontrahentDane[18] + "','" + KontrahentDane[19] + "','" + KontrahentDane[20] + "', '" + nrwz + "')";
-                */
-            //ZapiszDoBazy(sqlval); //zapis do tabeli list
-        
-            
-        } //Button Zapisz do bazy
-
-        public void ZapiszDok(string Data, int UserID)
-        {
-            sqlval = "insert into dok (Data,userID)values('" + Data + "'," + UserID + ")";  //uzytkownik id=
-            ZapiszDoBazy(sqlval); //zapis do tabeli dok
-        }
-
-        public void ZapiszList(int KontrID, int PaliwoID, int Ilosc, string Cena, string Formaplat, string Termin, string Sent, string DostUlica, string DostNr, string DostMiasto,
-            string DostKod, string DostPoczta, string DostKraj, string DostPlanRozp, string DostRozp, string DostPlanZak, int NrWZ)
-        {
-            sqlval = "select top 1 isnull(id,1) from dok order by id desc";
-            Baza dok = new Baza();
-            var dokid = dok.CzytajZBazy(sqlval);
-            sqlval = "insert into list (Dokid, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, NrWZ) " +
-              "values(" + dokid + ","+KontrID+","+PaliwoID+","+Ilosc+",'" +Cena+"','"+Formaplat+"','"+Termin+"','"+Sent+"','"+DostUlica+"','"+DostNr+"','"+DostMiasto+"','"+DostKod+"','"+DostPoczta+"','"+DostKraj+
-              "','"+DostPlanRozp+"','" +DostRozp+"','"+DostPlanZak+"',"+NrWZ+")";
-            ZapiszDoBazy(sqlval);
-        }
     }
     public class DaneFirmy
     {
@@ -727,51 +676,16 @@ namespace ListPrzewozowy
         }
     }
 
-    class Baza
+    static class Zapisz
     {
-           List<string> zawartosc = new List<string>();            
-            public string CzytajZBazy(string sql)
-                  {
-                string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-                rejestrIO rejestr = new rejestrIO();
-                string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
-                var conn = new SqlConnection(klucz);
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(sql, conn))
-                {
-                    SqlDataReader reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        zawartosc.Add(reader.GetValue(0).ToString());
-                    }
-                }
-                for (int i = 0; i <= zawartosc.Count; i++)
-                     {       
-                       // MessageBox.Show("Count: "+zawartosc.Count.ToString()+" i="+i);
-                        return zawartosc[i];
-                     }
-                return zawartosc[0];
-                    conn.Close();
-            }  //zwraca STRING
-    }
-
-   /* public static class SentKontrahent
-    {
-        private static Dictionary<int, string> _messages;
-        static SentKontrahent()
+        public static void DoLogu(string error)
         {
-            _messages = new Dictionary<int, string>();
-        }
-
-        public static Dictionary<int, string> Dane
-        {
-            get { return _messages; }
+            string data = DateTime.Now.ToString();
+            StackTrace stackTrace = new StackTrace();
+            var nazwa = (stackTrace.GetFrame(1).GetMethod().Name);
+            //File.WriteAllText(@"Logi.txt", data+": "+ error);
+            File.AppendAllText(@"Logi.txt", data + ": " + nazwa + " " + error + Environment.NewLine);
         }
     }
-
-    */
-
-    
-
 }
 

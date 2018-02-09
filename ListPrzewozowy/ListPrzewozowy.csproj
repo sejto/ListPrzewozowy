@@ -63,7 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="connect.cs" />
+    <Compile Include="Baza.cs" />
     <Compile Include="crypto.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

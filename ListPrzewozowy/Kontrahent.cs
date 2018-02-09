@@ -73,15 +73,6 @@ namespace ListPrzewozowy
 
         private void Kontrahent_Load(object sender, EventArgs e)
         {
-            /*
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(file);
-            XmlNodeList nodeList = xmlDoc.SelectNodes("/Parametry/Paliwo/Wartosc");
-                foreach (XmlNode _node in nodeList)
-                {
-                    TowarBox.Items.Add(new Towar { Name = _node.InnerText.ToString() });
-                }
-                */
             string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
             rejestrIO rejestr = new rejestrIO();
             string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
@@ -126,7 +117,7 @@ namespace ListPrzewozowy
             Form1.FirmLista.Add(new DaneFirmy
                 (Form1.data, Convert.ToInt32(Form1.KontrID),KontrNazwa,KontrUlica, KontrNrDomu, KontrKod, KontrMiasto,KontrTelefon,KontrNip, TowarBox.SelectedIndex+1, ilosc,
                 CenaBox.Text,FormaPlatBox.Text,TerminBox.Text,SentBox.Text,UlicaBox.Text,NrDomuBox.Text,MiejscowoscBox.Text,KodBox.Text,MiejscowoscBox.Text,
-                "PL",DataPlanRozp,DataRozp,DataPlanZak,"", nrWZ));
+                "PL",DataPlanRozp,DataRozp,DataPlanZak,UwagiBox.Text, nrWZ));
             //MessageBox.Show(TowarBox.SelectedIndex.ToString());
             Close();
            
