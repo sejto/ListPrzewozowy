@@ -48,10 +48,12 @@ namespace ListPrzewozowy
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.button5 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.New_btn = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
             this.ListNr_lbl = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.New_btn = new System.Windows.Forms.Button();
             this.RebuildSQL_btn = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.UserBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -99,7 +101,7 @@ namespace ListPrzewozowy
             this.dataGridView1.RowHeadersWidth = 60;
             this.dataGridView1.Size = new System.Drawing.Size(1384, 172);
             this.dataGridView1.TabIndex = 3;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellContentClick);
             // 
             // button2
             // 
@@ -126,7 +128,7 @@ namespace ListPrzewozowy
             this.button3.Text = "Wczytaj listy";
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.Wczytaj_btn_Click);
             // 
             // dateTimePicker1
             // 
@@ -171,7 +173,7 @@ namespace ListPrzewozowy
             this.button1.Text = "Otwórz folder PDF";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Print_btn_Click);
             // 
             // button4
             // 
@@ -184,7 +186,7 @@ namespace ListPrzewozowy
             this.button4.Text = "Zapisz";
             this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click_1);
+            this.button4.Click += new System.EventHandler(this.Zapisz_btn_Click_1);
             // 
             // dataGridView3
             // 
@@ -199,13 +201,13 @@ namespace ListPrzewozowy
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(1171, 30);
+            this.button5.Location = new System.Drawing.Point(1325, 18);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 21;
             this.button5.Text = "but5_test_2";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // groupBox1
             // 
@@ -227,6 +229,24 @@ namespace ListPrzewozowy
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Wykaz odbiorców:";
             // 
+            // ListNr_lbl
+            // 
+            this.ListNr_lbl.AutoSize = true;
+            this.ListNr_lbl.Location = new System.Drawing.Point(1240, 63);
+            this.ListNr_lbl.Name = "ListNr_lbl";
+            this.ListNr_lbl.Size = new System.Drawing.Size(10, 13);
+            this.ListNr_lbl.TabIndex = 22;
+            this.ListNr_lbl.Text = ".";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1118, 63);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(122, 13);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "List przewozowy numer: ";
+            // 
             // New_btn
             // 
             this.New_btn.Image = ((System.Drawing.Image)(resources.GetObject("New_btn.Image")));
@@ -239,24 +259,6 @@ namespace ListPrzewozowy
             this.New_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.New_btn.Click += new System.EventHandler(this.New_btn_Click);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1118, 63);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(122, 13);
-            this.label4.TabIndex = 21;
-            this.label4.Text = "List przewozowy numer: ";
-            // 
-            // ListNr_lbl
-            // 
-            this.ListNr_lbl.AutoSize = true;
-            this.ListNr_lbl.Location = new System.Drawing.Point(1240, 63);
-            this.ListNr_lbl.Name = "ListNr_lbl";
-            this.ListNr_lbl.Size = new System.Drawing.Size(10, 13);
-            this.ListNr_lbl.TabIndex = 22;
-            this.ListNr_lbl.Text = ".";
-            // 
             // RebuildSQL_btn
             // 
             this.RebuildSQL_btn.Location = new System.Drawing.Point(1325, 47);
@@ -267,11 +269,31 @@ namespace ListPrzewozowy
             this.RebuildSQL_btn.UseVisualStyleBackColor = true;
             this.RebuildSQL_btn.Click += new System.EventHandler(this.RebuildSQL_btn_Click);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(1087, 13);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(65, 13);
+            this.label5.TabIndex = 24;
+            this.label5.Text = "Użytkownik:";
+            // 
+            // UserBox
+            // 
+            this.UserBox.FormattingEnabled = true;
+            this.UserBox.Location = new System.Drawing.Point(1090, 30);
+            this.UserBox.Name = "UserBox";
+            this.UserBox.Size = new System.Drawing.Size(150, 21);
+            this.UserBox.TabIndex = 25;
+            this.UserBox.SelectedIndexChanged += new System.EventHandler(this.Userbox_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1435, 671);
+            this.Controls.Add(this.UserBox);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.RebuildSQL_btn);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button5);
@@ -317,6 +339,8 @@ namespace ListPrzewozowy
         private Label ListNr_lbl;
         private Label label4;
         private Button RebuildSQL_btn;
+        private Label label5;
+        private ComboBox UserBox;
     }
 }
 

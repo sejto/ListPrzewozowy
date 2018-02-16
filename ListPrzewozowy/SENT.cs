@@ -14,7 +14,7 @@ namespace ListPrzewozowy
 
     }
     */
-    public class zapiszSENT
+    public class ZapiszSENT
     {
         string file = "SENT100.xml";
        

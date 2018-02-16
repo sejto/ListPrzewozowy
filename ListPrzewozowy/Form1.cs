@@ -48,52 +48,64 @@ namespace ListPrzewozowy
             this.WindowState = FormWindowState.Maximized;
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
             CreateDGV();
-            print pdf = new print();
+            Print pdf = new Print();
             NewList();
+            WyswietlUser();
             //TODO - dodać sprawdzanie czy baza istnieje i jest we właściwej wersji !=> inicjalizacja bazy
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            ToolTip ToolTip1 = new ToolTip();
-            ToolTip1.SetToolTip(button2, "Zapisz dokument przed wydrukowaniem.");
+           // ToolTip ToolTip1 = new ToolTip();
+           // ToolTip1.SetToolTip(button2, "Zapisz dokument przed wydrukowaniem.");
     }
 
         void OnProcessExit(object sender, EventArgs e)
         {
-            parametry("/Parametry/NrWZ/Wartosc", nrwz.ToString()); //zapamiętanie numeru ostatniej WZ-tki
+            //Parametry("/Parametry/NrWZ/Wartosc", nrwz.ToString()); //zapamiętanie numeru ostatniej WZ-tki
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Print_btn_Click(object sender, EventArgs e)
         {
             string appPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
-            Process.Start("explorer.exe", appPath);
+            Process.Start("explorer.exe", appPath+@"\pdf\");
         }  //pokaż folder z dokumentami pdf
         private void Button2_Click(object sender, EventArgs e) //button "print generuje PDF z tablelayout"
         {
-            printCustomer();
+            PrintCustomer();
             //   printSender();
         }
-        private void button4_Click_1(object sender, EventArgs e)
+        private void Zapisz_btn_Click_1(object sender, EventArgs e)
         {
             if (button4.Text.Contains("poprawione"))
                 UaktualnijList();
             else
                 ZapiszList();
         } //Button Zapisz do bazy
-        private void button3_Click(object sender, EventArgs e) //button "Wczytaj" - pokaz zapisane w bazie
+        private void Wczytaj_btn_Click(object sender, EventArgs e) //button "Wczytaj" - pokaz zapisane w bazie
         {
             PokazListy();
         }
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
-            Zapisz.DoLogu("asdasd");
+            //PobierzIDUsera();
+            MessageBox.Show(PobierzIDUsera()+"");
         } //button5 test2
         private void RebuildSQL_btn_Click(object sender, EventArgs e)
         {
-            Baza bazasql = new Baza();
-            bazasql.ReinicjalizacjaBazy();
-            NewList();
-            MessageBox.Show("Baza została odbudowana.");
+            DialogResult dialogResult = MessageBox.Show("Wszystkie dane zostaną skasowane, kontynuować?", "Inicjalizacja bazy danych", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                Baza bazasql = new Baza();
+                bazasql.ReinicjalizacjaBazy();
+                NewList();
+                MessageBox.Show("Baza została odbudowana.");
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                //do something else
+            }
+
+
         } //Button reinicjujący baze
         private void New_btn_Click(object sender, EventArgs e)
         {
@@ -103,7 +115,7 @@ namespace ListPrzewozowy
         {
             SzukajKTH();
         }
-        void CheckKeys(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        void CheckKeys(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
             {
@@ -120,7 +132,10 @@ namespace ListPrzewozowy
             int a = Convert.ToInt32(baza.CzytajZBazy("SELECT COALESCE(MAX(nrwz), '0') FROM List"));
             WZtxt.Text = (a + 1).ToString();
             button4.Text = "Zapisz";
-            ListNr_lbl.Text = "";
+            button4.Enabled = true;  //Zapisz aktywny
+            button2.Enabled = false; //drukuj nieaktywny
+            ListNr_lbl.Text = ".";
+            dataGridView1.Columns.Clear();
         }
         void SzukajKTH()
         {
@@ -152,7 +167,7 @@ namespace ListPrzewozowy
         }
         void CreateDGV()
         {
-            dataGridView3.CellClick += dataGridView3_CellClick;
+            dataGridView3.CellClick += DataGridView3_CellClick;
             dataGridView3.RowHeadersVisible = false;
             dataGridView3.Columns.Add("Column", "Nazwa");
             dataGridView3.Columns[0].Width = 180;
@@ -178,15 +193,17 @@ namespace ListPrzewozowy
             dataGridView3.Columns.Add("Column", "NrWZ");
             dataGridView3.Columns[12].Width = 45;
 
-            var buttonCol = new DataGridViewButtonColumn();
-            buttonCol.HeaderText = "Usun";
-            buttonCol.Name = "Usun";
-            buttonCol.Text = "Usun";
-            buttonCol.UseColumnTextForButtonValue = true;
+            var buttonCol = new DataGridViewButtonColumn
+            {
+                HeaderText = "Usun",
+                Name = "Usun",
+                Text = "Usun",
+                UseColumnTextForButtonValue = true
+            };
             dataGridView3.Columns.Add(buttonCol);
             dataGridView3.AllowUserToAddRows = false;
         }  //Utwórz nagłówki dgv listy z kontrahentami
-        void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == dataGridView1.Columns["Wybor"].Index && e.RowIndex >= 0)
             {
@@ -205,52 +222,71 @@ namespace ListPrzewozowy
                     string d = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
                     FirmLista.Clear();
                     PokazDok(d);
+                    button4.Enabled = false;
                 }
             }
 
         } //Wyswietl Form_Kontrahent a następnie dodaj kontrahenta do zmiennej FirmLista oraz wyświetl ją w DGV
-        void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
+        void DataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+          //  SprawdzCzyZmiany();
             int firmCount;
                 if (e.ColumnIndex == dataGridView3.Columns["Usun"].Index && e.RowIndex >= 0)
                 {
-                    firmCount = FirmLista.Count;
-                    FirmLista.RemoveAt(e.RowIndex);
-               // MessageBox.Show(dataGridView3.Rows[e.RowIndex].Cells["nrwz"].Value.ToString());
-                    WczytajDaneDoDGV3();
+                firmCount = FirmLista.Count;
+                FirmLista.RemoveAt(e.RowIndex);
+                button2.Enabled = false;
+                button4.Text = "Zapisz poprawione";
+                button4.Enabled = true;
+                WczytajDaneDoDGV3();
                 }
-            //---------------
-            //string nrdok = 
-            //string sql = "update list set aktywny=0 where id="+nrdok;  //usun dok=dokid
-            //Baza BazaSQL = new Baza();
-            //BazaSQL.ZapiszDoBazy(sql);
-            //PokazDok(nrdok);
-            //---------------
+                
 
         } //Usuń wybranego kontrahenta z listy
         void WczytajDaneDoDGV3()
         {
-           dataGridView3.Rows.Clear();
-           dataGridView3.Refresh();
-           int firmCount = FirmLista.Count;
-                    for (int count = 0; count < firmCount; ++count)
+            SprawdzCzyZmiany();
+            dataGridView3.Rows.Clear();
+            dataGridView3.Refresh();
+            int firmCount = FirmLista.Count;
+            for (int count = 0; count < firmCount; ++count)
                     {
                         DaneFirmy oFirma = FirmLista[count];
                         int Fuel = Convert.ToInt32(oFirma.Paliwo);
                         dataGridView3.Rows.Add(new object[] {oFirma.KontrNazwa, oFirma.KontrUlica + " " + oFirma.KontrNrDomu, oFirma.KontrMiasto + " " + oFirma.KontrKod,
                         oFirma.KontrNIP,oFirma.KontrTel,Fuel,oFirma.Ilosc.ToString(),oFirma.Cena,oFirma.FormPlat,oFirma.Termin,oFirma.Sent,oFirma.DostUlica + " " + oFirma.DostNr,oFirma.NrWZ,"Usuń" });
                     }
-                }//Wyswietla dane z listy w DGV3
+            dataGridView3.ReadOnly = true;
+        }//Wyswietla dane z listy w DGV3
+        void SprawdzCzyZmiany()
+        {
+            if (ListNr_lbl.Text != ".")
+            {
+                int Doknr = Convert.ToInt32(ListNr_lbl.Text);
+                string sql = "select count(nrwz) from List where aktywny = 1 and dokid = " + Doknr;
+                Baza bazasql = new Baza();
+                int Iledokbaza = Convert.ToInt32(bazasql.CzytajZBazy(sql));
+                int IleDok = FirmLista.Count;
+               // MessageBox.Show("Iledokbaza:" + Iledokbaza + " iledok: " + IleDok);
+                if (Iledokbaza != IleDok)
+                {
+                    button4.Enabled = true;
+                    button4.Text = "Zapisz poprawione";
+                    button2.Enabled = false;
+                }
+            }
+        }
+
         void PokazDok(string nrdok)
         {
             FirmLista.Clear();
-            button2.Enabled = false;
-            button4.Text = "Zapisz poprawione";
+            //button2.Enabled = false;
+           // button4.Text = "Zapisz poprawione";
             ListNr_lbl.Text = nrdok;
             string sql = "select * from WZView where dokid =" + nrdok;
             string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true);
+            RejestrIO rejestr = new RejestrIO();
+            string klucz = rejestr.CzytajKlucz(keyname, "SQLconnect", true);
             using (SqlConnection connection = new SqlConnection(klucz))
             {
                 SqlCommand command = new SqlCommand(sql, connection);
@@ -287,6 +323,7 @@ namespace ListPrzewozowy
                 connection.Close();
                 AktualizujWczytanie(nrdok);
                 WczytajDaneDoDGV3();
+                
             }
         }
         void PokazListy()
@@ -303,6 +340,8 @@ namespace ListPrzewozowy
                 Name = "Wybor"
             };
             dataGridView1.Columns.Add(col);
+            button2.Enabled = true;
+            dataGridView1.ReadOnly = true;
         }
         void ClearDGV3()
         {
@@ -331,15 +370,60 @@ namespace ListPrzewozowy
         static string OstatniaWZ()
         {
             Baza baza = new Baza();
-            string LastnrWZ = baza.CzytajZBazy("select top 1 nrwz from List L inner join dok D on D.id = L.dokid order by L.id desc");
+            string LastnrWZ = baza.CzytajZBazy("SELECT COALESCE(MAX(nrwz), '0') FROM List where aktywny=1");
             return LastnrWZ;
+        }
+        void WyswietlUser()
+        {
+            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
+            RejestrIO rejestr = new RejestrIO();
+            string klucz = rejestr.CzytajKlucz(keyname, "SQLconnect", true);
+            using (SqlConnection conn = new SqlConnection(klucz))
+            {
+                try
+                {
+                    string query = "select Nazwa, ID from Uzytkownik";
+                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                    conn.Open();
+                    DataSet ds = new DataSet();
+                    da.Fill(ds, "User");
+                    UserBox.DisplayMember = "Nazwa";
+                    UserBox.ValueMember = "ID";
+                    UserBox.DataSource = ds.Tables["User"];
+                }
+                catch (Exception ex)
+                {
+                    // write exception info to log or anything else
+                    MessageBox.Show("Error occured!"+ex);
+                }
+            }
+            UserBox.DropDownStyle = ComboBoxStyle.DropDownList;
+        }
+        private void Userbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataRowView view = UserBox.SelectedItem as DataRowView;
+            string name = view["Nazwa"].ToString();
+            int id = Convert.ToInt32(view["Id"]);
+            //MessageBox.Show(name + " " + id);
+        }
+        int PobierzIDUsera()
+        {
+            DataRowView view = UserBox.SelectedItem as DataRowView;
+            int id = Convert.ToInt32(view["Id"]);
+            return id;
+        }
+        string PobierzNazweUsera()
+        {
+            DataRowView view = UserBox.SelectedItem as DataRowView;
+            string name = view["Nazwa"].ToString();
+            return name;
         }
         void ZapiszList()
             {
-            int UserID = 1;
+            int UserID = PobierzIDUsera();
             int aktywnyDok = 1;
             data = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd");
-            string sql = "insert into dok (Data,userID)values('" + data + "'," + UserID + ")";  //uzytkownik id=
+            string sql = "insert into dok (Data,userID)values('" + data + "'," + UserID + ")";  
             Baza dok = new Baza();
             dok.ZapiszDoBazy(sql); //zapis do tabeli dok
             sql = "select COALESCE(MAX(id), '0') from dok";
@@ -352,11 +436,11 @@ namespace ListPrzewozowy
                 {
                 DaneFirmy oFirma = FirmLista[count];
                 int Fuel = Convert.ToInt32(oFirma.Paliwo);
-                MessageBox.Show(WZnr + "");
-                sql = "insert into list (Dokid, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, NrWZ, Aktywny) " +
+               // MessageBox.Show("zapisz wz nr: "+WZnr);
+                sql = "insert into list (Dokid, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, Uwagi, NrWZ, Aktywny) " +
                        "values(" + nrdok + "," + oFirma.KontrahentID + "," + oFirma.Paliwo +"," + oFirma.Ilosc + ",'" + oFirma.Cena + "','" + oFirma.FormPlat + "','" + oFirma.Termin + "','" + oFirma.Sent + "','" + 
                         oFirma.DostUlica + "','" + oFirma.DostNr + "','" + oFirma.DostMiasto + "','" + oFirma.DostKod + "','" + oFirma.DostPoczta + "','" + oFirma.DostKraj +
-                        "','" + oFirma.DostPlanRozp + "','" + oFirma.DostRozp + "','" + oFirma.DostPlanZak + "'," + WZnr + "," + aktywnyDok + ")";
+                        "','" + oFirma.DostPlanRozp + "','" + oFirma.DostRozp + "','" + oFirma.DostPlanZak + "','" +oFirma.Uwagi+ "'," + WZnr + "," + aktywnyDok + ")";
                 dok.ZapiszDoBazy(sql);
                 WZnr = ++WZnr;
                 }
@@ -368,31 +452,43 @@ namespace ListPrzewozowy
         void UaktualnijList()
         {
             int aktywnyDok = 1;
+            int UserID = PobierzIDUsera();
             int WZnr = Convert.ToInt32(WZtxt.Text);
             int Doknr = Convert.ToInt32(ListNr_lbl.Text);
+            data = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd");
             Baza dok = new Baza();
-            string sql = "update list set aktywny=0,nrwz=0 where dokid=" + Doknr+" and Aktywny=1";
+            string sql = "update dok set userid=" + UserID + ",data= '" + data +"' where id="+Doknr;
+                dok.ZapiszDoBazy(sql); //Uaktualnij uzytkownika i datę w dok
+            sql = "update list set aktywny=0,nrwz=0 where dokid=" + Doknr+" and Aktywny=1";
             dok.ZapiszDoBazy(sql);//wszystkie WZ z tego Listu jako nieaktywne
             int firmCount = FirmLista.Count;
             for (int count = 0; count < firmCount; ++count)
             {
                 DaneFirmy oFirma = FirmLista[count];
                 int Fuel = Convert.ToInt32(oFirma.Paliwo);
-                MessageBox.Show(WZnr + "");
-                sql = "insert into list (Dokid, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, NrWZ, Aktywny) " +
-                   "values(" + Doknr + "," + oFirma.KontrahentID + "," + oFirma.Paliwo + "," + oFirma.Ilosc + ",'" + oFirma.Cena + "','" + oFirma.FormPlat + "','" + oFirma.Termin + "','" + oFirma.Sent + "','" +
-                    oFirma.DostUlica + "','" + oFirma.DostNr + "','" + oFirma.DostMiasto + "','" + oFirma.DostKod + "','" + oFirma.DostPoczta + "','" + oFirma.DostKraj +
-                    "','" + oFirma.DostPlanRozp + "','" + oFirma.DostRozp + "','" + oFirma.DostPlanZak + "'," + WZnr + "," + aktywnyDok + ")";
+                sql = "insert into list (Dokid, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, Uwagi, NrWZ, Aktywny) " +
+                       "values(" + Doknr + "," + oFirma.KontrahentID + "," + oFirma.Paliwo + "," + oFirma.Ilosc + ",'" + oFirma.Cena + "','" + oFirma.FormPlat + "','" + oFirma.Termin + "','" + oFirma.Sent + "','" +
+                        oFirma.DostUlica + "','" + oFirma.DostNr + "','" + oFirma.DostMiasto + "','" + oFirma.DostKod + "','" + oFirma.DostPoczta + "','" + oFirma.DostKraj +
+                        "','" + oFirma.DostPlanRozp + "','" + oFirma.DostRozp + "','" + oFirma.DostPlanZak + "','" + oFirma.Uwagi + "'," + WZnr + "," + aktywnyDok + ")";
                 dok.ZapiszDoBazy(sql); //dodaj na nowo wszystkie wz na nowo z FirmLista
                 WZnr = ++WZnr;
             }
+
+            //PrzenumerujWZ(WZnr-1);
+            PrzenumerujWZ();
             NewList();
             button2.Enabled = true;
             PokazListy();
         }
-        //TODO - przy zapisie zaktualizowanego Listu dopisac warunek sprawdzający, aby edycja wczesniejszych listów nie przekracza liczby wz w oryginalnym LisciePrzewozowym
-        //bo się zdublują nr WZ. W teorii nie powinno się tego robić... Nie dotyczy ostatniego ListuPrzewozowego
 
+        void PrzenumerujWZ()
+        {
+            int WZOffset= Convert.ToInt32(Parametry("/Parametry/NrWZ/Wartosc"));  //ostatnia wystawiona WZ
+            Baza dok = new Baza();
+            string sql = "UPDATE list SET nrwz = (rowNumber +"+WZOffset+") FROM list INNER JOIN (SELECT ID, row_number() OVER (ORDER BY dokID) as rowNumber " +
+                "FROM list where aktywny = 1) drRowNumbers ON drRowNumbers.ID = list.ID";
+            dok.ZapiszDoBazy(sql);
+        }
         static public bool NIPValidate(string NIPValidate)
         {
             const byte lenght = 10;
@@ -425,15 +521,16 @@ namespace ListPrzewozowy
             }
 
         }
-        
-        public void printCustomer()
+        void WczytajList(int nrdok)
+        {
+
+        }
+
+        public void PrintCustomer()
                 {
                     nrwz = Convert.ToInt32(WZtxt.Text);
                     data = dateTimePicker1.Text;
-                    int UserId = 1; 
-            
-            //TODO ************************************  Pobranie Id użytkownika z DropListy - do stworzenia na później ***************************************
-                    string filename = "wykaz_" + data + ".pdf";
+                    string filename = AppDomain.CurrentDomain.BaseDirectory+@"\pdf\wykaz_kierowca_" + data + ".pdf";
                     string pierwszalinia="";
                     string drugalinia="";
                     string termin;
@@ -446,11 +543,10 @@ namespace ListPrzewozowy
                     int litryOP = 0;
                     int numpage = 1;
                     page = document.Pages[numpage - 1];
-                    print pdf = new print();
+                    Print pdf = new Print();
                     pdf.DrawHeader(page, data);
                     pdf.DrawFooters(page, numpage);
                         string DataDok = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd");
-            //            ZapiszDok(DataDok, UserId); //Nowy dokument w bazie
                     int firmCount = FirmLista.Count;
                     for (int count = 0; count < firmCount; ++count)  //dla wszystkich odbiorców w zmiennej
                     {
@@ -468,14 +564,16 @@ namespace ListPrzewozowy
                             { litryON = litryON + oFirma.Ilosc; }
                         else if(oFirma.Paliwo == 2) //ONA
                             { litryONA = litryONA + oFirma.Ilosc; }
-                        else
-                            { litryOP = litryOP + oFirma.Ilosc; } //OP
+                        else if (oFirma.Paliwo == 3) //OP
+                            { litryOP = litryOP + oFirma.Ilosc; } 
+
                         if (oFirma.FormPlat == "Gotówka")
                             termin = oFirma.Termin;
                         else
                             termin = oFirma.Termin + " dni";
 
-                        pdf.DrawCustomer(page, heightRowCust, oFirma.KontrNazwa, oFirma.KontrUlica+" "+oFirma.KontrNrDomu, oFirma.KontrNIP, oFirma.KontrTel, "", 
+                        pdf.DrawCustomer(page, heightRowCust, oFirma.KontrNazwa, oFirma.KontrUlica+" "+oFirma.KontrNrDomu, oFirma.KontrNIP, oFirma.KontrTel,
+                            oFirma.DostUlica+" "+oFirma.DostNr+","+oFirma.DostMiasto+","+oFirma.Uwagi, 
                             oFirma.Ilosc.ToString(), oFirma.Sent+ ", " + oFirma.Cena + " " + oFirma.FormPlat + "," + termin );
                         heightRowCust = heightRowCust + 70;
                         StringBuilder completedWord = new StringBuilder();
@@ -493,15 +591,12 @@ namespace ListPrzewozowy
                             pierwszalinia = oFirma.KontrNazwa;
 
                         int f = 1;
-                        while (File.Exists(filename)) { filename = "wykaz_kierowca_" + data + "_" + f + ".pdf"; f++; }
+                        while (File.Exists(filename)) { filename = AppDomain.CurrentDomain.BaseDirectory+@"\pdf\wykaz_kierowca_" + data + "_" + f + ".pdf"; f++; }
                         if (oFirma.Sent.Length != 0)
                             sentval = true; else sentval = false;
-
-          //           ZapiszList(oFirma.KontrahentID, oFirma.Paliwo, oFirma.Ilosc, oFirma.Cena, oFirma.FormPlat, oFirma.Termin, oFirma.Sent, oFirma.DostUlica, oFirma.DostNr, oFirma.DostMiasto, oFirma.DostKod,
-           //                     oFirma.DostPoczta, oFirma.DostKraj, oFirma.DostPlanRozp, oFirma.DostRozp, oFirma.DostPlanZak, nrwz);
                      Baza CzytajSQL = new Baza();
                      var fuel = CzytajSQL.CzytajZBazy("select nazwa from paliwo where paliwoid=" + oFirma.Paliwo);
-                     printWZ(oFirma.Ilosc.ToString(), fuel, oFirma.Cena, oFirma.FormPlat, termin, "", pierwszalinia, drugalinia, oFirma.KontrUlica
+                     PrintWZ(oFirma.Ilosc.ToString(), fuel, oFirma.Cena, oFirma.FormPlat, termin, oFirma.DostUlica+" "+oFirma.DostNr+","+oFirma.DostMiasto, pierwszalinia, drugalinia, oFirma.KontrUlica
                             +" "+oFirma.KontrNrDomu+", "+oFirma.KontrMiasto, "NIP/PESEL:" + oFirma.KontrNIP, "tel:" + oFirma.KontrTel,sentval);
                     }
                     page = document.Pages[0];
@@ -509,19 +604,20 @@ namespace ListPrzewozowy
                     document.Save(filename);
                     Process.Start(filename);
                 } //drukuj list przewozowy
-        public void printWZ(string ilosc, string paliwo,string cena,string formaplatWZ, string termin, string uwagiN, string line1, string line2, string line3, string line4, string line5, Boolean sentval)
+        public void PrintWZ(string ilosc, string paliwo,string cena,string formaplatWZ, string termin, string uwagiN, string line1, string line2, string line3, string line4, string line5, Boolean sentval)
         {
-           
-            string filename = "WZ_"+nrwz+".pdf";
+            
+            string filename = AppDomain.CurrentDomain.BaseDirectory+@"\pdf\WZ_" +nrwz+".pdf";
             string rok = dateTimePicker1.Value.Date.ToString("yyyy");
-            //MessageBox.Show(odbiorcy.GetControlFromPosition(7, 1).Text.ToString());
             PdfDocument document = new PdfDocument();
             PdfPage page = document.AddPage();
-            print pdf = new print();
-            pdf.ilosc = ilosc;
-            pdf.paliwo = paliwo;
-            pdf.uwagi = formaplatWZ + " " + termin;
-            pdf.uwagiN = uwagiN;
+            Print pdf = new Print
+            {
+                ilosc = ilosc,
+                paliwo = paliwo,
+                uwagi = formaplatWZ + " " + termin,
+                uwagiN = uwagiN
+            };
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(file);
             XmlNodeList nodeList = xmlDoc.SelectNodes("/Parametry/Firma/Wartosc");
@@ -537,31 +633,28 @@ namespace ListPrzewozowy
             pdf.line3 = line3;
             pdf.line4 = line4;
             pdf.line5 = line5;
-         //   if (formaplatWZ == "Przelew") { cena = ""; }
             pdf.cenapaliwa = cena+" zł";
             pdf.DrawWZName(page, nrwz+"/"+rok, dataWZ,30);
             pdf.DrawWZBody(page,106, sentval);
-            pdf.DrawWZFooter(page, parametry("/Parametry/Uzytkownik/Wartosc"),226); //Nazwisko wystawiającego w polu wystawil
+            pdf.DrawWZFooter(page, PobierzNazweUsera(),226); //Nazwisko wystawiającego w polu wystawil
             //-------część dolna WZ------------------
             pdf.DrawWZName(page, nrwz + "/"+rok, dataWZ, 450);
             pdf.DrawWZBody(page, 526,sentval);
-            pdf.DrawWZFooter(page, parametry("/Parametry/Uzytkownik/Wartosc"), 646); //Nazwisko wystawiającego w polu wystawil
+            pdf.DrawWZFooter(page, PobierzNazweUsera(), 646); //Nazwisko wystawiającego w polu wystawil
             //---------------------------------------
             document.Save(filename);
             Process.Start(filename);
             nrwz = ++nrwz ; //następny numer WZ
-//            WZtxt.Text = num.ToString(); //aktualizacja textboxa
-            //parametry("/Parametry/NrWZ/Wartosc", num.ToString()); //zapamiętanie numeru ostatniej WZ-tki
         }
 
-        public string parametry(string param)
+        public string Parametry(string param)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load("parametry.xml");
             XmlNode dane = xmlDoc.DocumentElement.SelectSingleNode(param);
             return dane.InnerText;
         }  //odczytuje gałąź konfiguracji z xml
-        public void parametry(string param, string val)
+        public void Parametry(string param, string val)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(file);
@@ -571,10 +664,14 @@ namespace ListPrzewozowy
 
         public void SENT100()
         {
-            TraderAddress SenderAddress = new TraderAddress();
-            SenderAddress.City = "Wypierdek Mamuci";
-            TraderInfo Trader = new TraderInfo();
-            Trader.TraderIdentityNumber = "84422233388";
+            TraderAddress SenderAddress = new TraderAddress
+            {
+                City = "Wypierdek Mamuci"
+            };
+            TraderInfo Trader = new TraderInfo
+            {
+                TraderIdentityNumber = "84422233388"
+            };
 
             ZapiszSENT("/ns2:SENT_100/ns2:GoodsSender/TraderInfo/TraderIdentityNumber", "345353535");
         }
@@ -585,14 +682,16 @@ namespace ListPrzewozowy
             xmlDoc.SelectSingleNode(param).InnerText = val;
             xmlDoc.Save(file);
         }  //zapisuje SENT
-        private void drawSENTawaria()
+        private void DrawSENTawaria()
         {
             
             string filename = "SENT_awaria_WZ_" + nrwz + ".pdf";
             PdfDocument document = new PdfDocument();
             PdfPage page = document.AddPage();
-            SentAwaria awaria = new SentAwaria();
-            awaria.OwnNumber = "12312313/2017";
+            SentAwaria awaria = new SentAwaria
+            {
+                OwnNumber = "12312313/2017"
+            };
 
             awaria.DrawPage1(page);
             page = document.AddPage();
@@ -602,16 +701,6 @@ namespace ListPrzewozowy
             document.Save(filename);
             Process.Start(filename);
         }
-    /*    static void ZapiszDoLogu(string error)
-        {
-            string data = DateTime.Now.ToString();
-            StackTrace stackTrace = new StackTrace();
-            var nazwa=(stackTrace.GetFrame(1).GetMethod().Name);
-            //File.WriteAllText(@"Logi.txt", data+": "+ error);
-            File.AppendAllText(@"Logi.txt", data + ": " +nazwa+" "+ error + Environment.NewLine);
-        }
-        */
-
     }
     public class DaneFirmy
     {

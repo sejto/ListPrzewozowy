@@ -187,11 +187,34 @@ update list set aktywny=1 where id=4
 
 select * from Dok
 select * from List
-select * from WZView where dokid =2
+select * from WZView where dokid =1
 select top 1 isnull(nrwz,1) from list order by nrwz desc
 
-delete from dok where id=1
-delete from list where dokid=64
+
 select top 1 isnull(nrwz,1) from List L inner join dok D on D.id = L.dokid order by L.id desc
-SELECT COALESCE(MAX(nrwz), '0') FROM List
+SELECT COALESCE(MAX(nrwz), '0') FROM List where aktywny=1 
 select COALESCE(MAX(id), '0') from dok 
+SELECT COALESCE(MAX(nrwz), '0') FROM List
+SELECT COALESCE(MAX(nrwz), '0') FROM List where dokid=7
+select top 1 nrwz from List L inner join dok D on D.id = L.dokid order by L.id desc
+select top 1 nrwz from List L inner join dok D on D.id = L.dokid where dokid=1
+
+SELECT COALESCE(MAX(dokid), '0') FROM List where aktywny=1 
+
+
+DECLARE @i As int
+SET @i = 0
+UPDATE List
+SET @i= NrWZ= @i+1
+where aktywny=1
+
+
+UPDATE list
+SET nrwz = rowNumber 
+FROM list
+INNER JOIN 
+(SELECT ID, row_number() OVER (ORDER BY dokID ) as rowNumber
+FROM list where aktywny=1) drRowNumbers ON drRowNumbers.ID = list.ID
+
+update list set nrwz=17 where id=23
+select * from List where aktywny=1

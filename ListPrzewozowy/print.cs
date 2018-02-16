@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ListPrzewozowy
 {
-    class print
+    class Print
     {
         private static readonly XPen _pen = new XPen(XColors.Black, 0.5);
         private static readonly XBrush _brush = XBrushes.Black;
@@ -29,15 +29,15 @@ namespace ListPrzewozowy
         private static double posYBody=55;
         //------------WZ---------------------------
         private static double posXWZ1 = 30;
-        private static double posYWZ1 ;
-        private static double posXWZ2 = 30;
-        private static double posYWZ2 = 30;
+     //   private static double posYWZ1 ;
+      //  private static double posXWZ2 = 30;
+      //  private static double posYWZ2 = 30;
         private static double widthYWZ = 220;
         private static double heightWZ = 76;
 //        private static double newline = 30;
         private static double NamePosX1 = 250;
-        private static double BodyPosY1 = 106;
-        private static double FooterPosY1 = 226;
+      //  private static double BodyPosY1 = 106;
+      //  private static double FooterPosY1 = 226;
         public string[] lineour = new string[6];
         public string paliwo="";
         public string ilosc="";
@@ -145,12 +145,16 @@ namespace ListPrzewozowy
                 {
                     graphics.DrawLine(_pen, new XPoint(28, page.Height - 26), new XPoint(page.Width - 30.75, page.Height - 26));
                     XRect rectFooter = new XRect(28, page.Height - 25, page.Width - 59, 7);
-                    XStringFormat formatNear = new XStringFormat();
-                    formatNear.Alignment = XStringAlignment.Near;
-                    XStringFormat formatFar = new XStringFormat();
-                    formatFar.Alignment = XStringAlignment.Far;
+                XStringFormat formatNear = new XStringFormat
+                {
+                    Alignment = XStringAlignment.Near
+                };
+                XStringFormat formatFar = new XStringFormat
+                {
+                    Alignment = XStringAlignment.Far
+                };
 
-                    graphics.DrawString("Strona "+ numpage, _fontSubtitle, _brush, rectFooter, formatFar);
+                graphics.DrawString("Strona "+ numpage, _fontSubtitle, _brush, rectFooter, formatFar);
                     graphics.DrawString("List przewozowy v1.1 @sejto.pl", _fontSubtitle, _brush, rectFooter, formatNear);
                 }
         }

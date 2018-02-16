@@ -16,8 +16,8 @@ namespace WindowsFormsApp1
         {
             ListPrzewozowy.Zapisz.DoLogu(sql);
             string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); 
+            RejestrIO rejestr = new RejestrIO();
+            string klucz = rejestr.CzytajKlucz(keyname, "SQLconnect", true); 
             var conn = new SqlConnection(klucz);
             string zawartosc="";
             conn.Open();
@@ -38,8 +38,8 @@ namespace WindowsFormsApp1
         {
             ListPrzewozowy.Zapisz.DoLogu(sql);
             string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true);
+            RejestrIO rejestr = new RejestrIO();
+            string klucz = rejestr.CzytajKlucz(keyname, "SQLconnect", true);
             using (var conn = new SqlConnection(klucz))
             using (var cmd = conn.CreateCommand())
             {
@@ -54,8 +54,8 @@ namespace WindowsFormsApp1
         {
             DataSet ds = new DataSet();
             string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            rejestrIO rejestr = new rejestrIO();
-            string klucz = rejestr.czytajklucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
+            RejestrIO rejestr = new RejestrIO();
+            string klucz = rejestr.CzytajKlucz(keyname, "SQLconnect", true); //parametry połączenia do bazy SQL zapisane w rejestrze
             var conn = new SqlConnection(klucz);
             SqlDataAdapter da = new SqlDataAdapter(sql, conn);
             da.Fill(ds, "Kontrahenci");

@@ -56,6 +56,8 @@
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.UwagiBox = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -68,8 +70,6 @@
             this.CenaBox = new System.Windows.Forms.TextBox();
             this.TowarBox = new System.Windows.Forms.ComboBox();
             this.IloscBox = new System.Windows.Forms.TextBox();
-            this.UwagiBox = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.MiejsceGroup.SuspendLayout();
             this.DataBox.SuspendLayout();
@@ -143,7 +143,7 @@
             this.DodajKthBtn.Name = "DodajKthBtn";
             this.DodajKthBtn.Size = new System.Drawing.Size(75, 23);
             this.DodajKthBtn.TabIndex = 15;
-            this.DodajKthBtn.Text = "Zapisz";
+            this.DodajKthBtn.Text = "Zapisz (F2)";
             this.DodajKthBtn.UseVisualStyleBackColor = true;
             this.DodajKthBtn.Click += new System.EventHandler(this.DodajKthBtn_Click);
             // 
@@ -172,7 +172,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(234, 81);
+            this.label6.Location = new System.Drawing.Point(287, 84);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(36, 16);
             this.label6.TabIndex = 11;
@@ -181,7 +181,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(45, 81);
+            this.label5.Location = new System.Drawing.Point(169, 84);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(50, 16);
             this.label5.TabIndex = 10;
@@ -190,7 +190,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(453, 31);
+            this.label4.Location = new System.Drawing.Point(45, 84);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(91, 16);
             this.label4.TabIndex = 9;
@@ -225,21 +225,21 @@
             // 
             // KrajBox
             // 
-            this.KrajBox.Location = new System.Drawing.Point(237, 100);
+            this.KrajBox.Location = new System.Drawing.Point(290, 103);
             this.KrajBox.Name = "KrajBox";
             this.KrajBox.Size = new System.Drawing.Size(100, 23);
             this.KrajBox.TabIndex = 11;
             // 
             // PocztaBox
             // 
-            this.PocztaBox.Location = new System.Drawing.Point(48, 100);
+            this.PocztaBox.Location = new System.Drawing.Point(172, 103);
             this.PocztaBox.Name = "PocztaBox";
             this.PocztaBox.Size = new System.Drawing.Size(100, 23);
             this.PocztaBox.TabIndex = 10;
             // 
             // KodBox
             // 
-            this.KodBox.Location = new System.Drawing.Point(453, 50);
+            this.KodBox.Location = new System.Drawing.Point(45, 103);
             this.KodBox.Name = "KodBox";
             this.KodBox.Size = new System.Drawing.Size(100, 23);
             this.KodBox.TabIndex = 9;
@@ -353,6 +353,22 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Dane o towarze:";
             // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(533, 81);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(48, 16);
+            this.label16.TabIndex = 13;
+            this.label16.Text = "Uwagi:";
+            // 
+            // UwagiBox
+            // 
+            this.UwagiBox.Location = new System.Drawing.Point(535, 101);
+            this.UwagiBox.Name = "UwagiBox";
+            this.UwagiBox.Size = new System.Drawing.Size(366, 23);
+            this.UwagiBox.TabIndex = 12;
+            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -452,22 +468,6 @@
             this.IloscBox.Name = "IloscBox";
             this.IloscBox.Size = new System.Drawing.Size(62, 23);
             this.IloscBox.TabIndex = 1;
-            // 
-            // UwagiBox
-            // 
-            this.UwagiBox.Location = new System.Drawing.Point(535, 101);
-            this.UwagiBox.Name = "UwagiBox";
-            this.UwagiBox.Size = new System.Drawing.Size(366, 23);
-            this.UwagiBox.TabIndex = 12;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(533, 81);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(48, 16);
-            this.label16.TabIndex = 13;
-            this.label16.Text = "Uwagi:";
             // 
             // Kontrahent
             // 

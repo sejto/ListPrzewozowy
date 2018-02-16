@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp1
 {
-    class getdane
+    class GetDane
     {
         //       const string keyname = "HKEY_CURRENT_USER\\c#Test\\PUL";
         public string ip, user, pass;
-        public string dane(string keyname)
+        public string Dane(string keyname)
         {
-            rejestrIO rejestr = new rejestrIO();
-            ip = rejestr.czytajklucz(keyname, "ip", false);
-            user = rejestr.czytajklucz(keyname, "user", false);
-            pass = rejestr.czytajklucz(keyname, "pass", true);
+            RejestrIO rejestr = new RejestrIO();
+            ip = rejestr.CzytajKlucz(keyname, "ip", false);
+            user = rejestr.CzytajKlucz(keyname, "user", false);
+            pass = rejestr.CzytajKlucz(keyname, "pass", true);
             return ip;
             return user;
             return pass;
@@ -24,10 +24,10 @@ namespace WindowsFormsApp1
 
 
     }
-    class rejestrIO
+    class RejestrIO
     {
         const string salt = "f$4e9$#n!#98iaf542";
-        public void zapiszklucz(string keyName, string valuename, string valuedata, bool crypt)
+        public void ZapiszKlucz(string keyName, string valuename, string valuedata, bool crypt)
         {
             if (crypt != true)
             {
@@ -39,7 +39,7 @@ namespace WindowsFormsApp1
                 Registry.SetValue(keyName, valuename, valdatacrypt);
             }
         }
-        public string czytajklucz(string keyName, string valuename, bool crypt)
+        public string CzytajKlucz(string keyName, string valuename, bool crypt)
         {
             if (crypt != true)
             {
