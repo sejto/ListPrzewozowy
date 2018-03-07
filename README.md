@@ -8,3 +8,4 @@ W przygotowaniu jest generowanie dokumentu SENT zastępującego zgłoszenie(tzw 
 Program jest napisany dosyć chaotycznie, ale zależało mi na jak najszybszym oddaniu do użytkowania - na chwilę obecną skrócił czas przygotowywania dokumentów dla kierowcy z 2-3h do ok 15 minut.
 Błędy poprawiane są na bieżąco, w miarę zgłaszania przez użytkowników oraz zdobywania przeze mnie wiedzy o c#.
 Na przykładzie tego programu uczę się programować w języku c# oraz próbuję zrozumieć zasady programowania obiektowego. Niestety prymitywne pętle oraz programowanie proceduralne to jest kotwica, którą ciężko wyrwać z mułu...
+Ale ciągle staram sie ulepszać program.
