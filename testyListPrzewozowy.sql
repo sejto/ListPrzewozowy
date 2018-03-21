@@ -210,7 +210,7 @@ where aktywny=1
 
 
 UPDATE list
-SET nrwz = rowNumber 
+SET nrwz = (rowNumber +628)
 FROM list
 INNER JOIN 
 (SELECT ID, row_number() OVER (ORDER BY dokID ) as rowNumber
@@ -218,3 +218,8 @@ FROM list where aktywny=1) drRowNumbers ON drRowNumbers.ID = list.ID
 
 update list set nrwz=17 where id=23
 select * from List where aktywny=1
+
+select * from Paliwo
+update paliwo set nazwa = 'Olej opałowy' where paliwoid=3
+
+

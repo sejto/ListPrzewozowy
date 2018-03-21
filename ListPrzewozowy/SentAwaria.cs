@@ -19,7 +19,7 @@ namespace ListPrzewozowy
 
         private static double posX = 25;
         private static double posY = 100;
-        private static double currPosX;
+      //  private static double currPosX;
         private static double currPosY;
         private static double lenCol1 = 360;
         private static double lenCol2 = 180;

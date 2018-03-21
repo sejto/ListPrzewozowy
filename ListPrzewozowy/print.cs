@@ -11,33 +11,28 @@ namespace ListPrzewozowy
 {
     class Print
     {
-        private static readonly XPen _pen = new XPen(XColors.Black, 0.5);
-        private static readonly XBrush _brush = XBrushes.Black;
-        private static readonly XFont _fontNormal = new XFont("Arial", 9, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontWZ = new XFont("Arial", 11, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontBold = new XFont("Arial", 10, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontAmount = new XFont("Arial", 9, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontHeader = new XFont("Arial", 14, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontInvoiceType = new XFont("Arial", 12, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontDates = new XFont("Arial", 10, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontProductsHeader = new XFont("Arial", 8, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontWZproduct = new XFont("Arial", 8, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
-        private static readonly XFont _fontSubtitle = new XFont("Arial", 6, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XPen pen = new XPen(XColors.Black, 0.5);
+        private static readonly XBrush brush = XBrushes.Black;
+        private static readonly XFont fontNormal = new XFont("Arial", 9, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontUwagi = new XFont("Arial", 8, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontWZ = new XFont("Arial", 11, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontBold = new XFont("Arial", 10, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontAmount = new XFont("Arial", 9, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontHeader = new XFont("Arial", 14, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontInvoiceType = new XFont("Arial", 12, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontDates = new XFont("Arial", 10, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontProductsHeader = new XFont("Arial", 8, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontWZproduct = new XFont("Arial", 8, XFontStyle.Bold, new XPdfFontOptions(PdfFontEncoding.Unicode));
+        private static readonly XFont fontSubtitle = new XFont("Arial", 6, XFontStyle.Regular, new XPdfFontOptions(PdfFontEncoding.Unicode));
         private static double posX = 30;
         private static double lenListName = 360;
         private static double lenListDischarge = 60;
         private static double posYBody=55;
         //------------WZ---------------------------
         private static double posXWZ1 = 30;
-     //   private static double posYWZ1 ;
-      //  private static double posXWZ2 = 30;
-      //  private static double posYWZ2 = 30;
         private static double widthYWZ = 220;
         private static double heightWZ = 76;
-//        private static double newline = 30;
         private static double NamePosX1 = 250;
-      //  private static double BodyPosY1 = 106;
-      //  private static double FooterPosY1 = 226;
         public string[] lineour = new string[6];
         public string paliwo="";
         public string ilosc="";
@@ -61,12 +56,12 @@ namespace ListPrzewozowy
                 XRect listDate = new XRect(posX+100, 10, 530, 30);
                 XRect listShow = new XRect(posX, 30, 530, 10);
 
-                graphics.DrawRectangle(_pen, listHead);
-                XFont fontNumber = _fontDates;
+                graphics.DrawRectangle(pen, listHead);
+                XFont fontNumber = fontDates;
 
-                graphics.DrawString("Wykaz odbiorców UN 1202 w sprzedaży obwoźnej", _fontBold, _brush, listShow, XStringFormats.Center);
-                graphics.DrawString("Załącznik do listu przewozowego z dnia ", _fontNormal, _brush, listHeader, XStringFormats.Center);
-                graphics.DrawString(SaleDate, _fontHeader, _brush, listDate, XStringFormats.Center);
+                graphics.DrawString("Wykaz odbiorców UN 1202 w sprzedaży obwoźnej", fontBold, brush, listShow, XStringFormats.Center);
+                graphics.DrawString("Załącznik do listu przewozowego z dnia ", fontNormal, brush, listHeader, XStringFormats.Center);
+                graphics.DrawString(SaleDate, fontHeader, brush, listDate, XStringFormats.Center);
             }
         }
         public void DrawBody(PdfPage page, int litryON, int litryONA, int litryOP)
@@ -86,21 +81,21 @@ namespace ListPrzewozowy
                 XRect listDischarge = new XRect(posX + lenListName+55, posYBody+15, 58, 15);
                 XRect listRest = new XRect(posX+lenListName+lenListDischarge+53, posYBody+15, 57, 15);
 
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, listName);
-                graphics.DrawRectangle(_pen,  listAmountH);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, listOrdered);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, listDischarge);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, listRest);
+                graphics.DrawRectangle(pen, XBrushes.LightGray, listName);
+                graphics.DrawRectangle(pen,  listAmountH);
+                graphics.DrawRectangle(pen, XBrushes.LightGray, listOrdered);
+                graphics.DrawRectangle(pen, XBrushes.LightGray, listDischarge);
+                graphics.DrawRectangle(pen, XBrushes.LightGray, listRest);
 
-                graphics.DrawString("Nazwa i adres odbiorcy", _fontNormal, _brush, listName1, XStringFormats.Center);
-                graphics.DrawString("(miejsce rozładunku)", _fontNormal, _brush, listName2, XStringFormats.Center);
-                graphics.DrawString("Ilość", _fontBold, _brush, listAmountHON, XStringFormats.Center);
-                graphics.DrawString("ON: "+litryON, _fontAmount, _brush, listAmountON, XStringFormats.Center);
-                graphics.DrawString("ONA: " + litryONA, _fontAmount, _brush, listAmountONA, XStringFormats.Center);
-                graphics.DrawString("OP: " + litryOP, _fontAmount, _brush, listAmountOP, XStringFormats.Center);
-                graphics.DrawString("Zamówione", _fontNormal, _brush, listOrdered, XStringFormats.Center);
-                graphics.DrawString("Rozładowane", _fontNormal, _brush, listDischarge, XStringFormats.Center);
-                graphics.DrawString("Pozostało", _fontNormal, _brush, listRest, XStringFormats.Center);
+                graphics.DrawString("Nazwa i adres odbiorcy", fontNormal, brush, listName1, XStringFormats.Center);
+                graphics.DrawString("(miejsce rozładunku)", fontNormal, brush, listName2, XStringFormats.Center);
+                graphics.DrawString("Ilość", fontBold, brush, listAmountHON, XStringFormats.Center);
+                graphics.DrawString("ON: "+litryON, fontAmount, brush, listAmountON, XStringFormats.Center);
+                graphics.DrawString("ONA: " + litryONA, fontAmount, brush, listAmountONA, XStringFormats.Center);
+                graphics.DrawString("OP: " + litryOP, fontAmount, brush, listAmountOP, XStringFormats.Center);
+                graphics.DrawString("Zamówione", fontNormal, brush, listOrdered, XStringFormats.Center);
+                graphics.DrawString("Rozładowane", fontNormal, brush, listDischarge, XStringFormats.Center);
+                graphics.DrawString("Pozostało", fontNormal, brush, listRest, XStringFormats.Center);
             }
 
         }
@@ -121,29 +116,28 @@ namespace ListPrzewozowy
                 XRect listCustomerDischarge = new XRect(posX + lenListName + lenListDischarge-5, posYCustomer, 58, 70);
                 XRect listCustomerRest = new XRect(posX + lenListName + lenListDischarge+53, posYCustomer, 57, 70);
 
-                graphics.DrawRectangle(_pen, listCustomer);
+                graphics.DrawRectangle(pen, listCustomer);
 
-                graphics.DrawRectangle(_pen, listCustomerOrdered);
-                graphics.DrawRectangle(_pen, listCustomerDischarge);
-                graphics.DrawRectangle(_pen, listCustomerRest);
+                graphics.DrawRectangle(pen, listCustomerOrdered);
+                graphics.DrawRectangle(pen, listCustomerDischarge);
+                graphics.DrawRectangle(pen, listCustomerRest);
 
-                graphics.DrawString(line1, _fontProductsHeader, _brush, listCust1, XStringFormats.TopLeft  );
-                graphics.DrawString(line2, _fontNormal, _brush, listCust2, XStringFormats.TopLeft);
-                graphics.DrawString("NIP/PESEL: "+line3, _fontNormal, _brush, listCust3, XStringFormats.TopLeft);
-                graphics.DrawString("Tel: "+line4, _fontNormal, _brush, listCust4, XStringFormats.TopLeft);
-                graphics.DrawString("UWAGI: "+line5, _fontBold, _brush, listCust5, XStringFormats.TopLeft);
-                graphics.DrawString("Uwagi: " + line6, _fontNormal, _brush, listCust6, XStringFormats.TopLeft);
-                graphics.DrawString(amount, _fontInvoiceType, _brush, listCustomerOrdered, XStringFormats.Center);
+                graphics.DrawString(line1, fontProductsHeader, brush, listCust1, XStringFormats.TopLeft  );
+                graphics.DrawString(line2, fontNormal, brush, listCust2, XStringFormats.TopLeft);
+                graphics.DrawString("NIP/PESEL: "+line3, fontNormal, brush, listCust3, XStringFormats.TopLeft);
+                graphics.DrawString("Tel: "+line4, fontNormal, brush, listCust4, XStringFormats.TopLeft);
+                graphics.DrawString("UWAGI: "+line5, fontBold, brush, listCust5, XStringFormats.TopLeft);
+                graphics.DrawString("Uwagi: " + line6, fontNormal, brush, listCust6, XStringFormats.TopLeft);
+                graphics.DrawString(amount, fontInvoiceType, brush, listCustomerOrdered, XStringFormats.Center);
 
             }
         }
         public void DrawFooters(PdfPage page, int numpage)
         {
-                //PdfPage numpage = page[1];
-
-                using (XGraphics graphics = XGraphics.FromPdfPage(page))
+            string wersja = "20180321";
+            using (XGraphics graphics = XGraphics.FromPdfPage(page))
                 {
-                    graphics.DrawLine(_pen, new XPoint(28, page.Height - 26), new XPoint(page.Width - 30.75, page.Height - 26));
+                    graphics.DrawLine(pen, new XPoint(28, page.Height - 26), new XPoint(page.Width - 30.75, page.Height - 26));
                     XRect rectFooter = new XRect(28, page.Height - 25, page.Width - 59, 7);
                 XStringFormat formatNear = new XStringFormat
                 {
@@ -153,9 +147,8 @@ namespace ListPrzewozowy
                 {
                     Alignment = XStringAlignment.Far
                 };
-
-                graphics.DrawString("Strona "+ numpage, _fontSubtitle, _brush, rectFooter, formatFar);
-                    graphics.DrawString("List przewozowy v1.1 @sejto.pl", _fontSubtitle, _brush, rectFooter, formatNear);
+                graphics.DrawString("Strona "+ numpage, fontSubtitle, brush, rectFooter, formatFar);
+                    graphics.DrawString("List przewozowy v1." + wersja +" ©sejto.pl", fontSubtitle, brush, rectFooter, formatNear);
                 }
         }
 
@@ -182,29 +175,29 @@ namespace ListPrzewozowy
                 XRect listCust4 = new XRect(NamePosX1, posYWZ1 + 45, widthYWZ, 5);
                 XRect listCust5 = new XRect(NamePosX1 + 5, posYWZ1 + 60, widthYWZ, 5);
 
-                graphics.DrawRectangle(_pen, listOur1);
-                graphics.DrawRectangle(_pen, listCust);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, listNum);
-                graphics.DrawRectangle(_pen, listDate);
-                XFont fontNumber = _fontDates;
+                graphics.DrawRectangle(pen, listOur1);
+                graphics.DrawRectangle(pen, listCust);
+                graphics.DrawRectangle(pen, XBrushes.LightGray, listNum);
+                graphics.DrawRectangle(pen, listDate);
+                XFont fontNumber = fontDates;
 
-                graphics.DrawString(lineour[0], _fontWZ, _brush, listOurTxt, XStringFormats.TopCenter);
-                graphics.DrawString(lineour[1], _fontWZ, _brush, listOur2, XStringFormats.TopCenter);
-                graphics.DrawString(lineour[2], _fontWZ, _brush, listOur3, XStringFormats.TopCenter);
-                graphics.DrawString(lineour[3], _fontWZ, _brush, listOur4, XStringFormats.TopCenter);
-                graphics.DrawString(lineour[4], _fontWZ, _brush, listOur5, XStringFormats.TopCenter);
-                graphics.DrawString(lineour[5], _fontBold, _brush, listOur6, XStringFormats.TopCenter);
+                graphics.DrawString(lineour[0], fontWZ, brush, listOurTxt, XStringFormats.TopCenter);
+                graphics.DrawString(lineour[1], fontWZ, brush, listOur2, XStringFormats.TopCenter);
+                graphics.DrawString(lineour[2], fontWZ, brush, listOur3, XStringFormats.TopCenter);
+                graphics.DrawString(lineour[3], fontWZ, brush, listOur4, XStringFormats.TopCenter);
+                graphics.DrawString(lineour[4], fontWZ, brush, listOur5, XStringFormats.TopCenter);
+                graphics.DrawString(lineour[5], fontBold, brush, listOur6, XStringFormats.TopCenter);
                 
-                graphics.DrawString(line1, _fontNormal, _brush, listCustTxt, XStringFormats.TopCenter);
-                graphics.DrawString(line2, _fontNormal, _brush, listCust1, XStringFormats.TopCenter);
-                graphics.DrawString(line3, _fontNormal, _brush, listCust2, XStringFormats.TopCenter);
-                graphics.DrawString(line4, _fontNormal, _brush, listCust3, XStringFormats.TopCenter);
-                graphics.DrawString(line5, _fontNormal, _brush, listCust4, XStringFormats.TopCenter);
-                graphics.DrawString("Adres dostawy: "+uwagiN, _fontNormal, _brush, listCust5, XStringFormats.TopLeft);
+                graphics.DrawString(line1, fontNormal, brush, listCustTxt, XStringFormats.TopCenter);
+                graphics.DrawString(line2, fontNormal, brush, listCust1, XStringFormats.TopCenter);
+                graphics.DrawString(line3, fontNormal, brush, listCust2, XStringFormats.TopCenter);
+                graphics.DrawString(line4, fontNormal, brush, listCust3, XStringFormats.TopCenter);
+                graphics.DrawString(line5, fontNormal, brush, listCust4, XStringFormats.TopCenter);
+                graphics.DrawString("Adres dostawy: "+uwagiN, fontUwagi, brush, listCust5, XStringFormats.TopLeft);
 
-                graphics.DrawString("WZ", _fontBold, _brush, listNum, XStringFormats.TopCenter);
-                graphics.DrawString(nrWZ, _fontBold, _brush, listNumTxt, XStringFormats.TopCenter);
-                graphics.DrawString(data, _fontDates, _brush, listDateTxt, XStringFormats.TopCenter);
+                graphics.DrawString("WZ", fontBold, brush, listNum, XStringFormats.TopCenter);
+                graphics.DrawString(nrWZ, fontBold, brush, listNumTxt, XStringFormats.TopCenter);
+                graphics.DrawString(data, fontDates, brush, listDateTxt, XStringFormats.TopCenter);
 
             }
         }
@@ -241,58 +234,58 @@ namespace ListPrzewozowy
                 for (int t=0; t<2;t++)
                     {
                     tabelka[t] = new XRect(posXWZ1, BodyPosY1 + newline, 30, 30);
-                    graphics.DrawRectangle(_pen, tabelka[t]);
+                    graphics.DrawRectangle(pen, tabelka[t]);
                     tabelka[t] = new XRect(posXWZ1 + 30, BodyPosY1 + newline, 150, 30);
-                    graphics.DrawRectangle(_pen, tabelka[t]);
+                    graphics.DrawRectangle(pen, tabelka[t]);
                     tabelka[t] = new XRect(posXWZ1 + 180, BodyPosY1 + newline, 80, 30);
-                    graphics.DrawRectangle(_pen, tabelka[t]);
+                    graphics.DrawRectangle(pen, tabelka[t]);
                     tabelka[t] = new XRect(posXWZ1 + 260, BodyPosY1 + newline, 45, 30);
-                    graphics.DrawRectangle(_pen, tabelka[t]);
+                    graphics.DrawRectangle(pen, tabelka[t]);
                     tabelka[t] = new XRect(posXWZ1 + 305, BodyPosY1 + newline, 75, 30);
-                    graphics.DrawRectangle(_pen, tabelka[t]);
+                    graphics.DrawRectangle(pen, tabelka[t]);
                     tabelka[t] = new XRect(posXWZ1 + 380, BodyPosY1 + newline, 70, 30);
-                    graphics.DrawRectangle(_pen, tabelka[t]);
+                    graphics.DrawRectangle(pen, tabelka[t]);
                     tabelka[t] = new XRect(posXWZ1 + 450, BodyPosY1 + newline, 80, 30);
-                    graphics.DrawRectangle(_pen, tabelka[t]);
+                    graphics.DrawRectangle(pen, tabelka[t]);
                     newline = newline + 30;
                 }
 
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, Head);
-                graphics.DrawRectangle(_pen, Lp);
-                graphics.DrawRectangle(_pen, NazwaTow);
-                graphics.DrawRectangle(_pen, Ilosc);
-                graphics.DrawRectangle(_pen, Zadysp);
-                graphics.DrawRectangle(_pen, Jm);
-                graphics.DrawRectangle(_pen, Wydana);
-                graphics.DrawRectangle(_pen, Cena);
-                graphics.DrawRectangle(_pen, Wartosc);
-                graphics.DrawRectangle(_pen, LpVal);
-                graphics.DrawRectangle(_pen, NazwaTowVal);
-                graphics.DrawRectangle(_pen, ZadyspVal);
-                graphics.DrawRectangle(_pen, JmVal);
-                graphics.DrawRectangle(_pen, WydanaVal);
-                graphics.DrawRectangle(_pen, TerminVal);
-                graphics.DrawRectangle(_pen, WartoscVal);
+                graphics.DrawRectangle(pen, XBrushes.LightGray, Head);
+                graphics.DrawRectangle(pen, Lp);
+                graphics.DrawRectangle(pen, NazwaTow);
+                graphics.DrawRectangle(pen, Ilosc);
+                graphics.DrawRectangle(pen, Zadysp);
+                graphics.DrawRectangle(pen, Jm);
+                graphics.DrawRectangle(pen, Wydana);
+                graphics.DrawRectangle(pen, Cena);
+                graphics.DrawRectangle(pen, Wartosc);
+                graphics.DrawRectangle(pen, LpVal);
+                graphics.DrawRectangle(pen, NazwaTowVal);
+                graphics.DrawRectangle(pen, ZadyspVal);
+                graphics.DrawRectangle(pen, JmVal);
+                graphics.DrawRectangle(pen, WydanaVal);
+                graphics.DrawRectangle(pen, TerminVal);
+                graphics.DrawRectangle(pen, WartoscVal);
 
 
-                graphics.DrawString("Lp", _fontProductsHeader, _brush, Lp, XStringFormats.Center);
-                graphics.DrawString("Nazwa towaru", _fontProductsHeader, _brush, NazwaTow, XStringFormats.Center);
-                graphics.DrawString("Ilość", _fontProductsHeader, _brush, Ilosc, XStringFormats.Center);
-                graphics.DrawString("Zadysponowana", _fontProductsHeader, _brush, Zadysp, XStringFormats.Center);
-                graphics.DrawString("j.m.", _fontProductsHeader, _brush, Jm, XStringFormats.Center);
-                graphics.DrawString("Wydana", _fontProductsHeader, _brush, Wydana, XStringFormats.Center);
-                graphics.DrawString("Cena", _fontProductsHeader, _brush, Cena, XStringFormats.Center);
-                graphics.DrawString("Wartość", _fontProductsHeader, _brush, Wartosc, XStringFormats.Center);
-                graphics.DrawString(cenapaliwa, _fontProductsHeader, _brush, CenaVal, XStringFormats.Center);
-                graphics.DrawString(paliwo, _fontWZproduct, _brush, NazwaTowVal, XStringFormats.Center);
-                graphics.DrawString("1", _fontWZproduct, _brush, LpVal, XStringFormats.Center);
-                graphics.DrawString(ilosc, _fontWZproduct, _brush, ZadyspVal, XStringFormats.Center);
-                graphics.DrawString("l", _fontWZproduct, _brush, JmVal, XStringFormats.Center);
+                graphics.DrawString("Lp", fontProductsHeader, brush, Lp, XStringFormats.Center);
+                graphics.DrawString("Nazwa towaru", fontProductsHeader, brush, NazwaTow, XStringFormats.Center);
+                graphics.DrawString("Ilość", fontProductsHeader, brush, Ilosc, XStringFormats.Center);
+                graphics.DrawString("Zadysponowana", fontProductsHeader, brush, Zadysp, XStringFormats.Center);
+                graphics.DrawString("j.m.", fontProductsHeader, brush, Jm, XStringFormats.Center);
+                graphics.DrawString("Wydana", fontProductsHeader, brush, Wydana, XStringFormats.Center);
+                graphics.DrawString("Cena", fontProductsHeader, brush, Cena, XStringFormats.Center);
+                graphics.DrawString("Wartość", fontProductsHeader, brush, Wartosc, XStringFormats.Center);
+                graphics.DrawString(cenapaliwa, fontProductsHeader, brush, CenaVal, XStringFormats.Center);
+                graphics.DrawString(paliwo, fontWZproduct, brush, NazwaTowVal, XStringFormats.Center);
+                graphics.DrawString("1", fontWZproduct, brush, LpVal, XStringFormats.Center);
+                graphics.DrawString(ilosc, fontWZproduct, brush, ZadyspVal, XStringFormats.Center);
+                graphics.DrawString("l", fontWZproduct, brush, JmVal, XStringFormats.Center);
                 if (sentval)
-                    graphics.DrawString("SENT", _fontWZproduct, _brush, Sent, XStringFormats.Center);
+                    graphics.DrawString("SENT", fontWZproduct, brush, Sent, XStringFormats.Center);
                 else
-                    graphics.DrawString("", _fontWZproduct, _brush, Sent, XStringFormats.Center);
-                graphics.DrawString(uwagi, _fontProductsHeader, _brush, Uwagi, XStringFormats.Center);
+                    graphics.DrawString("", fontWZproduct, brush, Sent, XStringFormats.Center);
+                graphics.DrawString(uwagi, fontProductsHeader, brush, Uwagi, XStringFormats.Center);
             }
         } //Drukuje zawartość WZ
 
@@ -314,28 +307,27 @@ namespace ListPrzewozowy
                 XRect DaneDoPrzelewu1 = new XRect(posXWZ1, FooterPosY1+85, 530, 45);
                 XRect DaneDoPrzelewu2 = new XRect(posXWZ1, FooterPosY1 + 100, 530, 45);
 
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, Wystawil);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, Zatwierdzil);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, Ilosci);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, Wydal);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, Data);
-                graphics.DrawRectangle(_pen, XBrushes.LightGray, Odebral);
-                graphics.DrawRectangle(_pen, WystawilVal);
-                graphics.DrawRectangle(_pen, ZatwierdzilVal);
-                graphics.DrawRectangle(_pen, WydalVal);
-                graphics.DrawRectangle(_pen, DataVal);
-                graphics.DrawRectangle(_pen, OdebralVal);
-             //   graphics.DrawRectangle(_pen, DaneDoPrzelewu1);
+                graphics.DrawRectangle(Print.pen, XBrushes.LightGray, Wystawil);
+                graphics.DrawRectangle(Print.pen, XBrushes.LightGray, Zatwierdzil);
+                graphics.DrawRectangle(Print.pen, XBrushes.LightGray, Ilosci);
+                graphics.DrawRectangle(Print.pen, XBrushes.LightGray, Wydal);
+                graphics.DrawRectangle(Print.pen, XBrushes.LightGray, Data);
+                graphics.DrawRectangle(Print.pen, XBrushes.LightGray, Odebral);
+                graphics.DrawRectangle(Print.pen, WystawilVal);
+                graphics.DrawRectangle(Print.pen, ZatwierdzilVal);
+                graphics.DrawRectangle(Print.pen, WydalVal);
+                graphics.DrawRectangle(Print.pen, DataVal);
+                graphics.DrawRectangle(Print.pen, OdebralVal);
 
-                graphics.DrawString("Wystawił", _fontProductsHeader, _brush, Wystawil, XStringFormats.Center);
-                graphics.DrawString("Zatwierdził", _fontProductsHeader, _brush, Zatwierdzil, XStringFormats.Center);
-                graphics.DrawString("Wymienione ilości", _fontProductsHeader, _brush, Ilosci, XStringFormats.Center);
-                graphics.DrawString("Wydał", _fontProductsHeader, _brush, Wydal, XStringFormats.Center);
-                graphics.DrawString("Data", _fontProductsHeader, _brush, Data, XStringFormats.Center);
-                graphics.DrawString("Odebrał", _fontProductsHeader, _brush, Odebral, XStringFormats.Center);
-                graphics.DrawString(wystawil, _fontProductsHeader, _brush, WystawilVal, XStringFormats.Center);
-                graphics.DrawString("Dane do przelewu: "+ lineour[0]+" "+lineour[1]+", "+lineour[2], _fontBold, _brush, DaneDoPrzelewu1, XStringFormats.TopLeft);
-                graphics.DrawString(lineour[5] , _fontBold, _brush, DaneDoPrzelewu2, XStringFormats.TopLeft);
+                graphics.DrawString("Wystawił", fontProductsHeader, brush, Wystawil, XStringFormats.Center);
+                graphics.DrawString("Zatwierdził", fontProductsHeader, brush, Zatwierdzil, XStringFormats.Center);
+                graphics.DrawString("Wymienione ilości", fontProductsHeader, brush, Ilosci, XStringFormats.Center);
+                graphics.DrawString("Wydał", fontProductsHeader, brush, Wydal, XStringFormats.Center);
+                graphics.DrawString("Data", fontProductsHeader, brush, Data, XStringFormats.Center);
+                graphics.DrawString("Odebrał", fontProductsHeader, brush, Odebral, XStringFormats.Center);
+                graphics.DrawString(wystawil, fontProductsHeader, brush, WystawilVal, XStringFormats.Center);
+                graphics.DrawString("Dane do przelewu: "+ lineour[0]+" "+lineour[1]+", "+lineour[2], fontBold, brush, DaneDoPrzelewu1, XStringFormats.TopLeft);
+                graphics.DrawString(lineour[5] , fontBold, brush, DaneDoPrzelewu2, XStringFormats.TopLeft);
 
                 XPen pen = XPens.LightGray.Clone();
                 pen.DashStyle = XDashStyle.DashDot;

@@ -48,12 +48,14 @@ namespace ListPrzewozowy
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.button5 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.awariaCHK = new System.Windows.Forms.CheckBox();
             this.ListNr_lbl = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.New_btn = new System.Windows.Forms.Button();
             this.RebuildSQL_btn = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.UserBox = new System.Windows.Forms.ComboBox();
+            this.xmlBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -211,6 +213,7 @@ namespace ListPrzewozowy
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.awariaCHK);
             this.groupBox1.Controls.Add(this.ListNr_lbl);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.New_btn);
@@ -228,6 +231,16 @@ namespace ListPrzewozowy
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Wykaz odbiorców:";
+            // 
+            // awariaCHK
+            // 
+            this.awariaCHK.AutoSize = true;
+            this.awariaCHK.Location = new System.Drawing.Point(916, 38);
+            this.awariaCHK.Name = "awariaCHK";
+            this.awariaCHK.Size = new System.Drawing.Size(91, 17);
+            this.awariaCHK.TabIndex = 24;
+            this.awariaCHK.Text = "Tryb awaryjny";
+            this.awariaCHK.UseVisualStyleBackColor = true;
             // 
             // ListNr_lbl
             // 
@@ -287,11 +300,21 @@ namespace ListPrzewozowy
             this.UserBox.TabIndex = 25;
             this.UserBox.SelectedIndexChanged += new System.EventHandler(this.Userbox_SelectedIndexChanged);
             // 
+            // xmlBtn
+            // 
+            this.xmlBtn.Location = new System.Drawing.Point(924, 30);
+            this.xmlBtn.Name = "xmlBtn";
+            this.xmlBtn.Size = new System.Drawing.Size(114, 37);
+            this.xmlBtn.TabIndex = 26;
+            this.xmlBtn.Text = "Otwórz xml";
+            this.xmlBtn.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1435, 671);
+            this.Controls.Add(this.xmlBtn);
             this.Controls.Add(this.UserBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.RebuildSQL_btn);
@@ -341,6 +364,8 @@ namespace ListPrzewozowy
         private Button RebuildSQL_btn;
         private Label label5;
         private ComboBox UserBox;
+        private CheckBox awariaCHK;
+        private Button xmlBtn;
     }
 }
 

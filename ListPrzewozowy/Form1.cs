@@ -52,6 +52,10 @@ namespace ListPrzewozowy
             NewList();
             WyswietlUser();
             //TODO - dodać sprawdzanie czy baza istnieje i jest we właściwej wersji !=> inicjalizacja bazy
+
+            SqlConnection connection = new SqlConnection(PobierzConnString());
+            var NazwaBazy = connection.Database;
+            Text = "List Przewozowy, "+"BazaSQL: "+NazwaBazy;
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -87,8 +91,7 @@ namespace ListPrzewozowy
         }
         private void Button5_Click(object sender, EventArgs e)
         {
-            //PobierzIDUsera();
-            MessageBox.Show(PobierzIDUsera()+"");
+            DrawSENTawaria("Button_test");
         } //button5 test2
         private void RebuildSQL_btn_Click(object sender, EventArgs e)
         {
@@ -100,12 +103,6 @@ namespace ListPrzewozowy
                 NewList();
                 MessageBox.Show("Baza została odbudowana.");
             }
-            else if (dialogResult == DialogResult.No)
-            {
-                //do something else
-            }
-
-
         } //Button reinicjujący baze
         private void New_btn_Click(object sender, EventArgs e)
         {
@@ -267,7 +264,6 @@ namespace ListPrzewozowy
                 Baza bazasql = new Baza();
                 int Iledokbaza = Convert.ToInt32(bazasql.CzytajZBazy(sql));
                 int IleDok = FirmLista.Count;
-               // MessageBox.Show("Iledokbaza:" + Iledokbaza + " iledok: " + IleDok);
                 if (Iledokbaza != IleDok)
                 {
                     button4.Enabled = true;
@@ -276,17 +272,19 @@ namespace ListPrzewozowy
                 }
             }
         }
-
+        string PobierzConnString()
+        {
+            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
+            RejestrIO rejestr = new RejestrIO();
+            string connstring = rejestr.CzytajKlucz(keyname, "SQLconnect", true);
+            return connstring;
+        }
         void PokazDok(string nrdok)
         {
             FirmLista.Clear();
-            //button2.Enabled = false;
-           // button4.Text = "Zapisz poprawione";
             ListNr_lbl.Text = nrdok;
             string sql = "select * from WZView where dokid =" + nrdok;
-            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            RejestrIO rejestr = new RejestrIO();
-            string klucz = rejestr.CzytajKlucz(keyname, "SQLconnect", true);
+            string klucz = PobierzConnString();
             using (SqlConnection connection = new SqlConnection(klucz))
             {
                 SqlCommand command = new SqlCommand(sql, connection);
@@ -375,9 +373,7 @@ namespace ListPrzewozowy
         }
         void WyswietlUser()
         {
-            string keyname = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
-            RejestrIO rejestr = new RejestrIO();
-            string klucz = rejestr.CzytajKlucz(keyname, "SQLconnect", true);
+            string klucz = PobierzConnString();
             using (SqlConnection conn = new SqlConnection(klucz))
             {
                 try
@@ -393,7 +389,6 @@ namespace ListPrzewozowy
                 }
                 catch (Exception ex)
                 {
-                    // write exception info to log or anything else
                     MessageBox.Show("Error occured!"+ex);
                 }
             }
@@ -404,7 +399,6 @@ namespace ListPrzewozowy
             DataRowView view = UserBox.SelectedItem as DataRowView;
             string name = view["Nazwa"].ToString();
             int id = Convert.ToInt32(view["Id"]);
-            //MessageBox.Show(name + " " + id);
         }
         int PobierzIDUsera()
         {
@@ -436,7 +430,6 @@ namespace ListPrzewozowy
                 {
                 DaneFirmy oFirma = FirmLista[count];
                 int Fuel = Convert.ToInt32(oFirma.Paliwo);
-               // MessageBox.Show("zapisz wz nr: "+WZnr);
                 sql = "insert into list (Dokid, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent,DostUlica, DostNr, DostMiasto, DostKod, DostPoczta, DostKraj, DostPlanRozp, DostRozp, DostPlanZak, Uwagi, NrWZ, Aktywny) " +
                        "values(" + nrdok + "," + oFirma.KontrahentID + "," + oFirma.Paliwo +"," + oFirma.Ilosc + ",'" + oFirma.Cena + "','" + oFirma.FormPlat + "','" + oFirma.Termin + "','" + oFirma.Sent + "','" + 
                         oFirma.DostUlica + "','" + oFirma.DostNr + "','" + oFirma.DostMiasto + "','" + oFirma.DostKod + "','" + oFirma.DostPoczta + "','" + oFirma.DostKraj +
@@ -530,6 +523,7 @@ namespace ListPrzewozowy
                 {
                     nrwz = Convert.ToInt32(WZtxt.Text);
                     data = dateTimePicker1.Text;
+                    string rok = dateTimePicker1.Value.Date.ToString("yyyy");
                     string filename = AppDomain.CurrentDomain.BaseDirectory+@"\pdf\wykaz_kierowca_" + data + ".pdf";
                     string pierwszalinia="";
                     string drugalinia="";
@@ -572,7 +566,7 @@ namespace ListPrzewozowy
                         else
                             termin = oFirma.Termin + " dni";
 
-                        pdf.DrawCustomer(page, heightRowCust, oFirma.KontrNazwa, oFirma.KontrUlica+" "+oFirma.KontrNrDomu, oFirma.KontrNIP, oFirma.KontrTel,
+                        pdf.DrawCustomer(page, heightRowCust, oFirma.KontrNazwa, oFirma.KontrUlica+" "+oFirma.KontrNrDomu+", "+oFirma.KontrMiasto, oFirma.KontrNIP, oFirma.KontrTel,
                             oFirma.DostUlica+" "+oFirma.DostNr+","+oFirma.DostMiasto+","+oFirma.Uwagi, 
                             oFirma.Ilosc.ToString(), oFirma.Sent+ ", " + oFirma.Cena + " " + oFirma.FormPlat + "," + termin );
                         heightRowCust = heightRowCust + 70;
@@ -589,20 +583,23 @@ namespace ListPrzewozowy
                         }
                         else
                             pierwszalinia = oFirma.KontrNazwa;
-
+                            drugalinia = "";
                         int f = 1;
                         while (File.Exists(filename)) { filename = AppDomain.CurrentDomain.BaseDirectory+@"\pdf\wykaz_kierowca_" + data + "_" + f + ".pdf"; f++; }
                         if (oFirma.Sent.Length != 0)
                             sentval = true; else sentval = false;
-                     Baza CzytajSQL = new Baza();
-                     var fuel = CzytajSQL.CzytajZBazy("select nazwa from paliwo where paliwoid=" + oFirma.Paliwo);
-                     PrintWZ(oFirma.Ilosc.ToString(), fuel, oFirma.Cena, oFirma.FormPlat, termin, oFirma.DostUlica+" "+oFirma.DostNr+","+oFirma.DostMiasto, pierwszalinia, drugalinia, oFirma.KontrUlica
-                            +" "+oFirma.KontrNrDomu+", "+oFirma.KontrMiasto, "NIP/PESEL:" + oFirma.KontrNIP, "tel:" + oFirma.KontrTel,sentval);
-                    }
+                    Baza CzytajSQL = new Baza();
+                    var fuel = CzytajSQL.CzytajZBazy("select nazwa from paliwo where paliwoid=" + oFirma.Paliwo);
+                    PrintWZ(oFirma.Ilosc.ToString(), fuel, oFirma.Cena, oFirma.FormPlat, termin, oFirma.DostUlica+" "+oFirma.DostNr+","+oFirma.DostMiasto, pierwszalinia, drugalinia, oFirma.KontrUlica
+                            +" "+oFirma.KontrNrDomu+", "+oFirma.KontrKod +" "+ oFirma.KontrMiasto, "NIP/PESEL:" + oFirma.KontrNIP, "tel:" + oFirma.KontrTel,sentval);
+                    if (awariaCHK.Checked && sentval == true) DrawSENTawaria("WZ"+nrwz+"/"+rok);
+                    //***************cos nie dokladnie sprawdza warunek sentval-----sprawdzić
+            }
                     page = document.Pages[0];
                     pdf.DrawBody(page, litryON, litryONA, litryOP);
                     document.Save(filename);
                     Process.Start(filename);
+       
                 } //drukuj list przewozowy
         public void PrintWZ(string ilosc, string paliwo,string cena,string formaplatWZ, string termin, string uwagiN, string line1, string line2, string line3, string line4, string line5, Boolean sentval)
         {
@@ -682,7 +679,7 @@ namespace ListPrzewozowy
             xmlDoc.SelectSingleNode(param).InnerText = val;
             xmlDoc.Save(file);
         }  //zapisuje SENT
-        private void DrawSENTawaria()
+        private void DrawSENTawaria(string _OwnNumber)
         {
             
             string filename = "SENT_awaria_WZ_" + nrwz + ".pdf";
@@ -690,14 +687,12 @@ namespace ListPrzewozowy
             PdfPage page = document.AddPage();
             SentAwaria awaria = new SentAwaria
             {
-                OwnNumber = "12312313/2017"
+                OwnNumber = _OwnNumber
             };
 
             awaria.DrawPage1(page);
             page = document.AddPage();
             awaria.DrawPage2(page);
-            //MessageBox.Show("Height: "+page.Height+", Width: "+page.Width);
-
             document.Save(filename);
             Process.Start(filename);
         }
