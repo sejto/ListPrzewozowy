@@ -308,6 +308,7 @@ namespace ListPrzewozowy
             this.xmlBtn.TabIndex = 26;
             this.xmlBtn.Text = "Otwórz xml";
             this.xmlBtn.UseVisualStyleBackColor = true;
+            this.xmlBtn.Click += new System.EventHandler(this.xmlBtn_Click);
             // 
             // Form1
             // 

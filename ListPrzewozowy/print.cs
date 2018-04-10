@@ -117,7 +117,6 @@ namespace ListPrzewozowy
                 XRect listCustomerRest = new XRect(posX + lenListName + lenListDischarge+53, posYCustomer, 57, 70);
 
                 graphics.DrawRectangle(pen, listCustomer);
-
                 graphics.DrawRectangle(pen, listCustomerOrdered);
                 graphics.DrawRectangle(pen, listCustomerDischarge);
                 graphics.DrawRectangle(pen, listCustomerRest);
@@ -134,7 +133,6 @@ namespace ListPrzewozowy
         }
         public void DrawFooters(PdfPage page, int numpage)
         {
-            string wersja = "20180321";
             using (XGraphics graphics = XGraphics.FromPdfPage(page))
                 {
                     graphics.DrawLine(pen, new XPoint(28, page.Height - 26), new XPoint(page.Width - 30.75, page.Height - 26));
@@ -148,7 +146,7 @@ namespace ListPrzewozowy
                     Alignment = XStringAlignment.Far
                 };
                 graphics.DrawString("Strona "+ numpage, fontSubtitle, brush, rectFooter, formatFar);
-                    graphics.DrawString("List przewozowy v1." + wersja +" ©sejto.pl", fontSubtitle, brush, rectFooter, formatNear);
+                    graphics.DrawString("List przewozowy v1." + Form1.wersja +" ©sejto.pl", fontSubtitle, brush, rectFooter, formatNear);
                 }
         }
 

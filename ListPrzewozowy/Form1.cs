@@ -21,6 +21,8 @@ using PdfSharp.Drawing.Layout;
 using System.Xml;
 using System.IO;
 using System.Collections;
+using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace ListPrzewozowy
 {
@@ -41,6 +43,7 @@ namespace ListPrzewozowy
         public static string FirstnrWZ;
         public static string FirstdataWZ;
         public static List<DaneFirmy> FirmLista = new List<DaneFirmy>();
+        public static string wersja = "20180405";
 
         public Form1()
         {
@@ -55,7 +58,8 @@ namespace ListPrzewozowy
 
             SqlConnection connection = new SqlConnection(PobierzConnString());
             var NazwaBazy = connection.Database;
-            Text = "List Przewozowy, "+"BazaSQL: "+NazwaBazy;
+            
+            Text = "List Przewozowy, "+"BazaSQL: "+NazwaBazy+", wersja: v1."+wersja;
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -75,7 +79,7 @@ namespace ListPrzewozowy
         }  //pokaż folder z dokumentami pdf
         private void Button2_Click(object sender, EventArgs e) //button "print generuje PDF z tablelayout"
         {
-            PrintCustomer();
+            DrukujListPrzewozowy();
             //   printSender();
         }
         private void Zapisz_btn_Click_1(object sender, EventArgs e)
@@ -91,7 +95,11 @@ namespace ListPrzewozowy
         }
         private void Button5_Click(object sender, EventArgs e)
         {
-            DrawSENTawaria("Button_test");
+            //DrawSENTawaria("Button_test");
+            SENT mail = new SENT();
+            string mess = "asdasdasd";
+            mail.SendMail(mess);
+            // SENT100();
         } //button5 test2
         private void RebuildSQL_btn_Click(object sender, EventArgs e)
         {
@@ -112,6 +120,11 @@ namespace ListPrzewozowy
         {
             SzukajKTH();
         }
+        private void xmlBtn_Click(object sender, EventArgs e)
+        {
+            string appPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+            Process.Start("explorer.exe", appPath + @"\xml\");
+        } //Otworz xml
         void CheckKeys(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
@@ -326,7 +339,7 @@ namespace ListPrzewozowy
         }
         void PokazListy()
         {
-            string sql = "select * from ListyView";
+            string sql = "select * from ListyView order by dokid";
             Baza bazaSQL = new Baza();
             dataGridView1.Columns.Clear();
             dataGridView1.DataSource = bazaSQL.Polacz(sql);
@@ -519,15 +532,15 @@ namespace ListPrzewozowy
 
         }
 
-        public void PrintCustomer()
+        public void DrukujListPrzewozowy()
                 {
                     nrwz = Convert.ToInt32(WZtxt.Text);
                     data = dateTimePicker1.Text;
                     string rok = dateTimePicker1.Value.Date.ToString("yyyy");
                     string filename = AppDomain.CurrentDomain.BaseDirectory+@"\pdf\wykaz_kierowca_" + data + ".pdf";
-                    string pierwszalinia="";
-                    string drugalinia="";
                     string termin;
+          //  string pierwszalinia = "";
+           // string drugalinia = "";
                     Boolean sentval;
                     PdfDocument document = new PdfDocument();
                     PdfPage page = document.AddPage();
@@ -544,6 +557,7 @@ namespace ListPrzewozowy
                     int firmCount = FirmLista.Count;
                     for (int count = 0; count < firmCount; ++count)  //dla wszystkich odbiorców w zmiennej
                     {
+
                         DaneFirmy oFirma = FirmLista[count];
                         if (heightRowCust + 55 > page.Height - 30) //Jeżeli koniec strony
                         {
@@ -566,42 +580,76 @@ namespace ListPrzewozowy
                         else
                             termin = oFirma.Termin + " dni";
 
-                        pdf.DrawCustomer(page, heightRowCust, oFirma.KontrNazwa, oFirma.KontrUlica+" "+oFirma.KontrNrDomu+", "+oFirma.KontrMiasto, oFirma.KontrNIP, oFirma.KontrTel,
+                        pdf.DrawCustomer(page, heightRowCust, oFirma.KontrNazwa, oFirma.KontrUlica+" "+oFirma.KontrNrDomu+", " + oFirma.KontrKod + " " + oFirma.KontrMiasto, oFirma.KontrNIP, oFirma.KontrTel,
                             oFirma.DostUlica+" "+oFirma.DostNr+","+oFirma.DostMiasto+","+oFirma.Uwagi, 
                             oFirma.Ilosc.ToString(), oFirma.Sent+ ", " + oFirma.Cena + " " + oFirma.FormPlat + "," + termin );
                         heightRowCust = heightRowCust + 70;
                         StringBuilder completedWord = new StringBuilder();
                         int znaki = oFirma.KontrNazwa.Count();
+                         string pierwszalinia = "";
+                         string drugalinia = "";
                         if (znaki > 35)
-                        {
-                            completedWord.Append(oFirma.KontrNazwa.Substring(0, 35));//Jeżeli za długa nazwa kontrahenta, to po 35 znaku podzielic na 2 linie
-                            completedWord.AppendLine();
-                            pierwszalinia = completedWord.ToString();
-                            completedWord.Clear();
-                            completedWord.Append(oFirma.KontrNazwa.Substring(35, znaki - 35));
-                           drugalinia = completedWord.ToString();
-                        }
-                        else
-                            pierwszalinia = oFirma.KontrNazwa;
-                            drugalinia = "";
+                                {
+                                List<string> lines = oFirma.KontrNazwa.SplitOn(35);
+                                pierwszalinia = lines[0];
+                                drugalinia = lines[1];
+                                }
+                                else
+                                    pierwszalinia = oFirma.KontrNazwa;
                         int f = 1;
                         while (File.Exists(filename)) { filename = AppDomain.CurrentDomain.BaseDirectory+@"\pdf\wykaz_kierowca_" + data + "_" + f + ".pdf"; f++; }
                         if (oFirma.Sent.Length != 0)
                             sentval = true; else sentval = false;
                     Baza CzytajSQL = new Baza();
                     var fuel = CzytajSQL.CzytajZBazy("select nazwa from paliwo where paliwoid=" + oFirma.Paliwo);
-                    PrintWZ(oFirma.Ilosc.ToString(), fuel, oFirma.Cena, oFirma.FormPlat, termin, oFirma.DostUlica+" "+oFirma.DostNr+","+oFirma.DostMiasto, pierwszalinia, drugalinia, oFirma.KontrUlica
+                    DrukujWZ(oFirma.Ilosc.ToString(), fuel, oFirma.Cena, oFirma.FormPlat, termin, oFirma.DostUlica+" "+oFirma.DostNr+","+oFirma.DostMiasto, pierwszalinia, drugalinia, oFirma.KontrUlica
                             +" "+oFirma.KontrNrDomu+", "+oFirma.KontrKod +" "+ oFirma.KontrMiasto, "NIP/PESEL:" + oFirma.KontrNIP, "tel:" + oFirma.KontrTel,sentval);
+                    //=========================================
+//                    if (sentval) MessageBox.Show("WZ" + nrwz + "_" + rok+".xml");
+                    SENT dok = new SENT();
+                    if (sentval)
+                    {
+                    dok.FileName = AppDomain.CurrentDomain.BaseDirectory + @"\xml\SENT100_WZ" + nrwz + "_" + rok + ".xml";
+                    //dok.FileName = "Sent100_" + DokID + ".xml";
+                    dok.SenderName = "Oil Transfer Development Stacja Paliw sp. z o.o.";
+                    dok.SenderNIP = "8442355566";
+                    dok.SenderStreet = "Pułaskiego";
+                    dok.SenderNumber = "107";
+                    dok.SenderCity = "Suwałki";
+                    dok.SenderCode = "16-400";
+
+                    dok.RecipientName = oFirma.KontrNazwa;
+                    dok.RecipientNIP = oFirma.KontrNIP;
+                    dok.RecipientStreet = oFirma.KontrUlica;
+                    dok.RecipientNumber = oFirma.KontrNrDomu;
+                    dok.RecipientCity = oFirma.KontrMiasto;
+                    dok.RecipientCode = oFirma.KontrKod;
+
+                    dok.GoodsName = fuel;
+                    dok.AmountOfGoods = oFirma.Ilosc.ToString();
+
+                    dok.DocumentId = "WZ" + nrwz + "/" + rok;
+                    dok.Comments = "Sprzedaż obwoźna";
+                    dok.EmailAddress1 = "test_vir2@o2.pl";
+                    dok.FirstName = "Jaromir";
+                    dok.LastName = "Nohavica";
+
+
+//TODO Dodać na formatce Kontrahenta miejsce załadunku towaru - potrzebne do SENT!!!
+
+                    dok.SENT100();
+                        }
+                    //=====================================
                     if (awariaCHK.Checked && sentval == true) DrawSENTawaria("WZ"+nrwz+"/"+rok);
                     //***************cos nie dokladnie sprawdza warunek sentval-----sprawdzić
-            }
+                        }
                     page = document.Pages[0];
                     pdf.DrawBody(page, litryON, litryONA, litryOP);
                     document.Save(filename);
                     Process.Start(filename);
        
-                } //drukuj list przewozowy
-        public void PrintWZ(string ilosc, string paliwo,string cena,string formaplatWZ, string termin, string uwagiN, string line1, string line2, string line3, string line4, string line5, Boolean sentval)
+                    } //drukuj list przewozowy
+        public void DrukujWZ(string ilosc, string paliwo,string cena,string formaplatWZ, string termin, string uwagiN, string line1, string line2, string line3, string line4, string line5, Boolean sentval)
         {
             
             string filename = AppDomain.CurrentDomain.BaseDirectory+@"\pdf\WZ_" +nrwz+".pdf";
@@ -661,16 +709,71 @@ namespace ListPrzewozowy
 
         public void SENT100()
         {
-            TraderAddress SenderAddress = new TraderAddress
-            {
-                City = "Wypierdek Mamuci"
-            };
-            TraderInfo Trader = new TraderInfo
-            {
-                TraderIdentityNumber = "84422233388"
-            };
+            //===========================================================================================================
+            //----- przerzucic do klasy SENT--------------
+            XNamespace ns = "http://www.mf.gov.pl/SENT/2017/01/18/STypes.xsd";
+            XNamespace fc = "http://www.mf.gov.pl/SENT/2017/01/18/SENT_100.xsd";
+            XElement root = new XElement(fc + "SENT_100",
+                new XAttribute(XNamespace.Xmlns + "ns2", fc),
+                new XElement(fc + "GoodsSender",
+                   new XElement(ns + "TraderInfo",
+                   new XElement(ns + "TraderName", "OIL TRANSFER DEVELOPMENT STACJA PALIW"),
+                   new XElement(ns + "TraderIdentityType", "NIP"),
+                   new XElement(ns + "TraderIdentityNumber", "8442355566")),
+                   new XElement(ns + "TraderAddress",
+                   new XElement(ns + "Street", "PUŁASKIEGO"),
+                   new XElement(ns + "HouseNumber", "107"),
+                   new XElement(ns + "City", "SUWAŁKI"),
+                   new XElement(ns + "Country", "PL"),
+                   new XElement(ns + "PostalCode", "16-400"))),
 
-            ZapiszSENT("/ns2:SENT_100/ns2:GoodsSender/TraderInfo/TraderIdentityNumber", "345353535");
+                   new XElement(fc + "GoodsRecipient",
+                   new XElement(ns + "TraderInfo",
+                   new XElement(ns + "TraderName", "INNA FIRMA SP. z O.O."),
+                   new XElement(ns + "TraderIdentityType", "NIP"),
+                   new XElement(ns + "TraderIdentityNumber", "8442344568")),
+                   new XElement(ns + "TraderAddress",
+                   new XElement(ns + "Street", "Wojska Polskiego"),
+                   new XElement(ns + "HouseNumber", "17"),
+                   new XElement(ns + "City", "SUWAŁKI"),
+                   new XElement(ns + "Country", "PL"),
+                   new XElement(ns + "PostalCode", "16-400"))),
+
+                   new XElement(fc + "Transport",
+                   new XElement(ns + "PlaceOfLoading",
+                   new XElement(ns + "Street", "Wojska Polskiego"),
+                   new XElement(ns + "HouseNumber", "17"),
+                   new XElement(ns + "City", "SUWAŁKI"),
+                   new XElement(ns + "Country", "PL"),
+                   new XElement(ns + "PostalCode", "16-400")),
+                   new XElement(ns + "PlannedStartCarriageDate", "2018-04-12+02:00")),
+
+                   new XElement(fc + "GoodsInformation",
+                   new XElement(ns + "CodeCnClassification", "2710"),
+                   new XElement(ns + "GoodsName", "OLEJ NAPĘDOWY"),
+                   new XElement(ns + "AmountOfGoods", "2000.0"),
+                   new XElement(ns + "UnitOfMeasure", "l")),
+
+                   new XElement(fc + "Comments", "Sprzedaż obwoźna"),
+                   new XElement(fc + "DocumentId", "WZ 242/2018"),
+
+                   new XElement(fc + "ResponseAddress",
+                   new XElement(ns + "EmailChannel",
+                   new XElement(ns + "EmailAddress1", "test_vir2@o2.pl")),
+
+                   new XElement(ns + "WebServiceChannel",
+                   new XElement(ns + "WsFromSISC", "false"))),
+
+                   new XElement(fc + "Statements",
+                   new XElement(ns + "Statement1", "true"),
+                   new XElement(ns + "FirstName", "Alina"),
+                   new XElement(ns + "LastName", "Niesamowita")));
+
+            root.SetAttributeValue("xmlns", "http://www.mf.gov.pl/SENT/2017/01/18/STypes.xsd");
+            root.Save("dupa.xml");
+            MessageBox.Show("Zapisano xml jako: dupa.xml");
+            Close();
+            //===========================================================================================================
         }
         public void ZapiszSENT(string param, string val)
         {
@@ -696,6 +799,8 @@ namespace ListPrzewozowy
             document.Save(filename);
             Process.Start(filename);
         }
+
+
     }
     public class DaneFirmy
     {
@@ -769,6 +874,25 @@ namespace ListPrzewozowy
             var nazwa = (stackTrace.GetFrame(1).GetMethod().Name);
             //File.WriteAllText(@"Logi.txt", data+": "+ error);
             File.AppendAllText(@"Logi.txt", data + ": " + nazwa + " " + error + Environment.NewLine);
+        }
+    }
+    public static class StringExtensions
+    {
+        public static List<string> SplitOn(this string initial, int MaxCharacters)
+        {
+            List<string> lines = new List<string>();
+
+            if (string.IsNullOrEmpty(initial) == false)
+            {
+                string targetGroup = "Line";
+                string pattern = string.Format(@"(?<{0}>.{{1,{1}}})(?:\W|$)", targetGroup, MaxCharacters);
+
+                lines = Regex.Matches(initial, pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant)
+                             .OfType<Match>()
+                             .Select(mt => mt.Groups[targetGroup].Value)
+                             .ToList();
+            }
+            return lines;
         }
     }
 }
