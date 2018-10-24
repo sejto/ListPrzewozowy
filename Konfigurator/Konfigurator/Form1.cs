@@ -22,6 +22,7 @@ namespace Konfigurator
         const string keyname = "HKEY_CURRENT_USER\\MARKET\\serwerLokal";
         const string keynameremote = "HKEY_CURRENT_USER\\MARKET\\serwerRemote";
         const string keyList = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowy";
+        const string keyListPOM = "HKEY_CURRENT_USER\\MARKET\\ListPrzewozowyPOM";
 
         public void wczytaj()
         {
@@ -32,6 +33,7 @@ namespace Konfigurator
             connBox.Text = rejestr.czytajklucz(keyname, "SQLconnect", true);
             connBoxremote.Text = rejestr.czytajklucz(keynameremote, "SQLconnect", true);
             connBoxList.Text = rejestr.czytajklucz(keyList, "SQLconnect", true);
+            connBoxListPOM.Text = rejestr.czytajklucz(keyListPOM, "SQLconnect", true);
         }
 
 
@@ -43,6 +45,7 @@ namespace Konfigurator
             string conn = connBox.Text;
             string connremote = connBoxremote.Text;
             string connList = connBoxList.Text;
+            string connListPOM = connBoxListPOM.Text;
 
             rejestrIO rejestr = new rejestrIO();
             //if (string.IsNullOrWhitespace(userremote))
@@ -65,6 +68,10 @@ namespace Konfigurator
             if (!string.IsNullOrEmpty(connList))
             {
                 rejestr.zapiszklucz(keyList, "SQLconnect", connList, true);
+            }
+            if (!string.IsNullOrEmpty(connListPOM))
+            {
+                rejestr.zapiszklucz(keyListPOM, "SQLconnect", connListPOM, true);
             }
             Close();
         }

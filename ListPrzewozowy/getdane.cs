@@ -7,23 +7,6 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp1
 {
-    class GetDane
-    {
-        //       const string keyname = "HKEY_CURRENT_USER\\c#Test\\PUL";
-        public string ip, user, pass;
-        public string Dane(string keyname)
-        {
-            RejestrIO rejestr = new RejestrIO();
-            ip = rejestr.CzytajKlucz(keyname, "ip", false);
-            user = rejestr.CzytajKlucz(keyname, "user", false);
-            pass = rejestr.CzytajKlucz(keyname, "pass", true);
-            return ip;
-            return user;
-            return pass;
-        }
-
-
-    }
     class RejestrIO
     {
         const string salt = "f$4e9$#n!#98iaf542";

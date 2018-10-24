@@ -37,28 +37,42 @@ namespace ListPrzewozowy
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button2 = new System.Windows.Forms.Button();
-            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.button3 = new System.Windows.Forms.Button();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.WZtxt = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.button5 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.wojew_box = new System.Windows.Forms.ComboBox();
+            this.wsp_btn = new System.Windows.Forms.Button();
+            this.ZalKod_txt = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.awariaCHK = new System.Windows.Forms.CheckBox();
+            this.ZalMiasto_txt = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.ZalNr_txt = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.ZalUlica_txt = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.nrWZ_lbl = new System.Windows.Forms.Label();
             this.ListNr_lbl = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.New_btn = new System.Windows.Forms.Button();
-            this.RebuildSQL_btn = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.UserBox = new System.Windows.Forms.ComboBox();
             this.xmlBtn = new System.Windows.Forms.Button();
+            this.czytaj_email = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // Txt_KTH
@@ -67,7 +81,6 @@ namespace ListPrzewozowy
             this.Txt_KTH.Name = "Txt_KTH";
             this.Txt_KTH.Size = new System.Drawing.Size(166, 20);
             this.Txt_KTH.TabIndex = 0;
-            this.Txt_KTH.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckKeys);
             // 
             // label1
             // 
@@ -109,7 +122,7 @@ namespace ListPrzewozowy
             // 
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(664, 37);
+            this.button2.Location = new System.Drawing.Point(1251, 361);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(93, 39);
             this.button2.TabIndex = 6;
@@ -123,7 +136,7 @@ namespace ListPrzewozowy
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(594, 30);
+            this.button3.Location = new System.Drawing.Point(548, 20);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(117, 38);
             this.button3.TabIndex = 7;
@@ -134,7 +147,7 @@ namespace ListPrzewozowy
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(57, 44);
+            this.dateTimePicker1.Location = new System.Drawing.Point(57, 26);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(145, 20);
             this.dateTimePicker1.TabIndex = 8;
@@ -142,7 +155,7 @@ namespace ListPrzewozowy
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 47);
+            this.label2.Location = new System.Drawing.Point(18, 29);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 9;
@@ -151,18 +164,11 @@ namespace ListPrzewozowy
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(241, 50);
+            this.label3.Location = new System.Drawing.Point(241, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(102, 13);
             this.label3.TabIndex = 12;
             this.label3.Text = "Nr początkowy WZ:";
-            // 
-            // WZtxt
-            // 
-            this.WZtxt.Location = new System.Drawing.Point(349, 47);
-            this.WZtxt.Name = "WZtxt";
-            this.WZtxt.Size = new System.Drawing.Size(58, 20);
-            this.WZtxt.TabIndex = 13;
             // 
             // button1
             // 
@@ -181,7 +187,7 @@ namespace ListPrzewozowy
             // 
             this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
             this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.Location = new System.Drawing.Point(549, 37);
+            this.button4.Location = new System.Drawing.Point(1136, 361);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(93, 39);
             this.button4.TabIndex = 17;
@@ -196,9 +202,9 @@ namespace ListPrzewozowy
             this.dataGridView3.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView3.GridColor = System.Drawing.SystemColors.AppWorkspace;
-            this.dataGridView3.Location = new System.Drawing.Point(0, 88);
+            this.dataGridView3.Location = new System.Drawing.Point(0, 74);
             this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.Size = new System.Drawing.Size(1392, 258);
+            this.dataGridView3.Size = new System.Drawing.Size(1392, 253);
             this.dataGridView3.TabIndex = 20;
             // 
             // button5
@@ -213,39 +219,166 @@ namespace ListPrzewozowy
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.awariaCHK);
+            this.groupBox1.Controls.Add(this.groupBox2);
+            this.groupBox1.Controls.Add(this.nrWZ_lbl);
             this.groupBox1.Controls.Add(this.ListNr_lbl);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.New_btn);
+            this.groupBox1.Controls.Add(this.awariaCHK);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.dataGridView3);
+            this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.dateTimePicker1);
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.WZtxt);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.groupBox1.Location = new System.Drawing.Point(31, 296);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1392, 352);
+            this.groupBox1.Size = new System.Drawing.Size(1392, 427);
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Wykaz odbiorców:";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.wojew_box);
+            this.groupBox2.Controls.Add(this.wsp_btn);
+            this.groupBox2.Controls.Add(this.ZalKod_txt);
+            this.groupBox2.Controls.Add(this.label9);
+            this.groupBox2.Controls.Add(this.ZalMiasto_txt);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.ZalNr_txt);
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.ZalUlica_txt);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Location = new System.Drawing.Point(21, 342);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(1060, 67);
+            this.groupBox2.TabIndex = 26;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Adres załadunku (na potrzeby SENT):";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(655, 31);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(77, 13);
+            this.label10.TabIndex = 27;
+            this.label10.Text = "Województwo:";
+            // 
+            // wojew_box
+            // 
+            this.wojew_box.FormattingEnabled = true;
+            this.wojew_box.ItemHeight = 13;
+            this.wojew_box.Location = new System.Drawing.Point(748, 28);
+            this.wojew_box.Name = "wojew_box";
+            this.wojew_box.Size = new System.Drawing.Size(121, 21);
+            this.wojew_box.TabIndex = 12;
+            this.wojew_box.SelectedIndexChanged += new System.EventHandler(this.SelectedWojewodztwo);
+            // 
+            // wsp_btn
+            // 
+            this.wsp_btn.Location = new System.Drawing.Point(919, 14);
+            this.wsp_btn.Name = "wsp_btn";
+            this.wsp_btn.Size = new System.Drawing.Size(123, 23);
+            this.wsp_btn.TabIndex = 25;
+            this.wsp_btn.Text = "Pobierz współrzędne";
+            this.wsp_btn.UseVisualStyleBackColor = true;
+            this.wsp_btn.Click += new System.EventHandler(this.wsp_btn_Click);
+            // 
+            // ZalKod_txt
+            // 
+            this.ZalKod_txt.Location = new System.Drawing.Point(565, 29);
+            this.ZalKod_txt.Name = "ZalKod_txt";
+            this.ZalKod_txt.Size = new System.Drawing.Size(73, 20);
+            this.ZalKod_txt.TabIndex = 7;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(530, 33);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(29, 13);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "Kod:";
+            // 
             // awariaCHK
             // 
             this.awariaCHK.AutoSize = true;
-            this.awariaCHK.Location = new System.Drawing.Point(916, 38);
+            this.awariaCHK.Location = new System.Drawing.Point(1138, 333);
             this.awariaCHK.Name = "awariaCHK";
             this.awariaCHK.Size = new System.Drawing.Size(91, 17);
             this.awariaCHK.TabIndex = 24;
             this.awariaCHK.Text = "Tryb awaryjny";
             this.awariaCHK.UseVisualStyleBackColor = true;
             // 
+            // ZalMiasto_txt
+            // 
+            this.ZalMiasto_txt.Location = new System.Drawing.Point(375, 29);
+            this.ZalMiasto_txt.Name = "ZalMiasto_txt";
+            this.ZalMiasto_txt.Size = new System.Drawing.Size(137, 20);
+            this.ZalMiasto_txt.TabIndex = 5;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label8.Location = new System.Drawing.Point(328, 33);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(41, 13);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "Miasto:";
+            // 
+            // ZalNr_txt
+            // 
+            this.ZalNr_txt.Location = new System.Drawing.Point(259, 29);
+            this.ZalNr_txt.Name = "ZalNr_txt";
+            this.ZalNr_txt.Size = new System.Drawing.Size(51, 20);
+            this.ZalNr_txt.TabIndex = 3;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label7.Location = new System.Drawing.Point(203, 33);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(50, 13);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "Nr domu:";
+            // 
+            // ZalUlica_txt
+            // 
+            this.ZalUlica_txt.Location = new System.Drawing.Point(58, 29);
+            this.ZalUlica_txt.Name = "ZalUlica_txt";
+            this.ZalUlica_txt.Size = new System.Drawing.Size(131, 20);
+            this.ZalUlica_txt.TabIndex = 1;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label6.Location = new System.Drawing.Point(17, 33);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(37, 13);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Ulica: ";
+            // 
+            // nrWZ_lbl
+            // 
+            this.nrWZ_lbl.AutoSize = true;
+            this.nrWZ_lbl.Location = new System.Drawing.Point(346, 20);
+            this.nrWZ_lbl.Name = "nrWZ_lbl";
+            this.nrWZ_lbl.Size = new System.Drawing.Size(16, 13);
+            this.nrWZ_lbl.TabIndex = 25;
+            this.nrWZ_lbl.Text = "...";
+            // 
             // ListNr_lbl
             // 
             this.ListNr_lbl.AutoSize = true;
-            this.ListNr_lbl.Location = new System.Drawing.Point(1240, 63);
+            this.ListNr_lbl.Location = new System.Drawing.Point(348, 44);
             this.ListNr_lbl.Name = "ListNr_lbl";
             this.ListNr_lbl.Size = new System.Drawing.Size(10, 13);
             this.ListNr_lbl.TabIndex = 22;
@@ -254,7 +387,7 @@ namespace ListPrzewozowy
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1118, 63);
+            this.label4.Location = new System.Drawing.Point(226, 44);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(122, 13);
             this.label4.TabIndex = 21;
@@ -264,7 +397,7 @@ namespace ListPrzewozowy
             // 
             this.New_btn.Image = ((System.Drawing.Image)(resources.GetObject("New_btn.Image")));
             this.New_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.New_btn.Location = new System.Drawing.Point(783, 38);
+            this.New_btn.Location = new System.Drawing.Point(415, 19);
             this.New_btn.Name = "New_btn";
             this.New_btn.Size = new System.Drawing.Size(96, 38);
             this.New_btn.TabIndex = 0;
@@ -272,15 +405,16 @@ namespace ListPrzewozowy
             this.New_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.New_btn.Click += new System.EventHandler(this.New_btn_Click);
             // 
-            // RebuildSQL_btn
+            // pictureBox1
             // 
-            this.RebuildSQL_btn.Location = new System.Drawing.Point(1325, 47);
-            this.RebuildSQL_btn.Name = "RebuildSQL_btn";
-            this.RebuildSQL_btn.Size = new System.Drawing.Size(87, 21);
-            this.RebuildSQL_btn.TabIndex = 23;
-            this.RebuildSQL_btn.Text = "Reinicjalizacja";
-            this.RebuildSQL_btn.UseVisualStyleBackColor = true;
-            this.RebuildSQL_btn.Click += new System.EventHandler(this.RebuildSQL_btn_Click);
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
+            this.pictureBox1.Location = new System.Drawing.Point(1250, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(61, 51);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 27;
+            this.pictureBox1.TabStop = false;
             // 
             // label5
             // 
@@ -310,19 +444,29 @@ namespace ListPrzewozowy
             this.xmlBtn.UseVisualStyleBackColor = true;
             this.xmlBtn.Click += new System.EventHandler(this.xmlBtn_Click);
             // 
+            // czytaj_email
+            // 
+            this.czytaj_email.Location = new System.Drawing.Point(1325, 48);
+            this.czytaj_email.Name = "czytaj_email";
+            this.czytaj_email.Size = new System.Drawing.Size(75, 23);
+            this.czytaj_email.TabIndex = 29;
+            this.czytaj_email.Text = "czytaj email";
+            this.czytaj_email.UseVisualStyleBackColor = true;
+            this.czytaj_email.Click += new System.EventHandler(this.czytaj_email_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1435, 671);
+            this.ClientSize = new System.Drawing.Size(1435, 735);
+            this.Controls.Add(this.czytaj_email);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.xmlBtn);
             this.Controls.Add(this.UserBox);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.RebuildSQL_btn);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.Btn_szukajKTH);
             this.Controls.Add(this.label1);
@@ -335,6 +479,9 @@ namespace ListPrzewozowy
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -348,12 +495,10 @@ namespace ListPrzewozowy
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button button2;
-        private System.Drawing.Printing.PrintDocument printDocument1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label2;
         private Label label3;
-        private TextBox WZtxt;
         private Button button1;
         private Button button4;
         private DataGridView dataGridView3;
@@ -362,11 +507,25 @@ namespace ListPrzewozowy
         private Button New_btn;
         private Label ListNr_lbl;
         private Label label4;
-        private Button RebuildSQL_btn;
         private Label label5;
         private ComboBox UserBox;
         private CheckBox awariaCHK;
         private Button xmlBtn;
+        private PictureBox pictureBox1;
+        private Button czytaj_email;
+        private Label nrWZ_lbl;
+        private GroupBox groupBox2;
+        private TextBox ZalKod_txt;
+        private Label label9;
+        private TextBox ZalMiasto_txt;
+        private Label label8;
+        private TextBox ZalNr_txt;
+        private Label label7;
+        private TextBox ZalUlica_txt;
+        private Label label6;
+        private Button wsp_btn;
+        private Label label10;
+        private ComboBox wojew_box;
     }
 }
 

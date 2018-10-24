@@ -49,7 +49,22 @@ namespace WindowsFormsApp1
                 conn.Close();
             }
         }
-
+        // TODO: Zaktualizowac ZapiszDoBazy o zapytanie parametryzowane (string sql, string val)
+        #region
+        /*     using(SqlConnection conn = new SqlConnection(connectionString))
+{
+    conn.Open();
+    using(SqlTransaction trans = conn.BeginTransaction())
+    using (SqlCommand cmd = conn.CreateCommand())
+    {
+        cmd.Transaction = trans;
+        cmd.CommandText = @"INSERT INTO [MYTABLE] ([GuidValue]) VALUE @guidValue;";
+        cmd.Parameters.AddWithValue("@guidValue", Guid.NewGuid());
+        cmd.ExecuteNonQuery();
+        trans.Commit();
+    }
+} */
+        #endregion
         public DataSet Polacz(string sql)
         {
             DataSet ds = new DataSet();
@@ -98,6 +113,7 @@ namespace WindowsFormsApp1
                 "[NrWZ] [int] NOT NULL," +
                 "[Aktywny][bit]NOT NULL)";
             ZapiszDoBazy(sql);
-        }
+        } 
+        //Zaktualizować funkcje aktualizacji bazy/albo zrobić wykonanie skryptu sql
     }
 }

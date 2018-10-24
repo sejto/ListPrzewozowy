@@ -31,8 +31,6 @@ namespace ListPrzewozowy
         {
             InitializeComponent();
             KontrIDlabel.Text = Form1.KontrID;
-            //Odpytac w bazie sql OTD o pozostałe dane Kontrahenta na podstawie kontrID i wyjebac wszystkie zbędne zmienne----------------------
-            //---------------------------
             string sql = "select Nazwa, Ulica, Nrdomu, Miasto, Kod, NIP, Telefon from OTD.dbo.kontrahent where kontrid="+Form1.KontrID;
             string keyname = "HKEY_CURRENT_USER\\MARKET\\serwerLokal";
             RejestrIO rejestr = new RejestrIO();
@@ -126,7 +124,7 @@ namespace ListPrzewozowy
             Form1.FirmLista.Add(new DaneFirmy
                 (Form1.data, Convert.ToInt32(Form1.KontrID), KontrNazwa, KontrUlica, KontrNrDomu, KontrKod, KontrMiasto, KontrTelefon, KontrNip, TowarBox.SelectedIndex + 1, ilosc,
                 CenaBox.Text, FormaPlatBox.Text, TerminBox.Text, SentBox.Text, UlicaBox.Text, NrDomuBox.Text, MiejscowoscBox.Text, KodBox.Text, MiejscowoscBox.Text,
-                "PL", DataPlanRozp, DataRozp, DataPlanZak, UwagiBox.Text, nrWZ));
+                "PL", DataPlanRozp, DataRozp, DataPlanZak, UwagiBox.Text, nrWZ,"","","","",Form1.kodTeryt,Form1.LatSent,Form1.LongSent));
             Close();
             OnRunMethod();//wywołuje funkcję WczytajDanedoDGV3 z form1 za pomocą delegata
         }
@@ -186,7 +184,7 @@ namespace ListPrzewozowy
                 UlicaBox.Text = KontrUlica;
                 NrDomuBox.Text = KontrNrDomu;
                 if (NrDomuBox.Text.Length<1)
-                 MessageBox.Show("Klient nie ma wpisanego numeru domu.","Informacja SENT");
+                 MessageBox.Show("Klient nie ma wpisanego numeru domu. Uzupełnij w Markecie, bo SENT będzie nieprawidłowy.","Informacja SENT");
             }
         }
     }

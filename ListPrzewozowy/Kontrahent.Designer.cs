@@ -121,7 +121,7 @@
             this.groupBox1.Controls.Add(this.MiastoLabel);
             this.groupBox1.Controls.Add(this.UlicaLabel);
             this.groupBox1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.groupBox1.Location = new System.Drawing.Point(24, 22);
+            this.groupBox1.Location = new System.Drawing.Point(24, 10);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(923, 96);
             this.groupBox1.TabIndex = 5;
@@ -162,9 +162,9 @@
             this.MiejsceGroup.Controls.Add(this.NrDomuBox);
             this.MiejsceGroup.Controls.Add(this.UlicaBox);
             this.MiejsceGroup.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.MiejsceGroup.Location = new System.Drawing.Point(24, 297);
+            this.MiejsceGroup.Location = new System.Drawing.Point(24, 275);
             this.MiejsceGroup.Name = "MiejsceGroup";
-            this.MiejsceGroup.Size = new System.Drawing.Size(923, 141);
+            this.MiejsceGroup.Size = new System.Drawing.Size(923, 90);
             this.MiejsceGroup.TabIndex = 7;
             this.MiejsceGroup.TabStop = false;
             this.MiejsceGroup.Text = "Miejsce dostarczenia towaru:";
@@ -172,7 +172,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(287, 84);
+            this.label6.Location = new System.Drawing.Point(692, 31);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(36, 16);
             this.label6.TabIndex = 11;
@@ -181,7 +181,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(169, 84);
+            this.label5.Location = new System.Drawing.Point(574, 31);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(50, 16);
             this.label5.TabIndex = 10;
@@ -190,7 +190,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(45, 84);
+            this.label4.Location = new System.Drawing.Point(450, 31);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(91, 16);
             this.label4.TabIndex = 9;
@@ -199,7 +199,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(287, 31);
+            this.label3.Location = new System.Drawing.Point(296, 31);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(85, 16);
             this.label3.TabIndex = 8;
@@ -208,7 +208,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(206, 31);
+            this.label2.Location = new System.Drawing.Point(215, 31);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 16);
             this.label2.TabIndex = 7;
@@ -225,35 +225,35 @@
             // 
             // KrajBox
             // 
-            this.KrajBox.Location = new System.Drawing.Point(290, 103);
+            this.KrajBox.Location = new System.Drawing.Point(693, 50);
             this.KrajBox.Name = "KrajBox";
             this.KrajBox.Size = new System.Drawing.Size(100, 23);
             this.KrajBox.TabIndex = 11;
             // 
             // PocztaBox
             // 
-            this.PocztaBox.Location = new System.Drawing.Point(172, 103);
+            this.PocztaBox.Location = new System.Drawing.Point(573, 50);
             this.PocztaBox.Name = "PocztaBox";
             this.PocztaBox.Size = new System.Drawing.Size(100, 23);
             this.PocztaBox.TabIndex = 10;
             // 
             // KodBox
             // 
-            this.KodBox.Location = new System.Drawing.Point(45, 103);
+            this.KodBox.Location = new System.Drawing.Point(453, 50);
             this.KodBox.Name = "KodBox";
             this.KodBox.Size = new System.Drawing.Size(100, 23);
             this.KodBox.TabIndex = 9;
             // 
             // MiejscowoscBox
             // 
-            this.MiejscowoscBox.Location = new System.Drawing.Point(290, 50);
+            this.MiejscowoscBox.Location = new System.Drawing.Point(294, 50);
             this.MiejscowoscBox.Name = "MiejscowoscBox";
             this.MiejscowoscBox.Size = new System.Drawing.Size(139, 23);
             this.MiejscowoscBox.TabIndex = 8;
             // 
             // NrDomuBox
             // 
-            this.NrDomuBox.Location = new System.Drawing.Point(209, 50);
+            this.NrDomuBox.Location = new System.Drawing.Point(213, 50);
             this.NrDomuBox.Name = "NrDomuBox";
             this.NrDomuBox.Size = new System.Drawing.Size(61, 23);
             this.NrDomuBox.TabIndex = 7;
@@ -274,9 +274,9 @@
             this.DataBox.Controls.Add(this.dateTimePicker2);
             this.DataBox.Controls.Add(this.dateTimePicker1);
             this.DataBox.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.DataBox.Location = new System.Drawing.Point(24, 460);
+            this.DataBox.Location = new System.Drawing.Point(24, 403);
             this.DataBox.Name = "DataBox";
-            this.DataBox.Size = new System.Drawing.Size(640, 91);
+            this.DataBox.Size = new System.Drawing.Size(640, 86);
             this.DataBox.TabIndex = 8;
             this.DataBox.TabStop = false;
             this.DataBox.Text = "Daty rozpoczęcia i zakończenia przewozu:";
@@ -346,7 +346,7 @@
             this.groupBox4.Controls.Add(this.TowarBox);
             this.groupBox4.Controls.Add(this.IloscBox);
             this.groupBox4.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.groupBox4.Location = new System.Drawing.Point(24, 136);
+            this.groupBox4.Location = new System.Drawing.Point(24, 123);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(923, 139);
             this.groupBox4.TabIndex = 9;

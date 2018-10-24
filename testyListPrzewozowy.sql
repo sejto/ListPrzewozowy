@@ -120,18 +120,7 @@ inner join OTD.dbo.kontrahent K
 on k.kontrid=L.kontrID
  where dokid=1
 ------------###############----------------
-insert into dok (Data,userID)values('2017-12-10',1)
-insert into Uzytkownik (nazwa) values ('Alina Spura')
-insert into Uzytkownik (nazwa) values ('Małgorzata Zakrzewska')
-insert into Paliwo (Nazwa) values ('Olej napędowy')
-insert into Paliwo (Nazwa) values ('Olej napędowy arktyczny')
-insert into Paliwo (Nazwa) values ('Olej napędowy do celów opałowych')
-insert into list (DokID, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent, NrWZ) values (1,83,1, 1000,'3,99','przelew',3,'My zamykamy','148')
-insert into list (DokID, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent, NrWZ) values (1,86,1, 1000,'3,99','przelew',3,'My zamykamy','149')
-insert into list (DokID, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent, NrWZ) values (1,93,2, 2000,'4,8','przelew',2,'Oni zamykają','150')
-insert into list (DokID, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent, NrWZ) values (1,96,2, 1500,'4,85','przelew',3,'Oni zamykają','151')
-insert into list (DokID, KontrId, PaliwoID, Ilosc,Cena, FormaPlat,Termin, Sent, NrWZ) values (1,183,2, 500,'4,28','przelew',2,'Oni zamykają','152')
---------#####################-----------
+
 
 CREATE TABLE [dbo].[Dok](
 	[ID] int IDENTITY(1,1) primary key,
@@ -219,7 +208,10 @@ FROM list where aktywny=1) drRowNumbers ON drRowNumbers.ID = list.ID
 update list set nrwz=17 where id=23
 select * from List where aktywny=1
 
-select * from Paliwo
-update paliwo set nazwa = 'Olej opałowy' where paliwoid=3
+SELECT UUID FROM PocztaSent where UUID='11535345.24522.23424'
+select uniqueidentifier
+[klucz] [uniqueidentifier] NOT NULL)
 
 
+
+select * from PocztaSent
