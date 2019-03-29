@@ -6,3 +6,6 @@ Na chwilę obecna umożliwia utworzenie listy kontrahentów, do których zostani
 Na dokumencie przewozowym sumowane są ilości zamówionego paliwa z podziałem na ON, ONA, OP. Dodatkowe informacje, które tam sie znajdują to: inny adres dostawy, uwagi, informacja kto zamyka SENT(jeżeli wymagany).
 W przygotowaniu jest generowanie dokumentu SENT zastępującego zgłoszenie(tzw procedura awaryjna) oraz generowanie dokumentu xml do zaimportowania w systemie PUESC.
 
+Program nierozwijany - do zaorania. 
+Do przepisania całość kodu. 
+Uczyłem się na nim składni języka c# - pierwszy program w tym języku.
